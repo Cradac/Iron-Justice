@@ -47,7 +47,7 @@ class IronFleet:
         with conn:
             cur = conn.cursor()
             cur.execute(query)
-            cur.commit()
+            conn.commit()
 
     @isCrimson()
     @isIronFleet()

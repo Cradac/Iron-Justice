@@ -25,7 +25,7 @@ from checks import create_connection, db_file
 
 
 Client = discord.Client()
-client = commands.Bot(command_prefix = ["?", "!"], description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron")
+client = commands.Bot(command_prefix = ["?", "!", "."], description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron")
 #bot_token = sys.argv[1]
 bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = "116222914327478274"
@@ -224,7 +224,7 @@ async def setup(ctx):
 		try:
 			print((guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para))
 			cur.execute("UPDATE guilds SET guild_id='{}', guild_name='{}', enabled='{}', lfc_channels='{}', profile_channels='{}' WHERE guild_id='{}';".format(guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para, guild_id))
-			cur.commit()
+			conn.commit()
 			client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled, lfc_channels, profile_channels)
 			await client.say("Setup complete!")
 		except:
