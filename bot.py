@@ -130,10 +130,10 @@ async def on_member_join(member):
 	embed.set_thumbnail(url="https://i.imgur.com/od8TIcs.png")
 	footertext = "#{} Ironborn".format(member_count)
 	embed.set_footer(text=footertext, icon_url="https://i.imgur.com/od8TIcs.png") #482296103740375051
-	rules = f"Please take a moment to read our {rules_channel.mention} and {info_channel.mention}."
+	rules = "Please take a moment to read our {} and {}.".format(rules_channel.mention, info_channel.mention)
 	embed.add_field(name="__Rules and Info__", value=rules)
 	embed.add_field(name="__Pinned Messages__", value="After you enter the server, please check out the pinned messages in each channel for explicit rule lists and channel specific bot commands. This will give you an idea of all we have to offer! If you're unsure of anything, feel free to ask anyone!")
-	jointext = f"If you'd like to join our ranks, please leave a message in {intro_channel.mention} with the following information.\n\n--**Gamertag:**\n--**Age:**\n--**Platform:**\n--**Other** *(anything else about yourself you'd like to share)*"
+	jointext = "If you'd like to join our ranks, please leave a message in {} with the following information.\n\n--**Gamertag:**\n--**Age:**\n--**Platform:**\n--**Other** *(anything else about yourself you'd like to share)*".format(intro_channel.mention)
 	embed.add_field(name="__Join us!__", value=jointext)
 	await client.send_message(welcome_channel, embed=embed)
 
@@ -261,20 +261,20 @@ async def whois(ctx, rolename : str, page : int=1 ):
 		page = sumpages
 	pagestart = (page * 20)-20
 	pageend = pagestart + 19
-	desctext = f"({len(users)} in total)\n"
+	desctext = "({} in total)\n".format(str(len(users)))
 	for i in range(pagestart, pageend):
 		try:
 			desctext += ctx.message.server.get_member(str(users[i])).mention + "\n"
 		except IndexError:
 			break
 
-	title = f"__Users with the role '{role.name}':__"
+	title = "__Users with the role '{}':__".format(role.name)
 	emb=discord.Embed(color=0xffd700, timestamp=datetime.datetime.utcnow(), title=title, description=desctext)
 	if member.avatar_url == "":
 		emb.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.default_avatar_url)
 	else:
 		emb.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.avatar_url)
-	emb.set_footer(text=f"Page {page}/{sumpages}")
+	emb.set_footer(text="Page {}/{}".format(page, sumpages))
 	await client.say(embed=emb)
 
 ##########################################################################################################################################
