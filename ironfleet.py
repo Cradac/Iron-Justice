@@ -14,7 +14,7 @@ class IronFleet:
     
     @isIronFleet()
     @isMod()
-    @commands.command(pass_context=True, hidden=True, aliases=["member"])
+    @commands.command(pass_context=True, hidden=True, aliases=["member"], brief="This roles grant a player basic member status.", description="mod-command:Membership\nTo use this command tag a member or type his full name. His 'Stowaway' role will be removed and he will receive the ranks of 'Member' and 'Fledgling'.\n\n aliases:")
     async def membership(self, ctx, member):
         server = ctx.message.server
         msg = ctx.message
