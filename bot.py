@@ -10,7 +10,7 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 from discord import HTTPException
 import asyncio
-#import re
+import math
 import sys
 import sqlite3
 from sqlite3 import Error 
@@ -21,6 +21,7 @@ from guilds import Guilds
 from member import Members
 from checks import isMod, isAdmin, isGod
 from checks import servers
+from checks import create_connection, db_file
 
 
 Client = discord.Client()
@@ -29,21 +30,12 @@ client = commands.Bot(command_prefix = ["?", "!"], description="This is the Iron
 bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = "116222914327478274"
 welcome = "479301249351548928"
-db_file = "JusticeDB.db"
 
 client.dictGuilds = {}
 
 extensions = ["lfc", "profile", "ironfleet"]
 
-#connecting to db
-def create_connection(db_file):
-    """ create a database connection to a SQLite database """
-    try:
-        conn = sqlite3.connect(db_file)
-        return conn
-    except Error as e:
-        print(e)
-    return None
+
 
 ##########################################################################################################################################
 
@@ -232,6 +224,7 @@ async def setup(ctx):
 		try:
 			print((guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para))
 			cur.execute("UPDATE guilds SET guild_id='{}', guild_name='{}', enabled='{}', lfc_channels='{}', profile_channels='{}' WHERE guild_id='{}';".format(guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para, guild_id))
+			cur.commit()
 			client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled, lfc_channels, profile_channels)
 			await client.say("Setup complete!")
 		except:
@@ -251,28 +244,37 @@ async def id(ctx, mention):
 	memberID = ctx.message.mentions[0].id
 	await client.say("{}'s ID is `{}`".format(memberName, memberID))
 
-@client.command(pass_context=True, brief="Return every member of a role.", description=">>>Who is\nGet a list of members who are in a certain role.\n\nAliases:")
-async def whois(ctx, *rolename):
-	rolename = " ".join(rolename)
+@client.command(pass_context=True, brief="Return every member of a role.", description=">>>Who is\nGet a list of members who are in a certain role.\nPLEASE WRAP ROLES WITH SPACES IN QUOTATIONMARKS!\n\nAliases:")
+async def whois(ctx, rolename : str, page : int=1 ):
 	role = discord.utils.get(ctx.message.server.roles, name=rolename)
 	if role == None:
 		client.say("This is not a valid role name.")
 		return
-	users = ""
+	users = []
 	members = ctx.message.server.members
 	for member in members:
 		if role in member.roles:
-			users += "%s\n" % member.mention
-	if len(users) > 1000:
-		client.say("There are too many users in this role. Try another.")
-		return
-	title = "Users with the role '%s'" % role.name
-	emb=discord.Embed(color=0xffd700, timestamp=datetime.datetime.utcnow(), title=title, description=users)
+			users.append(int(member.id))
+	users.sort()
+	sumpages=math.ceil(len(users)/20)
+	if page > sumpages:
+		page = sumpages
+	pagestart = (page * 20)-20
+	pageend = pagestart + 19
+	desctext = f"({len(users)} in total)\n"
+	for i in range(pagestart, pageend):
+		try:
+			desctext += ctx.message.server.get_member(str(users[i])).mention + "\n"
+		except IndexError:
+			break
+
+	title = f"__Users with the role '{role.name}':__"
+	emb=discord.Embed(color=0xffd700, timestamp=datetime.datetime.utcnow(), title=title, description=desctext)
 	if member.avatar_url == "":
 		emb.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.default_avatar_url)
 	else:
 		emb.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.avatar_url)
-	emb.set_footer()
+	emb.set_footer(text=f"Page {page}/{sumpages}")
 	await client.say(embed=emb)
 
 ##########################################################################################################################################

@@ -1,8 +1,10 @@
 import discord
 from discord.ext import commands
 import asyncio
-import checks
+import sqlite3
+from sqlite3 import Error 
 from checks import isGod, isAdmin, isMod, isIronFleet
+from checks import create_connection, db_file
 
 
 
@@ -37,6 +39,16 @@ class IronFleet:
     @commands.command(pass_context=True, hidden=True)
     async def serverid(self, ctx):
         await self.client.say("Server ID: `{}`".format(ctx.message.server.id))
+
+    @isGod()
+    @commands.command(hidden=True)
+    async def sql(self, *query : str):
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            cur.execute(query)
+            cur.commit()
+
 
 
 
