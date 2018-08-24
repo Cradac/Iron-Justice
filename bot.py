@@ -237,7 +237,7 @@ async def ban(ctx, banID):
 	await client.ban(member, 7)
 	await client.say("Just banned '{}'`{}`".format(member.name, member.id))
 
-@isAdmin()
+@isMod()
 @client.command(pass_context=True, hidden=True)
 async def id(ctx, mention):
 	memberName = ctx.message.mentions[0].display_name
