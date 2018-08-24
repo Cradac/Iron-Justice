@@ -1,0 +1,37 @@
+{
+  "embed": {
+    "description": "Excelsior! It seems @MazLad has drunkenly washed ashore onto The Iron Islands!  Our forces have reached 32 strong!\nIf you come for Sea of Thieves please head [here](https://www.seaofthieves.com/forum/topic/30248/the-iron-fleet-official-recruitment-thread-economy-wages-market-gambling-rpg-discord-community/1176) to apply on the offcial forum!",
+    "color": 16766720,
+    "timestamp": "2018-08-23T20:21:04.259Z",
+    "footer": {
+      "icon_url": "https://i.imgur.com/od8TIcs.png",
+      "text": "#32 Ironborn"
+    },
+    "thumbnail": {
+      "url": "https://i.imgur.com/od8TIcs.png"
+    },
+    "author": {
+      "name": "Cradac | Max",
+      "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
+    },
+    "fields": [
+      {
+        "name": "__Rules and Info__",
+        "value": "Please take a moment to read our #rules-and-faq  and #server-info."
+      },
+      {
+        "name": "__Pinned Messages__",
+        "value": "After you enter the server, please check out the pinned messages in each channel for explicit rule lists and channel specific bot commands. This will give you an idea of all we have to offer! If you're unsure of anything, feel free to ask anyone!"
+      },
+      {
+        "name": "__Join us!__",
+        "value": "If you'd like to join our ranks, please leave a message in #introductions  with the following information."
+      },
+      {
+        "name": "__**Your Introduction**__",
+        "value": "--**Gamertag:**\n--**Age:**\n--**Platform:**\n--**Other** *(anything else about yourself you'd like to share)* :"
+      
+      }
+    ]
+  }
+}
