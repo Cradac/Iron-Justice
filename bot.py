@@ -96,15 +96,15 @@ async def on_message(message):
 		await client.process_commands(message)
 
 @client.event
-async def on_command_error(ctx, error):
-    if not isinstance(error, commands.errors.CheckFailure) or not isinstance(error, commands.errors.CommandNotFound):
-        try:
-            raise error
-        except Exception as error:
-            tb = traceback.format_exc()
-            print(error, tb)
-    else:
-        pass
+async def on_command_error(error, ctx):
+	if isinstance(error, commands.CheckFailure) or isinstance(error, commands.CommandNotFound):
+		pass
+	else:
+		try:
+			raise error
+		except Exception as error:
+			tb = traceback.format_exc()
+			print(error, tb)
 
 @client.event
 async def on_server_join(server):
