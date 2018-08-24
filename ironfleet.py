@@ -3,7 +3,7 @@ from discord.ext import commands
 import asyncio
 import sqlite3
 from sqlite3 import Error 
-from checks import isGod, isAdmin, isMod, isIronFleet
+from checks import isGod, isAdmin, isMod, isIronFleet, isCrimson, crimson_id
 from checks import create_connection, db_file
 
 
@@ -48,6 +48,16 @@ class IronFleet:
             cur = conn.cursor()
             cur.execute(query)
             cur.commit()
+
+    @isCrimson()
+    @isIronFleet()
+    @commands.command(pass_context=True, hidden=True)
+    async def crewup(self, ctx, *name : str):
+        member = ctx.message.mentions[0]
+        await self.client.add_roles(member, discord.utils.get(ctx.message.server.roles, id="482646954829152256"))
+        await self.client.send_message(ctx.message.server.get_member(crimson_id), f"{member.mention} just joined your crew!")
+
+
 
 
 
