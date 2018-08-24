@@ -2,7 +2,7 @@ import discord
 from guilds import Guilds
 from discord.ext import commands
 god = "116222914327478274"
-
+servers=["479300072077787160","421650482176589835"]
 
 
 def isGod():
@@ -43,21 +43,9 @@ def matchprofilechannel():
 		return False
 	return commands.check(does_it_match)
 
-
-
-# def isMod(usr):
-# 	for role in usr.roles:
-# 		if role.permissions.kick_members:
-# 			return True
-# 	return False
-
-# def isAdmin(usr):
-# 	for role in usr.roles:
-# 		if role.permissions.administrator:
-# 			return True
-# 	return False
-
-# def isGod(usr):
-# 	if usr.id == god:
-# 		return True
-# 	return False
+def isIronFleet():
+    def inServer(ctx):
+        if ctx.message.server.id in servers:
+            return True
+        return False
+    return commands.check(inServer)

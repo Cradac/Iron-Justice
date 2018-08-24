@@ -2,15 +2,9 @@ import discord
 from discord.ext import commands
 import asyncio
 import checks
-from checks import isGod, isAdmin, isMod
+from checks import isGod, isAdmin, isMod, isIronFleet
 
-servers=["479300072077787160","421650482176589835"]
-def isIronFleet():
-    def inServer(ctx):
-        if ctx.message.server.id in servers:
-            return True
-        return False
-    return commands.check(inServer)
+
 
 class IronFleet:
     def __init__(self, client):
