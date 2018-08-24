@@ -20,7 +20,7 @@ import traceback
 from guilds import Guilds
 from member import Members
 from checks import isMod, isAdmin, isGod
-from ironfleet import servers
+from checks import servers
 
 
 Client = discord.Client()
