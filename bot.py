@@ -23,11 +23,13 @@ from checks import isMod, isAdmin, isGod
 from checks import servers
 from checks import create_connection, db_file
 
+print(sys.version)
+
 
 Client = discord.Client()
-client = commands.Bot(command_prefix = ["?", "!", "."], description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron")
-#bot_token = sys.argv[1]
-bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
+client = commands.Bot(command_prefix = ["?", "!"], description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron")
+bot_token = sys.argv[1]
+#bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = "116222914327478274"
 welcome = "479301249351548928"
 
@@ -53,6 +55,11 @@ async def on_ready():
 	with conn:
 		cur = conn.cursor()
 		try:
+			cur.execute("SELECT guild_id FROM guilds;")
+			guilds = cur.fetchall()
+			for server in client.servers:
+				if server.id not in guilds:
+					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
 			cur.execute("SELECT * FROM guilds")
 			rows = cur.fetchall()
 			for row in rows:
@@ -70,10 +77,10 @@ async def on_ready():
 			print("Successfully imported all Guilds.")
 		except:
 			print("Fatal error or some shit.")
-		# for guildID in dictGuilds.keys():
-		# 	print(guildID)
-		# for guild in dictGuilds.values():
-		# 	print(guild.guild_name, guild.guild_id, guild.enabled, guild.lfc_channels, guild.profile_channels)
+		for guildID in client.dictGuilds.keys():
+			print(guildID)
+		for guild in client.dictGuilds.values():
+			print(guild.guild_name, guild.guild_id, guild.enabled, guild.lfc_channels, guild.profile_channels)
 
 @client.event
 async def on_message(message):
@@ -86,7 +93,7 @@ async def on_message(message):
 		#command=message.content.lower().split()[0]
 		#message.content=command+message.content[len(command):]
 		await client.process_commands(message)
-
+'''
 @client.event
 async def on_command_error(error, ctx):
 	if isinstance(error, commands.CheckFailure) or isinstance(error, commands.CommandNotFound):
@@ -97,6 +104,7 @@ async def on_command_error(error, ctx):
 		except Exception as error:
 			tb = traceback.format_exc()
 			print(error, tb)
+'''
 
 @client.event
 async def on_server_join(server):
@@ -126,7 +134,6 @@ async def on_member_join(member):
 		embed.set_author(name=member.display_name,icon_url=member.default_avatar_url)
 	else:
 		embed.set_author(name=member.display_name,icon_url=member.avatar_url)
-	print(member.name, member.display_name)
 	embed.set_thumbnail(url="https://i.imgur.com/od8TIcs.png")
 	footertext = "#{} Ironborn".format(member_count)
 	embed.set_footer(text=footertext, icon_url="https://i.imgur.com/od8TIcs.png") #482296103740375051

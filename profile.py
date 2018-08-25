@@ -120,7 +120,7 @@ class Profile:
                 await self.client.say(embed=embed)
 
     @matchprofilechannel()
-    @commands.command(pass_context=True, brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh = Gold Hoarders\noos = Order of Souls\nma = Merchant Aliance\naf(optional) = Athena's Fortune\n\nAliases:")
+    @commands.command(pass_context=True, aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh = Gold Hoarders\noos = Order of Souls\nma = Merchant Aliance\naf(optional) = Athena's Fortune\n\nAliases:")
     async def levels(self, ctx, gh:int=0, oos:int=0, ma:int=0, af:int=None):
         #if ctx.message.channel.name == "crew-ledger":
         if 0< gh <=50 and 0< oos <=50 and 0 < ma <=50:	

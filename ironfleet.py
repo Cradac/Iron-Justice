@@ -56,6 +56,14 @@ class IronFleet:
         member = ctx.message.mentions[0]
         await self.client.add_roles(member, discord.utils.get(ctx.message.server.roles, id="482646954829152256"))
         await self.client.send_message(ctx.message.server.get_member(crimson_id), "{} just joined your crew!".format(member.mention))
+    
+    @isAdmin()
+    @commands.command(pass_context=True, hidden=True)
+    async def leave_server(self, ctx):
+        server = ctx.message.server
+        await self.client.leave_server(server)
+        print("Left Server {} ({}).".format(server.name, server.id))
+    
 
 
 
