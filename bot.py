@@ -55,38 +55,38 @@ async def on_ready():
 	conn = create_connection(db_file)
 	with conn:
 		cur = conn.cursor()
-		#try:
-		cur.execute("SELECT guild_id FROM guilds;")
-		guilds = cur.fetchall()
-		guildIDlist = []
-		for guild in guilds:
-			guildIDlist.append(guild[0])
-		for server in client.servers:
-			if server.id not in guildIDlist:
-				cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
-				conn.commit()
-		cur.execute("SELECT * FROM guilds")
-		rows = cur.fetchall()
-		for row in rows:
-			guild_id = row[0]
-			guild_name = row[1]
-			lfc_channels = []
-			profile_channels = []
-			if row[2] is not None:
-				enabled = row[2].split(",")
-				enabled_dict = {"lfc" : enabled[0], "profile" : enabled[1]}
-			else:
-				enabled_dict = {}
-			if row[3] is not None:
-				for el in row[3].split(","):
-					lfc_channels.append(el)
-			if row[4] is not None:
-				for el in row[4].split(","):
-					profile_channels.append(el)
-			client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
-		print("Successfully imported all Guilds.")
-		#except:
-		#	print("Fatal error or some shit.")
+		try:
+			cur.execute("SELECT guild_id FROM guilds;")
+			guilds = cur.fetchall()
+			guildIDlist = []
+			for guild in guilds:
+				guildIDlist.append(guild[0])
+			for server in client.servers:
+				if server.id not in guildIDlist:
+					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
+					conn.commit()
+			cur.execute("SELECT * FROM guilds")
+			rows = cur.fetchall()
+			for row in rows:
+				guild_id = row[0]
+				guild_name = row[1]
+				lfc_channels = []
+				profile_channels = []
+				if row[2] is not None:
+					enabled = row[2].split(",")
+					enabled_dict = {"lfc" : enabled[0], "profile" : enabled[1]}
+				else:
+					enabled_dict = {}
+				if row[3] is not None:
+					for el in row[3].split(","):
+						lfc_channels.append(el)
+				if row[4] is not None:
+					for el in row[4].split(","):
+						profile_channels.append(el)
+				client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
+			print("Successfully imported all Guilds.")
+		except:
+			print("Fatal error or some shit.")
 		#for guildID in client.dictGuilds.keys():
 		#	print(guildID)
 		#for guild in client.dictGuilds.values():
@@ -103,7 +103,7 @@ async def on_message(message):
 		#command=message.content.lower().split()[0]
 		#message.content=command+message.content[len(command):]
 		await client.process_commands(message)
-'''
+
 @client.event
 async def on_command_error(error, ctx):
 	if isinstance(error, commands.CheckFailure) or isinstance(error, commands.CommandNotFound):
@@ -114,7 +114,7 @@ async def on_command_error(error, ctx):
 		except Exception as error:
 			tb = traceback.format_exc()
 			print(error, tb)
-'''
+
 
 @client.event
 async def on_server_join(server):
@@ -238,6 +238,14 @@ async def setup(ctx):
 	conn = create_connection(db_file)
 	with conn:
 		cur = conn.cursor()
+		cur.execute("SELECT guild_id FROM guilds;")
+		guilds = cur.fetchall()
+		guildIDlist = []
+		for guild in guilds:
+			guildIDlist.append(guild[0])
+		if ctx.message.server.id not in guildIDlist:
+			server = ctx.message.server
+			cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
 		try:
 			print((guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para))
 			cur.execute("UPDATE guilds SET guild_id='{}', guild_name='{}', enabled='{}', lfc_channels='{}', profile_channels='{}' WHERE guild_id='{}';".format(guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para, guild_id))
