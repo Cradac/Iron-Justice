@@ -28,12 +28,13 @@ print(sys.version)
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = ["?", "!"], description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron")
-bot_token = sys.argv[1]
-#bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
+#bot_token = sys.argv[1]
+bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = "116222914327478274"
 welcome = "479301249351548928"
 
 client.dictGuilds = {}
+serverids = []
 
 extensions = ["lfc", "profile", "ironfleet"]
 
@@ -54,33 +55,42 @@ async def on_ready():
 	conn = create_connection(db_file)
 	with conn:
 		cur = conn.cursor()
-		try:
-			cur.execute("SELECT guild_id FROM guilds;")
-			guilds = cur.fetchall()
-			for server in client.servers:
-				if server.id not in guilds:
-					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
-			cur.execute("SELECT * FROM guilds")
-			rows = cur.fetchall()
-			for row in rows:
-				guild_id = row[0]
-				guild_name = row[1]
-				lfc_channels = []
-				profile_channels = []
+		#try:
+		cur.execute("SELECT guild_id FROM guilds;")
+		guilds = cur.fetchall()
+		guildIDlist = []
+		for guild in guilds:
+			guildIDlist.append(guild[0])
+		for server in client.servers:
+			if server.id not in guildIDlist:
+				cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
+				conn.commit()
+		cur.execute("SELECT * FROM guilds")
+		rows = cur.fetchall()
+		for row in rows:
+			guild_id = row[0]
+			guild_name = row[1]
+			lfc_channels = []
+			profile_channels = []
+			if row[2] is not None:
 				enabled = row[2].split(",")
 				enabled_dict = {"lfc" : enabled[0], "profile" : enabled[1]}
+			else:
+				enabled_dict = {}
+			if row[3] is not None:
 				for el in row[3].split(","):
 					lfc_channels.append(el)
+			if row[4] is not None:
 				for el in row[4].split(","):
 					profile_channels.append(el)
-				client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
-			print("Successfully imported all Guilds.")
-		except:
-			print("Fatal error or some shit.")
-		for guildID in client.dictGuilds.keys():
-			print(guildID)
-		for guild in client.dictGuilds.values():
-			print(guild.guild_name, guild.guild_id, guild.enabled, guild.lfc_channels, guild.profile_channels)
+			client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
+		print("Successfully imported all Guilds.")
+		#except:
+		#	print("Fatal error or some shit.")
+		#for guildID in client.dictGuilds.keys():
+		#	print(guildID)
+		#for guild in client.dictGuilds.values():
+		#	print(guild.guild_name, guild.guild_id, guild.enabled, guild.lfc_channels, guild.profile_channels)
 
 @client.event
 async def on_message(message):
