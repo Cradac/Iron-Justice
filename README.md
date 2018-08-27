@@ -23,4 +23,4 @@ In the profile you can add your XBox Gamertag, your levels with the Trading Comp
 
 At first you have to create a profile by typing `?profile`. This will add you to the Database.
 
-After you've done that you can add your Gamertag with `?gt <gamertag>` and your levels with the command `?levels <gh> <oos> <ma> [af]`. The Athena's Fortune levels are optional to update in
+After you've done that you can add your Gamertag with `?gt <gamertag>` and your levels with the command `?levels <gh> <oos> <ma> [af]`. The Athena's Fortune levels are optional to update.
