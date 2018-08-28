@@ -28,7 +28,6 @@ class Profile:
     @matchprofilechannel()
     @commands.command(pass_context=True, brief="Shows your Player Profile.", description=">>>Profile:\nThis shows your player profile.\nAdd your XBox Profile name with '!gt <Your Gamertag>'.\nYou can update your levels with '!levels <GH> <OOS> <MA> [AF]'.\nIf you tag a player after '!profile [member]' you can see his/her profile.\n\nAliases:")
     async def profile(self, ctx, member:discord.Member=None):
-        #if ctx.message.channel.name == "crew-ledger":
         if member is None:
             member = ctx.message.author
         fr = member.top_role.name
@@ -54,7 +53,7 @@ class Profile:
                     embed.set_author(name=member.name,icon_url=member.default_avatar_url)
                 else:
                     embed.set_author(name=member.name,icon_url=member.avatar_url)
-                embed.set_thumbnail(url="https://i.imgur.com/od8TIcs.png")
+                embed.set_thumbnail(url=ctx.message.server.icon_url) #"https://i.imgur.com/od8TIcs.png"
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 if pname != "none":
                     embed.add_field(name="<:pirate_flag:411530494857969685> Pirate Name", value=pname, inline=False)
