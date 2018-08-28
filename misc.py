@@ -11,59 +11,50 @@ class Misc:
         self.client = client
 
     @isAdmin()
-    @commands.command(pass_context=True, aliases=["guildinfo"])
+    @commands.command(pass_context=True, aliases=["guildinfo"], brief="Gives Admin Information about this server and this bots setup")
     async def serverinfo(self, ctx):
         guild = ctx.message.server
         member = ctx.message.author
-        icon = "https://cdn.discordapp.com/{}/{}.png".format(guild.id, guild.icon)
+        icon = guild.icon_url
         embed = discord.Embed(
             colour=discord.Colour(0xffd700), 
             timestamp=datetime.datetime.utcnow())
-
         embed.set_thumbnail(url=icon)
         if member.avatar_url == "":
             embed.set_author(name=member.display_name,icon_url=member.default_avatar_url)
         else:
             embed.set_author(name=member.display_name,icon_url=member.avatar_url)
         embed.set_footer(text=guild.name, icon_url=icon)
-        print(icon)
+        #print(icon)
         server_info = "**Server Name:** `{}`\n**Server ID:** `{}`\n**Owner:** {}\n**Member Count:** {}".format(guild.name, guild.id, guild.owner.mention, guild.member_count)
-        print(server_info)
+        #print(server_info)
         embed.add_field(name="__Server Info__", value=server_info, inline=False)
         lfc_enabled = ctx.bot.dictGuilds[ctx.message.server.id].enabled["lfc"]
-        lfc_text = ""
-        # if lfc_enabled == "True":
-        #     print(1)
-        #     lfc_text += "in:\n"
-        #     lfc_channels = ctx.bot.dictGuilds[ctx.message.server.id].lfc_channels
-        #     for channel in lfc_channels:
-        #         ch = discord.utils.get(ctx.message.server.channels, id=channel)
-        #         lfc_text += "{}, ".format(ch.mention)            
-        if lfc_enabled:
+        lfc_text = ""           
+        if lfc_enabled == "True":
             lfc_text = "`enabled` in:\n"
             lfc_channels = ctx.bot.dictGuilds[ctx.message.server.id].lfc_channels
             for channel in lfc_channels:
                 ch = discord.utils.get(ctx.message.server.channels, id=channel)
-                lfc_text += "{}, ".format(ch.mention)
+                if ch is not None:
+                    lfc_text += "{}, ".format(ch.mention)
             lfc_text = lfc_text[:-2]
         else:
             lfc_text = "`disabled`"
-        print(lfc_text)
         embed.add_field(name="__LFC-Module__", value=lfc_text, inline=True)
 
         profile_enabled = ctx.bot.dictGuilds[ctx.message.server.id].enabled["profile"]
-        profile_text = ""          
-        if profile_enabled:
+        profile_text = ""      
+        if profile_enabled == "True":
             profile_text = "`enabled` in:\n"
             profile_channels = ctx.bot.dictGuilds[ctx.message.server.id].profile_channels
             for channel in profile_channels:
                 ch = discord.utils.get(ctx.message.server.channels, id=channel)
-                profile_text += "{}, ".format(ch.mention)
+                if ch is not None:
+                    profile_text += "{}, ".format(ch.mention)
             profile_text = profile_text[:-2]
         else:
             profile_text = "`disabled`"
-        
-        print(profile_text)
         embed.add_field(name="__Profile-Module__", value=profile_text, inline=True)
 
         await self.client.say(embed=embed)

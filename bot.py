@@ -10,7 +10,6 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 from discord import HTTPException
 import asyncio
-import math
 import sys
 import sqlite3
 from sqlite3 import Error 
@@ -36,7 +35,7 @@ welcome = "479301249351548928"
 client.dictGuilds = {}
 serverids = []
 
-extensions = ["lfc", "profile", "ironfleet"]
+extensions = ["lfc", "profile", "ironfleet", "misc"]
 
 
 
@@ -95,13 +94,18 @@ async def on_ready():
 @client.event
 async def on_message(message):
 	server=message.server
-	log_channel = discord.utils.get(server.channels, name="message-log")
+	try:
+		log_channel = discord.utils.get(server.channels, name="message-log")
+	except:
+		await client.process_commands(message)
+		return
+	if log_channel is None:
+		await client.process_commands(message)
+		return
 	if message.author.id != client.user.id and not message.author.bot:
 		await client.send_message(log_channel, "{}`{}` just said in {}: *'{}'*".format(message.author.name, message.author.id, message.channel.mention, message.clean_content.replace("@","")))
 		for att in message.attachments:
 			await client.send_message(log_channel, att.get("url"))
-		#command=message.content.lower().split()[0]
-		#message.content=command+message.content[len(command):]
 		await client.process_commands(message)
 
 @client.event
@@ -118,15 +122,16 @@ async def on_command_error(error, ctx):
 
 @client.event
 async def on_server_join(server):
-	client.send_message(server.owner, "Hey! I am the Iron Fleet's iron Justice Bot, specifically for Discord Servers of Sea of Thieves Fleets. If you have any questions write a message `Cradac | #2614`.\nTo set up the bot for your server type `!setup` (best in an admin-exclusive room) and go through the installation wizard. \n**Please ensure the bot has sufficient right, at least for the setup!**\n Enjoy!")
+	await client.send_message(server.owner, "Hey! I am the Iron Fleet's Iron Justice Bot, specifically for Discord Servers of *Sea of Thieves* Fleets. If you have any questions write a message `Cradac | #2614` or type `?help [command|module]`.\nTo set up the bot for your server type `?setup` (best in an admin-exclusive room) and go through the installation wizard. \n**Please ensure the bot has sufficient rights, at least for the setup!**\nYou can set up a message logger by createing a channel called `#message-log`. The bot must be able to see and write in it. This channels should be at least Moderator exclusive!\nEnjoy!")
 	conn = create_connection(db_file)
+	await client.create_role(server, name="lfc", mentionable=True, colour=discord.Color(0xFFFFFF))
 	with conn:
 		cur = conn.cursor()
 		cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
 
 @client.event
 async def on_member_join(member):
-	if not member.server.id in servers:
+	if not member.server.id in servers or member.bot:
 		return
 	welcome_channel = discord.utils.get(member.server.channels, id=welcome)
 	rules_channel = discord.utils.get(member.server.channels, id="479301263461449768")
@@ -156,7 +161,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_member_remove(member):
-	if not member.server.id in servers:
+	if not member.server.id in servers or member.bot:
 		return
 	channel = discord.utils.get(member.server.channels, id=welcome)
 	await client.send_message(channel, "Oh my, **{}** lost their senses during a storm and drowned. Not worthy of being called an Ironborn! What is dead may never die!".format(member.display_name))
@@ -254,53 +259,6 @@ async def setup(ctx):
 			await client.say("Setup complete!")
 		except:
 		 	await client.say("Something went terribly wrong.")
-
-@isMod()
-@client.command(pass_context=True, hidden=True, brief="Bans a member by ID.", description=">>>Ban\n Ban a member just by user ID.\n\n Usage:")
-async def ban(ctx, banID):
-	member = discord.utils.get(ctx.message.server.members, id=banID)
-	await client.ban(member, 7)
-	await client.say("Just banned '{}'`{}`".format(member.name, member.id))
-
-@isMod()
-@client.command(pass_context=True, hidden=True)
-async def id(ctx, mention):
-	memberName = ctx.message.mentions[0].display_name
-	memberID = ctx.message.mentions[0].id
-	await client.say("{}'s ID is `{}`".format(memberName, memberID))
-
-@client.command(pass_context=True, brief="Return every member of a role.", description=">>>Who is\nGet a list of members who are in a certain role.\nPLEASE WRAP ROLES WITH SPACES IN QUOTATIONMARKS!\n\nAliases:")
-async def whois(ctx, rolename : str, page : int=1 ):
-	role = discord.utils.get(ctx.message.server.roles, name=rolename)
-	if role == None:
-		client.say("This is not a valid role name.")
-		return
-	users = []
-	members = ctx.message.server.members
-	for member in members:
-		if role in member.roles:
-			users.append(int(member.id))
-	users.sort()
-	sumpages=math.ceil(len(users)/20)
-	if page > sumpages:
-		page = sumpages
-	pagestart = (page * 20)-20
-	pageend = pagestart + 19
-	desctext = "({} in total)\n".format(str(len(users)))
-	for i in range(pagestart, pageend):
-		try:
-			desctext += ctx.message.server.get_member(str(users[i])).mention + "\n"
-		except IndexError:
-			break
-
-	title = "__Users with the role '{}':__".format(role.name)
-	emb=discord.Embed(color=0xffd700, timestamp=datetime.datetime.utcnow(), title=title, description=desctext)
-	if member.avatar_url == "":
-		emb.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.default_avatar_url)
-	else:
-		emb.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.avatar_url)
-	emb.set_footer(text="Page {}/{}".format(page, sumpages))
-	await client.say(embed=emb)
 
 ##########################################################################################################################################
 
