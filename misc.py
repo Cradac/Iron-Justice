@@ -25,9 +25,7 @@ class Misc:
         else:
             embed.set_author(name=member.display_name,icon_url=member.avatar_url)
         embed.set_footer(text=guild.name, icon_url=icon)
-        #print(icon)
         server_info = "**Server Name:** `{}`\n**Server ID:** `{}`\n**Owner:** {}\n**Member Count:** {}".format(guild.name, guild.id, guild.owner.mention, guild.member_count)
-        #print(server_info)
         embed.add_field(name="__Server Info__", value=server_info, inline=False)
         lfc_enabled = ctx.bot.dictGuilds[ctx.message.server.id].enabled["lfc"]
         lfc_text = ""           
