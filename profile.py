@@ -14,7 +14,7 @@ class Profile:
     def __init__(self, client):
         self.client = client	
 
-    #connecting to db
+    #connecting to db 
     def create_connection(self, db_file):
         """ create a database connection to a SQLite database """
         try:
