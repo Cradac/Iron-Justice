@@ -53,7 +53,8 @@ class Profile:
                     embed.set_author(name=member.name,icon_url=member.default_avatar_url)
                 else:
                     embed.set_author(name=member.name,icon_url=member.avatar_url)
-                embed.set_thumbnail(url=ctx.message.server.icon_url) #"https://i.imgur.com/od8TIcs.png"
+                guild = ctx.message.server
+                embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 if pname != "none":
                     embed.add_field(name="<:pirate_flag:411530494857969685> Pirate Name", value=pname, inline=False)

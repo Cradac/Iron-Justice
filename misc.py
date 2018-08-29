@@ -15,7 +15,7 @@ class Misc:
     async def serverinfo(self, ctx):
         guild = ctx.message.server
         member = ctx.message.author
-        icon = guild.icon_url
+        icon = "https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)
         embed = discord.Embed(
             colour=discord.Colour(0xffd700), 
             timestamp=datetime.datetime.utcnow())
