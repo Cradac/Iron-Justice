@@ -145,9 +145,9 @@ async def on_member_join(member):
 		timestamp=datetime.datetime.utcnow()
 	)
 	if member.avatar_url == "":
-		embed.set_author(name=member.display_name,icon_url=member.default_avatar_url)
+		embed.set_author(name=member.name,icon_url=member.default_avatar_url)
 	else:
-		embed.set_author(name=member.display_name,icon_url=member.avatar_url)
+		embed.set_author(name=member.name,icon_url=member.avatar_url)
 	guild = member.server
 	embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
 	footertext = "#{} Ironborn".format(member_count)
