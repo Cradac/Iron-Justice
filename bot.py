@@ -119,10 +119,9 @@ async def on_command_error(error, ctx):
 			tb = traceback.format_exc()
 			print(error, tb)
 
-
 @client.event
 async def on_server_join(server):
-	await client.send_message(server.owner, "Hey! I am the Iron Fleet's Iron Justice Bot, specifically for Discord Servers of *Sea of Thieves* Fleets. If you have any questions write a message `Cradac | #2614` or type `?help [command|module]`.\nTo set up the bot for your server type `?setup` (best in an admin-exclusive room) and go through the installation wizard. \n**Please ensure the bot has sufficient rights, at least for the setup!**\nYou can set up a message logger by createing a channel called `#message-log`. The bot must be able to see and write in it. This channels should be at least Moderator exclusive!\nEnjoy!")
+	await client.send_message(server.owner, "Hey! I am the Iron Fleet's Iron Justice Bot, specifically for Discord Servers of *Sea of Thieves* Fleets. If you have any questions write a message `Cradac | Max#2614` or type `?help [command|module]`.\nTo set up the bot for your server type `?setup` (best in an admin-exclusive room) and go through the installation wizard. \n**Please ensure the bot has sufficient rights, at least for the setup!**\nYou can set up a message logger by createing a channel called `#message-log`. The bot must be able to see and write in it. This channels should be at least Moderator exclusive!\nEnjoy!")
 	conn = create_connection(db_file)
 	await client.create_role(server, name="lfc", mentionable=True, colour=discord.Color(0xFFFFFF))
 	with conn:
