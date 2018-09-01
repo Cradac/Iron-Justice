@@ -57,6 +57,13 @@ class IronFleet:
         await self.client.add_roles(member, discord.utils.get(ctx.message.server.roles, id="482646954829152256"))
         await self.client.send_message(ctx.message.server.get_member(crimson_id), "{} just joined your crew!".format(member.mention))
 
+    @isAdmin()
+    @commands.command(pass_context=True, hidden=True)
+    async def nickname(self, ctx, member, *newname : str):
+        newname = (" ").join(newname)
+        member = ctx.message.mentions[0]
+        await self.client.change_nickname(member, newname)
+        print("{} is now called {}".format(member.name, newname))
     
 
 
