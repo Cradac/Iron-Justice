@@ -138,7 +138,7 @@ async def on_member_join(member):
 	intro_channel = discord.utils.get(member.server.channels, id="481455365192548363")
 
 	member_count = str(len(member.server.members))
-	maintext = "Excelsior! It seems **{}** has drunkenly washed ashore onto The Iron Islands!  Our forces have reached {} strong!\nIf you come for Sea of Thieves please head [here](https://www.seaofthieves.com/forum/topic/30248/the-iron-fleet-official-recruitment-thread-economy-wages-market-gambling-rpg-discord-community/1) to apply on the offcial forum!".format(member.display_name, member_count)
+	maintext = "Excelsior! It seems {} has drunkenly washed ashore onto The Iron Islands!  Our forces have reached {} strong!\nIf you come for Sea of Thieves please head [here](https://www.seaofthieves.com/forum/topic/30248/the-iron-fleet-official-recruitment-thread-economy-wages-market-gambling-rpg-discord-community/1) to apply on the official forum!".format(member.mention, member_count)
 	embed=discord.Embed(
 		color=0xffd700,
 		description=maintext,
@@ -157,6 +157,8 @@ async def on_member_join(member):
 	embed.add_field(name="__Pinned Messages__", value="After you enter the server, please check out the pinned messages in each channel for explicit rule lists and channel specific bot commands. This will give you an idea of all we have to offer! If you're unsure of anything, feel free to ask anyone!")
 	jointext = "If you'd like to join our ranks, please leave a message in {} with the following information.\n\n--**Gamertag:**\n--**Age:**\n--**Platform:**\n--**Other** *(anything else about yourself you'd like to share)*".format(intro_channel.mention)
 	embed.add_field(name="__Join us!__", value=jointext)
+	gametext = "After you applied and we've set your rank please head to {} and **react with the emoji** according to the games you play to get access to their categories!".format(info_channel.mention)
+	embed.add_field(name="__Game Access__", value=gametext)
 	await client.send_message(welcome_channel, embed=embed)
 
 @client.event

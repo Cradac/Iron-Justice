@@ -58,7 +58,7 @@ class Profile:
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 if pname != "none":
                     embed.add_field(name="<:jollyroger:481147962614087692> Pirate Name", value=pname, inline=False)
-                embed.add_field(name="<:kraken:450708726517596160> Rank", value=fr, inline=False)
+                embed.add_field(name="<:rank3:485746204727181312> Rank", value=fr, inline=False)
                 embed.add_field(name="<:gh:481147963272331284> Gold Hoarders", value=gh, inline=True)
                 embed.add_field(name="<:oos:481147963180056596> Order of Souls", value=oos, inline=True)
                 embed.add_field(name="<:ma:481147963280982017> Merchant Alliance", value=ma, inline=True)
