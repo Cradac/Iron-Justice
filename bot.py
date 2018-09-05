@@ -138,7 +138,7 @@ async def on_member_join(member):
 	intro_channel = discord.utils.get(member.server.channels, id="481455365192548363")
 
 	member_count = str(len(member.server.members))
-	maintext = "Excelsior! It seems {} has drunkenly washed ashore onto The Iron Islands!  Our forces have reached {} strong!\nIf you come for Sea of Thieves please head [here](https://www.seaofthieves.com/forum/topic/30248/the-iron-fleet-official-recruitment-thread-economy-wages-market-gambling-rpg-discord-community/1) to apply on the official forum!".format(member.mention, member_count)
+	maintext = "Excelsior! It seems {} has drunkenly washed ashore onto The Iron Islands!  Our forces have reached {} strong!\nIf you have come for Sea of Thieves please head [here](https://www.seaofthieves.com/forum/topic/30248/the-iron-fleet-official-recruitment-thread-economy-wages-market-gambling-rpg-discord-community/1) to apply on the official forum!".format(member.mention, member_count)
 	embed=discord.Embed(
 		color=0xffd700,
 		description=maintext,

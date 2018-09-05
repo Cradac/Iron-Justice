@@ -57,12 +57,12 @@ class Profile:
                 embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 if pname != "none":
-                    embed.add_field(name="<:jollyroger:481147962614087692> Pirate Name", value=pname, inline=False)
-                embed.add_field(name="<:rank3:485746204727181312> Rank", value=fr, inline=False)
-                embed.add_field(name="<:gh:481147963272331284> Gold Hoarders", value=gh, inline=True)
-                embed.add_field(name="<:oos:481147963180056596> Order of Souls", value=oos, inline=True)
-                embed.add_field(name="<:ma:481147963280982017> Merchant Alliance", value=ma, inline=True)
-                embed.add_field(name="<:af:485537460852490241> Athena's Fortune", value="{}".format(af), inline=False)
+                    embed.add_field(name="<:jollyroger:486619773875126293> Pirate Name", value=pname, inline=False)
+                embed.add_field(name="<:rank:486619774445551626> Rank", value=fr, inline=False)
+                embed.add_field(name="<:gh:486619774424449036> Gold Hoarders", value=gh, inline=True)
+                embed.add_field(name="<:oos:486619776593166336> Order of Souls", value=oos, inline=True)
+                embed.add_field(name="<:ma:486619774688952320> Merchant Alliance", value=ma, inline=True)
+                embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value="{}".format(af), inline=False)
                 embed.set_footer()
                 if img != "none":
                     embed.set_image(url=img)

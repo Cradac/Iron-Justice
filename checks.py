@@ -28,6 +28,8 @@ def isGod():
 
 def isAdmin():
 	def admincheck(ctx):
+		if ctx.message.author == ctx.message.server.owner:
+			return True
 		for role in ctx.message.author.roles:
 			if role.permissions.administrator:
 				return True
