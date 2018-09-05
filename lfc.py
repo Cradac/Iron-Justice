@@ -9,7 +9,7 @@ class LFC:
         self.client = client
 
     async def auto_remove(self, member, role):
-        await asyncio.sleep(10800)
+        await asyncio.sleep(3600)
         await self.client.remove_roles(member,role)
     
     @matchlfcchannel()
