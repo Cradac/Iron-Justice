@@ -23,14 +23,14 @@ from checks import servers
 from checks import create_connection, db_file
 
 print(sys.version)
-
+print(discord.__version__)
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = ["?", "!"], description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron")
 #bot_token = sys.argv[1]
 bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
-god = "116222914327478274"
-welcome = "479301249351548928"
+god = 116222914327478274
+welcome = 479301249351548928
 
 client.dictGuilds = {}
 serverids = []
@@ -45,11 +45,11 @@ extensions = ["lfc", "profile", "ironfleet", "misc"]
 @client.event
 async def on_ready():
 	print("Bot is ready!")
-	await client.change_presence(game=discord.Game(name="the Iron Price"))
+	await client.change_presence(activity=discord.Game(name="the Iron Price"))
 	print("Logged in as: " + client.user.name)
 	print("Bot ID: "+client.user.id)
-	for server in client.servers:
-		print ("Connected to server: {}".format(server))
+	for guild in client.guilds:
+		print ("Connected to server: {}".format(guild))
 	print("------")
 	conn = create_connection(db_file)
 	with conn:
@@ -60,9 +60,9 @@ async def on_ready():
 			guildIDlist = []
 			for guild in guilds:
 				guildIDlist.append(guild[0])
-			for server in client.servers:
-				if server.id not in guildIDlist:
-					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
+			for guild in client.guilds:
+				if guild.id not in guildIDlist:
+					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
 					conn.commit()
 			cur.execute("SELECT * FROM guilds")
 			rows = cur.fetchall()
@@ -93,9 +93,9 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	server=message.server
+	guild=message.guild
 	try:
-		log_channel = discord.utils.get(server.channels, name="message-log")
+		log_channel = discord.utils.get(guild.channels, name="message-log")
 	except:
 		await client.process_commands(message)
 		return
@@ -103,9 +103,9 @@ async def on_message(message):
 		await client.process_commands(message)
 		return
 	if message.author.id != client.user.id and not message.author.bot:
-		await client.send_message(log_channel, "{}`{}` just said in {}: *'{}'*".format(message.author.name, message.author.id, message.channel.mention, message.clean_content.replace("@","")))
+		await log_channel.send("{}`{}` just said in {}: *'{}'*".format(message.author.name, message.author.id, message.channel.mention, message.clean_content.replace("@","")))
 		for att in message.attachments:
-			await client.send_message(log_channel, att.get("url"))
+			await log_channel.send(att.get("url"))
 		await client.process_commands(message)
 
 @client.event
@@ -120,24 +120,24 @@ async def on_command_error(error, ctx):
 			print(error, tb)
 
 @client.event
-async def on_server_join(server):
-	await client.send_message(server.owner, "Hey! I am the Iron Fleet's Iron Justice Bot, specifically for Discord Servers of *Sea of Thieves* Fleets. If you have any questions write a message `Cradac | Max#2614` or type `?help [command|module]`.\nTo set up the bot for your server type `?setup` (best in an admin-exclusive room) and go through the installation wizard. \n**Please ensure the bot has sufficient rights, at least for the setup!**\nYou can set up a message logger by createing a channel called `#message-log`. The bot must be able to see and write in it. This channels should be at least Moderator exclusive!\nEnjoy!")
+async def on_guild_join(guild):
+	await guild.owner.send("Hey! I am the Iron Fleet's Iron Justice Bot, specifically for Discord Servers of *Sea of Thieves* Fleets. If you have any questions write a message `Cradac | Max#2614` or type `?help [command|module]`.\nTo set up the bot for your server type `?setup` (best in an admin-exclusive room) and go through the installation wizard. \n**Please ensure the bot has sufficient rights, at least for the setup!**\nYou can set up a message logger by createing a channel called `#message-log`. The bot must be able to see and write in it. This channels should be at least Moderator exclusive!\nEnjoy!")
 	conn = create_connection(db_file)
-	await client.create_role(server, name="lfc", mentionable=True, colour=discord.Color(0xFFFFFF))
+	await guild.create_role(name="lfc", mentionable=True, colour=discord.Color(0xFFFFFF))
 	with conn:
 		cur = conn.cursor()
-		cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
+		cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
 
 @client.event
 async def on_member_join(member):
-	if not member.server.id in servers or member.bot:
+	if not member.guild.id in servers or member.bot:
 		return
-	welcome_channel = discord.utils.get(member.server.channels, id=welcome)
-	rules_channel = discord.utils.get(member.server.channels, id="479301263461449768")
-	info_channel = discord.utils.get(member.server.channels, id="479313811518652417")
-	intro_channel = discord.utils.get(member.server.channels, id="481455365192548363")
+	welcome_channel = discord.utils.get(member.guild.channels, id=welcome)
+	rules_channel = discord.utils.get(member.guild.channels, id=479301263461449768)
+	info_channel = discord.utils.get(member.guild.channels, id=479313811518652417)
+	intro_channel = discord.utils.get(member.guild.channels, id=481455365192548363)
 
-	member_count = str(len(member.server.members))
+	member_count = str(len(member.guild.members))
 	maintext = "Excelsior! It seems {} has drunkenly washed ashore onto The Iron Islands!  Our forces have reached {} strong!\nIf you have come for Sea of Thieves please head [here](https://www.seaofthieves.com/forum/topic/30248/the-iron-fleet-official-recruitment-thread-economy-wages-market-gambling-rpg-discord-community/1) to apply on the official forum!".format(member.mention, member_count)
 	embed=discord.Embed(
 		color=0xffd700,
@@ -148,7 +148,7 @@ async def on_member_join(member):
 		embed.set_author(name=member.name,icon_url=member.default_avatar_url)
 	else:
 		embed.set_author(name=member.name,icon_url=member.avatar_url)
-	guild = member.server
+	guild = member.guild
 	embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
 	footertext = "#{} Ironborn".format(member_count)
 	embed.set_footer(text=footertext, icon_url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
@@ -159,46 +159,46 @@ async def on_member_join(member):
 	embed.add_field(name="__Join us!__", value=jointext)
 	gametext = "After you applied and we've set your rank please head to {} and **react with the emoji** according to the games you play to get access to their categories!".format(info_channel.mention)
 	embed.add_field(name="__Game Access__", value=gametext)
-	await client.send_message(welcome_channel, embed=embed)
+	await welcome_channel.send(embed=embed)
 
 @client.event
 async def on_member_remove(member):
-	if not member.server.id in servers or member.bot:
+	if not member.guild.id in servers or member.bot:
 		return
-	channel = discord.utils.get(member.server.channels, id=welcome)
-	await client.send_message(channel, "Oh my, **{}** lost their senses during a storm and drowned. Not worthy of being called an Ironborn! What is dead may never die!".format(member.display_name))
+	channel = discord.utils.get(member.guild.channels, id=welcome)
+	await channel.send("Oh my, **{}** lost their senses during a storm and drowned. Not worthy of being called an Ironborn! What is dead may never die!".format(member.display_name))
 
 ##########################################################################################################################################
 
 
 @isAdmin()
-@client.command(pass_context=True, hidden=True, brief="This command takes you through a small install wizard for this bot.", description="This command takes you through a small install wizard for this bot.")
+@client.command(hidden=True, brief="This command takes you through a small install wizard for this bot.", description="This command takes you through a small install wizard for this bot.")
 async def setup(ctx):
 	lfc_channels=[]
 	profile_channels=[]
 	lfc_channels_para = ""
 	profile_channels_para = ""
 	
-	await client.say("Starting the setup of this bot now. **You can stop at any point by typing 'cancel' or reacting with any odd Emoji to the current Question.**")
-	msg = await client.say("Do you want to enable the 'Looking For Crew'-Helper?\n **Please react below.**")
-	await client.add_reaction(msg, "✅")
-	await client.add_reaction(msg, "❌")
+	await ctx.send("Starting the setup of this bot now. **You can stop at any point by typing 'cancel' or reacting with any odd Emoji to the current Question.**")
+	msg = await ctx.send("Do you want to enable the 'Looking For Crew'-Helper?\n **Please react below.**")
+	await msg.add_reaction("✅")
+	await msg.add_reaction("❌")
 	lfc_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
 	if lfc_enabled.reaction.emoji == "✅":
 		lfc_enabled = True
-		await client.say("LFC Module is enabled.")
+		await ctx.send("LFC Module is enabled.")
 	elif lfc_enabled.reaction.emoji == "❌":
 		lfc_enabled = False
-		await client.say("LFC Module is disabled.")
+		await ctx.send("LFC Module is disabled.")
 	else:
-		await client.say("Canceled Setup.")
+		await ctx.send("Canceled Setup.")
 		return
 
 	if lfc_enabled:
-		await client.say("In which channels should the LFC commands be usable? **Please tag one or multiple channels you want it enabled in.**")
+		await ctx.send("In which channels should the LFC commands be usable? **Please tag one or multiple channels you want it enabled in.**")
 		msg = await client.wait_for_message(author=ctx.message.author)
 		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
-			await client.say("Canceled Setup.")
+			await ctx.send("Canceled Setup.")
 			return
 		for ch in msg.channel_mentions:
 			lfc_channels.append(ch.id)
@@ -206,25 +206,25 @@ async def setup(ctx):
 			lfc_channels_para += val + ','
 		lfc_channels_para = lfc_channels_para[:-1]
 	
-	msg = await client.say("Do you want to enable the 'Profile'-Functions?\n **Please react below.**")
-	await client.add_reaction(msg, "✅")
-	await client.add_reaction(msg, "❌")
+	msg = await ctx.send("Do you want to enable the 'Profile'-Functions?\n **Please react below.**")
+	await msg.add_reaction("✅")
+	await msg.add_reaction("❌")
 	profile_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
 	if profile_enabled.reaction.emoji == "✅":
 		profile_enabled = True
-		await client.say("Profile Module is enabled.")
+		await ctx.send("Profile Module is enabled.")
 	elif profile_enabled.reaction.emoji == "❌":
 		profile_enabled = False
-		await client.say("Profile Module is disabled.")
+		await ctx.send("Profile Module is disabled.")
 	else:
-		await client.say("Canceled Setup.")
+		await ctx.send("Canceled Setup.")
 		return
 
 	if profile_enabled:
-		await client.say("In which channels should the Profile commands be usable?** Please tag one or multiple channels you want it enabled in.**")
+		await ctx.send("In which channels should the Profile commands be usable?** Please tag one or multiple channels you want it enabled in.**")
 		msg = await client.wait_for_message(author=ctx.message.author)
 		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
-			await client.say("Canceled Setup.")
+			await ctx.send("Canceled Setup.")
 			return
 		for ch in msg.channel_mentions:
 			profile_channels.append(ch.id)
@@ -234,8 +234,8 @@ async def setup(ctx):
 		profile_channels_para = profile_channels_para[:-1]
 	
 	enabled = {"lfc" : lfc_enabled, "profile" : profile_enabled}
-	guild_id = ctx.message.server.id
-	guild_name = ctx.message.server.name
+	guild_id = ctx.message.guild.id
+	guild_name = ctx.message.guild.name
 
 	enabled_para = ""
 	for val in enabled.values():
@@ -250,27 +250,27 @@ async def setup(ctx):
 		guildIDlist = []
 		for guild in guilds:
 			guildIDlist.append(guild[0])
-		if ctx.message.server.id not in guildIDlist:
-			server = ctx.message.server
-			cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (server.id, server.name))
+		if ctx.message.guild.id not in guildIDlist:
+			guild = ctx.message.guild
+			cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
 		try:
 			print((guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para))
 			cur.execute("UPDATE guilds SET guild_id='{}', guild_name='{}', enabled='{}', lfc_channels='{}', profile_channels='{}' WHERE guild_id='{}';".format(guild_id, guild_name, enabled_para, lfc_channels_para, profile_channels_para, guild_id))
 			conn.commit()
 			client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled, lfc_channels, profile_channels)
-			await client.say("Setup complete!")
+			await ctx.send("Setup complete!")
 		except:
-		 	await client.say("Something went terribly wrong.")
+		 	await ctx.send("Something went terribly wrong.")
 
 ##########################################################################################################################################
 
 @isGod()
-@client.command(pass_context=True, hidden=True)
+@client.command(hidden=True)
 async def kill(ctx):
 	print("Bot shutting down...")
 	await client.close()
 @isGod()
-@client.command(pass_context=True, hidden=True)
+@client.command(hidden=True)
 async def load(ctx, extension_name : str):
 	try:
 		client.load_extension(extension_name)
@@ -280,7 +280,7 @@ async def load(ctx, extension_name : str):
 	print("'{}' loaded.".format(extension_name))
 
 @isGod()
-@client.command(pass_context=True, hidden=True)
+@client.command(hidden=True)
 async def unload(ctx, extension_name : str):
 	client.unload_extension(extension_name)
 	print("'{}' unloaded.".format(extension_name))

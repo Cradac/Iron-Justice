@@ -3,9 +3,9 @@ from guilds import Guilds
 from discord.ext import commands
 import sqlite3
 from sqlite3 import Error 
-god = "116222914327478274"
-crimson_id = "116222914327478274" #"231187226288062464"
-servers=["479300072077787160","421650482176589835"]
+god = 116222914327478274
+crimson_id = 116222914327478274 #"231187226288062464"
+servers=[479300072077787160,421650482176589835]
 db_file = "JusticeDB.db"
 
 #connecting to db
@@ -28,7 +28,7 @@ def isGod():
 
 def isAdmin():
 	def admincheck(ctx):
-		if ctx.message.author == ctx.message.server.owner:
+		if ctx.message.author == ctx.message.guild.owner:
 			return True
 		for role in ctx.message.author.roles:
 			if role.permissions.administrator:
@@ -43,25 +43,25 @@ def isMod():
 				return True
 		return False
 	return commands.check(moderatorcheck)
-
+'''
 def isCrimson():
 	def crimsoncheck(ctx):
 		if ctx.message.author.id == crimson_id:
 			return True
 		return False
 	return commands.check(crimsoncheck)
-
+'''
 
 def matchlfcchannel():
 	def does_it_match(ctx):
-		if ctx.message.channel.id in ctx.bot.dictGuilds[ctx.message.server.id].lfc_channels:
+		if ctx.message.channel.id in ctx.bot.dictGuilds[ctx.message.guild.id].lfc_channels:
 			return True
 		return False
 	return commands.check(does_it_match)
 	
 def matchprofilechannel():
 	def does_it_match(ctx):
-		if ctx.message.channel.id in ctx.bot.dictGuilds[ctx.message.server.id].profile_channels:
+		if ctx.message.channel.id in ctx.bot.dictGuilds[ctx.message.guild.id].profile_channels:
 			return True
 		return False
 	return commands.check(does_it_match)
@@ -69,7 +69,7 @@ def matchprofilechannel():
 
 def isIronFleet():
     def inServer(ctx):
-        if ctx.message.server.id in servers:
+        if ctx.message.guild.id in servers:
             return True
         return False
     return commands.check(inServer)

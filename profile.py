@@ -26,7 +26,7 @@ class Profile:
 
 
     @matchprofilechannel()
-    @commands.command(pass_context=True, brief="Shows your Player Profile.", description=">>>Profile:\nThis shows your player profile.\nAdd your XBox Profile name with '!gt <Your Gamertag>'.\nYou can update your levels with '!levels <GH> <OOS> <MA> [AF]'.\nIf you tag a player after '!profile [member]' you can see his/her profile.\n\nAliases:")
+    @commands.command(brief="Shows your Player Profile.", description=">>>Profile:\nThis shows your player profile.\nAdd your XBox Profile name with '!gt <Your Gamertag>'.\nYou can update your levels with '!levels <GH> <OOS> <MA> [AF]'.\nIf you tag a player after '!profile [member]' you can see his/her profile.\n\nAliases:")
     async def profile(self, ctx, member:discord.Member=None):
         if member is None:
             member = ctx.message.author
@@ -53,7 +53,7 @@ class Profile:
                     embed.set_author(name=member.name,icon_url=member.default_avatar_url)
                 else:
                     embed.set_author(name=member.name,icon_url=member.avatar_url)
-                guild = ctx.message.server
+                guild = ctx.message.guild
                 embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 if pname != "none":
@@ -68,7 +68,7 @@ class Profile:
                     embed.set_image(url=img)
                 if gh >= 50 and oos >= 50 and ma >= 50:
                     embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
-                await self.client.say(embed=embed)
+                await ctx.send(embed=embed)
             except:
                 cur.execute("INSERT INTO users VALUES (?, ?, 0, 0, 0, 0, 'none', 'none', 'none');", (member.id, member.name))
                 conn.commit()
@@ -77,7 +77,7 @@ class Profile:
                     timestamp=datetime.datetime.utcnow(),
                     title="__Your Profile was created!__"
                 )
-                guild = ctx.message.server
+                guild = ctx.message.guild
                 icon = "https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)
                 embed.set_footer(icon_url=icon)
                 if member.avatar_url == "":
@@ -87,10 +87,10 @@ class Profile:
                 embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> [AF]`.", inline=False)
                 embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
                 embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
-                await self.client.say(embed=embed)
+                await ctx.send(embed=embed)
 
     @matchprofilechannel()
-    @commands.command(pass_context=True, aliases=["gamertag"], brief="Update your Gamertag.", description=">>>Gamertag:\nWith this command you can update your Gamertag so people can invite you easier.\n\nAliases:")
+    @commands.command(aliases=["gamertag"], brief="Update your Gamertag.", description=">>>Gamertag:\nWith this command you can update your Gamertag so people can invite you easier.\n\nAliases:")
     async def gt(self, ctx, *gamertag):
         #if ctx.message.channel.name == "crew-ledger" or ctx.message.channel.name == "looking-for-crew":
         if len(gamertag) > 0:
@@ -104,9 +104,9 @@ class Profile:
                     try:
                         cur.execute("UPDATE users SET tag = '{}' WHERE user_id = '{}'".format(gt, ctx.message.author.id))
                         conn.commit()
-                        await self.client.say("Successfully updated your Gamertag to *'{}'*.".format(gt))
+                        await ctx.send("Successfully updated your Gamertag to *'{}'*.".format(gt))
                     except:
-                        await self.client.say("Something went wrong there. Try again some time later.")
+                        await ctx.send("Something went wrong there. Try again some time later.")
                 else:
                     uid = ctx.message.mentions[0].id
                     cur.execute("SELECT tag FROM users WHERE user_id='{}'".format(uid))
@@ -118,7 +118,7 @@ class Profile:
                     embed.set_author(name=ctx.message.mentions[0].name,icon_url=ctx.message.mentions[0].avatar_url)
                     embed.add_field(name="Gamertag", value=gamertag, inline=False)
                     embed.set_footer()
-                    await self.client.say(embed=embed)
+                    await ctx.send(embed=embed)
         else: 
             conn = self.create_connection(db_file)
             with conn:
@@ -132,10 +132,10 @@ class Profile:
                 embed.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.avatar_url)
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 embed.set_footer()
-                await self.client.say(embed=embed)
+                await ctx.send(embed=embed)
 
     @matchprofilechannel()
-    @commands.command(pass_context=True, aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh = Gold Hoarders\noos = Order of Souls\nma = Merchant Aliance\naf(optional) = Athena's Fortune\n\nAliases:")
+    @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh = Gold Hoarders\noos = Order of Souls\nma = Merchant Aliance\naf(optional) = Athena's Fortune\n\nAliases:")
     async def levels(self, ctx, gh:int=0, oos:int=0, ma:int=0, af:int=None):
         #if ctx.message.channel.name == "crew-ledger":
         if 0< gh <=50 and 0< oos <=50 and 0 < ma <=50:	
@@ -148,12 +148,12 @@ class Profile:
                     else:
                         if 0<= af <=10:
                             cur.execute("UPDATE users SET gh='{}', oos='{}', ma='{}', af='{}' WHERE user_id = '{}'".format(gh, oos, ma, af, ctx.message.author.id))	
-                    await self.client.say("{}, your levels are updated.".format(ctx.message.author.mention))
+                    await ctx.send("{}, your levels are updated.".format(ctx.message.author.mention))
                 except:
-                    await self.client.say("Something went wrong. Please try again later.")
+                    await ctx.send("Something went wrong. Please try again later.")
 
     @matchprofilechannel()
-    @commands.command(pass_context=True, aliases=["image", "img"], brief="Set a picture for your profile.", description=">>>Set Image\nWith this command you can set a picture for your profile.\nMake sure your URL ends with '.png', '.jpg' or '.gif'.\nIf you want no profile picture type '!set-image none'.\n\n Aliases:")
+    @commands.command(aliases=["image", "img"], brief="Set a picture for your profile.", description=">>>Set Image\nWith this command you can set a picture for your profile.\nMake sure your URL ends with '.png', '.jpg' or '.gif'.\nIf you want no profile picture type '!set-image none'.\n\n Aliases:")
     async def set_image(self, ctx, img_url:str="none"):
         #if ctx.message.channel.name == "crew-ledger":
         if img_url.endswith(".png") or img_url.endswith(".jpg") or img_url.endswith(".gif") or img_url == "none":
@@ -163,16 +163,16 @@ class Profile:
                 try:
                     cur.execute("UPDATE users SET img_url='{}' WHERE user_id = '{}'".format(img_url, ctx.message.author.id))
                     if img_url != "none":
-                        await self.client.say("{}, your profile image was updated.".format(ctx.message.author.mention))
+                        await ctx.send("{}, your profile image was updated.".format(ctx.message.author.mention))
                     else: 
-                        await self.client.say("{}, your profile image was deleted.".format(ctx.message.author.mention))
+                        await ctx.send("{}, your profile image was deleted.".format(ctx.message.author.mention))
                 except:
-                    await self.client.say("Something went wrong. Please try again later.")
+                    await ctx.send("Something went wrong. Please try again later.")
         else: 
-            await self.client.say("The link you are submitting **has** to end with `.png`, `.jpg` or `.gif`.")
+            await ctx.send("The link you are submitting **has** to end with `.png`, `.jpg` or `.gif`.")
 
     @matchprofilechannel()
-    @commands.command(pass_context=True, aliases=["alias"], brief="Set a Piratename for your profile.", description=">>>Pirate Name\nWith this command you can set a pirate name for your profile.\nIf you want no pirate name type '!piratename none'.\n\n Aliases:")
+    @commands.command(aliases=["alias"], brief="Set a Piratename for your profile.", description=">>>Pirate Name\nWith this command you can set a pirate name for your profile.\nIf you want no pirate name type '!piratename none'.\n\n Aliases:")
     async def piratename(self, ctx, *pname):
         #if ctx.message.channel.name == "crew-ledger":
         pname = " ".join(pname)
@@ -182,11 +182,11 @@ class Profile:
             try:
                 cur.execute("UPDATE users SET pirate_name='{}' WHERE user_id = '{}'".format(pname, ctx.message.author.id))
                 if pname != "none":
-                    await self.client.say("{}, your pirate name was updated.".format(ctx.message.author.mention))
+                    await ctx.send("{}, your pirate name was updated.".format(ctx.message.author.mention))
                 else: 
-                    await self.client.say("{}, your pirate name was deleted.".format(ctx.message.author.mention))
+                    await ctx.send("{}, your pirate name was deleted.".format(ctx.message.author.mention))
             except:
-                await self.client.say("Something went wrong. Please try again later.")
+                await ctx.send("Something went wrong. Please try again later.")
 
 
 def setup(client):
