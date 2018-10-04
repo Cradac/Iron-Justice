@@ -35,6 +35,7 @@ Now to the optional things:
 Every piece of info can be reset by leaving out the arguments.
 
 **Additional info for Images:**\
-You either need to upload an image to discord with `?img` as a comment on the upload or manually upload the image to an image hoster e.g. Imgur, and get a link that directly links to the image itself and ends with `.png`, `.jpg` or `.gif`.
+You either need to upload an image to discord with `?img` as a comment on the upload or manually upload the image to an image hoster e.g. Imgur, and get a link that directly links to the image itself and ends with `.png`, `.jpg` or `.gif`.\
+Here's a little [tutorial](https://imgur.com/gallery/L2IsRy0) on how to use the Imgur variant
 
 **Please note that you DO NOT need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.**
