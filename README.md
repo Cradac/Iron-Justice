@@ -33,9 +33,8 @@ Now to the optional things:
 * You can set a Pirate name, which you want to be adressed as, by typing `?alias <piratename>`
 
 Every piece of info can be reset by leaving out the arguments.
-At first you have to create a profile by typing `?profile`. This will add you to the Database.
 
-**Additional info for Images:**
+**Additional info for Images:**\
 You either need to upload an image to discord with `?img` as a comment on the upload or manually upload the image to an image hoster e.g. Imgur, and get a link that directly links to the image itself and ends with `.png`, `.jpg` or `.gif`.
 
 **Please note that you DO NOT need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.**
