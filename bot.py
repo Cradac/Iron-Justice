@@ -45,7 +45,9 @@ extensions = ["lfc", "profile", "ironfleet", "misc"]
 @client.event
 async def on_ready():
 	print("Bot is ready!")
-	await client.change_presence(activity=discord.Game(name="the Iron Price"))
+	game = discord.Game("the Iron Price")
+	await client.change_presence(status=discord.Status.online, activity=game)
+	await client.change_presence()
 	print("Logged in as: " + client.user.name)
 	print("Bot ID: "+client.user.id)
 	for guild in client.guilds:
@@ -178,16 +180,31 @@ async def setup(ctx):
 	profile_channels=[]
 	lfc_channels_para = ""
 	profile_channels_para = ""
+	lfc_enabled = True
+	profile_enabled = True
 	
+	def reaction_check(reaction, user):
+		return user == ctx.message.author and str(reaction.emoji) in ["✅", "❌"]
+
+	def message_check(msg):
+		return msg.author == ctx.author and msg.content
+
+	
+
 	await ctx.send("Starting the setup of this bot now. **You can stop at any point by typing 'cancel' or reacting with any odd Emoji to the current Question.**")
 	msg = await ctx.send("Do you want to enable the 'Looking For Crew'-Helper?\n **Please react below.**")
 	await msg.add_reaction("✅")
 	await msg.add_reaction("❌")
-	lfc_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
-	if lfc_enabled.reaction.emoji == "✅":
+	#lfc_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
+	try:
+		reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=reaction_check)
+	except asyncio.TimeoutError:
+		await ctx.send("Cancelled the Setup.")
+	
+	if str(reaction.emoji) == "✅":
 		lfc_enabled = True
 		await ctx.send("LFC Module is enabled.")
-	elif lfc_enabled.reaction.emoji == "❌":
+	elif str(reaction.emoji) == "❌":
 		lfc_enabled = False
 		await ctx.send("LFC Module is disabled.")
 	else:
@@ -196,7 +213,8 @@ async def setup(ctx):
 
 	if lfc_enabled:
 		await ctx.send("In which channels should the LFC commands be usable? **Please tag one or multiple channels you want it enabled in.**")
-		msg = await client.wait_for_message(author=ctx.message.author)
+		#msg = await client.wait_for_message(author=ctx.message.author)
+		msg = await client.wait_for('message', check=message_check)
 		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
 			await ctx.send("Canceled Setup.")
 			return
@@ -209,11 +227,16 @@ async def setup(ctx):
 	msg = await ctx.send("Do you want to enable the 'Profile'-Functions?\n **Please react below.**")
 	await msg.add_reaction("✅")
 	await msg.add_reaction("❌")
-	profile_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
-	if profile_enabled.reaction.emoji == "✅":
+	try:
+		reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=reaction_check)
+	except asyncio.TimeoutError:
+		await ctx.send("Cancelled the Setup.")
+
+	#profile_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
+	if str(reaction.emoji) == "✅":
 		profile_enabled = True
 		await ctx.send("Profile Module is enabled.")
-	elif profile_enabled.reaction.emoji == "❌":
+	elif str(reaction.emoji) == "❌":
 		profile_enabled = False
 		await ctx.send("Profile Module is disabled.")
 	else:
@@ -222,7 +245,8 @@ async def setup(ctx):
 
 	if profile_enabled:
 		await ctx.send("In which channels should the Profile commands be usable?** Please tag one or multiple channels you want it enabled in.**")
-		msg = await client.wait_for_message(author=ctx.message.author)
+		#msg = await client.wait_for_message(author=ctx.message.author)
+		msg = await client.wait_for('message', check=message_check)
 		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
 			await ctx.send("Canceled Setup.")
 			return
