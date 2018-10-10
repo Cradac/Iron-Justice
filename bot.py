@@ -25,12 +25,13 @@ from checks import create_connection, db_file
 print(sys.version)
 print(discord.__version__)
 
-#Client = discord.Client()
+Client = discord.Client()
 client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron", pm_help=False)
 #bot_token = sys.argv[1]
 bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = 116222914327478274
-welcome = 479301249351548928
+#welcome = 479301249351548928
+welcome= 460860007693418496
 
 client.dictGuilds = {}
 serverids = []
@@ -49,45 +50,45 @@ async def on_ready():
 	await client.change_presence(status=discord.Status.online, activity=game)
 	await client.change_presence()
 	print("Logged in as: " + client.user.name)
-	print("Bot ID: "+ client.user.id)
+	print("Bot ID: " + str(client.user.id))
 	for guild in client.guilds:
 		print ("Connected to server: {}".format(guild))
 	print("------")
 	conn = create_connection(db_file)
 	with conn:
 		cur = conn.cursor()
-		try:
-			cur.execute("SELECT guild_id FROM guilds;")
-			guilds = cur.fetchall()
-			guildIDlist = []
-			for guild in guilds:
-				guildIDlist.append(guild[0])
-			for guild in client.guilds:
-				if guild.id not in guildIDlist:
-					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
-					conn.commit()
-			cur.execute("SELECT * FROM guilds")
-			rows = cur.fetchall()
-			for row in rows:
-				guild_id = row[0]
-				guild_name = row[1]
-				lfc_channels = []
-				profile_channels = []
-				if row[2] is not None:
-					enabled = row[2].split(",")
-					enabled_dict = {"lfc" : enabled[0], "profile" : enabled[1]}
-				else:
-					enabled_dict = {}
-				if row[3] is not None:
-					for el in row[3].split(","):
-						lfc_channels.append(el)
-				if row[4] is not None:
-					for el in row[4].split(","):
-						profile_channels.append(el)
-				client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
-			print("Successfully imported all Guilds.")
-		except:
-			print("Fatal error or some shit.")
+		#try:
+		cur.execute("SELECT guild_id FROM guilds;")
+		guilds = cur.fetchall()
+		guildIDlist = []
+		for guild in guilds:
+			guildIDlist.append(int(guild[0]))
+		for guild in client.guilds:
+			if guild.id not in guildIDlist:
+				cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
+				conn.commit()
+		cur.execute("SELECT * FROM guilds")
+		rows = cur.fetchall()
+		for row in rows:
+			guild_id = int(row[0])
+			guild_name = row[1]
+			lfc_channels = []
+			profile_channels = []
+			if row[2] is not None:
+				enabled = row[2].split(",")
+				enabled_dict = {"lfc" : enabled[0], "profile" : enabled[1]}
+			else:
+				enabled_dict = {}
+			if row[3] is not None:
+				for el in row[3].split(","):
+					lfc_channels.append(int(el))
+			if row[4] is not None:
+				for el in row[4].split(","):
+					profile_channels.append(int(el))
+			client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
+		print("Successfully imported all Guilds.")
+		#except:
+		#	print("Fatal error or some shit.")
 		#for guildID in client.dictGuilds.keys():
 		#	print(guildID)
 		#for guild in client.dictGuilds.values():
@@ -110,7 +111,7 @@ async def on_message(message):
 			await log_channel.send(att.get("url"))
 		await client.process_commands(message)
 
-@client.event
+""" @client.event
 async def on_command_error(error, ctx):
 	if isinstance(error, commands.CheckFailure) or isinstance(error, commands.CommandNotFound):
 		pass
@@ -119,7 +120,7 @@ async def on_command_error(error, ctx):
 			raise error
 		except Exception as error:
 			tb = traceback.format_exc()
-			print(error, tb)
+			print(error, tb) """
 
 @client.event
 async def on_guild_join(guild):
@@ -216,7 +217,7 @@ async def setup(ctx):
 		for ch in msg.channel_mentions:
 			lfc_channels.append(ch.id)
 		for val in lfc_channels:
-			lfc_channels_para += val + ','
+			lfc_channels_para += str(val) + ','
 		lfc_channels_para = lfc_channels_para[:-1]
 	
 	msg = await ctx.send("Do you want to enable the 'Profile'-Functions?\n **Please react below.**")
@@ -247,7 +248,7 @@ async def setup(ctx):
 			profile_channels.append(ch.id)
 
 		for val in profile_channels:
-			profile_channels_para += val + ','
+			profile_channels_para += str(val) + ','
 		profile_channels_para = profile_channels_para[:-1]
 	
 	enabled = {"lfc" : lfc_enabled, "profile" : profile_enabled}
@@ -311,7 +312,10 @@ if __name__ == "__main__":
 			exc = '{}: {}'.format(type(e).__name__, e)
 			print('Failed to load extension {}\n{}'.format(extension, exc))
 
-async def connect():
+#await client.start(bot_token)
+client.run(bot_token)
+
+""" async def connect():
 	print("Logging in...")
 	while not client.is_closed:
 		try:
@@ -320,3 +324,5 @@ async def connect():
 			await asyncio.sleep(5)
 		
 client.loop.run_until_complete(connect())
+ """
+

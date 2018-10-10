@@ -60,7 +60,7 @@ class Misc:
     @isMod()
     @commands.command(hidden=True, brief="Bans a member by ID.", description=">>>Ban\n Ban a member just by user ID.\n\n Usage:")
     async def ban(self,ctx, banID):
-        member = discord.utils.get(ctx.message.guild.members, id=banID)
+        member = discord.utils.get(ctx.message.guild.members, id=int(banID))
         await member.ban(delete_message_days=7)
         await ctx.send("Just banned '{}'`{}`".format(member.name, member.id))
 

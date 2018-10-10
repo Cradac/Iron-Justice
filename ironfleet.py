@@ -28,7 +28,7 @@ class IronFleet:
     @isIronFleet()
     @commands.command(aliases=["invite", "link"], brief="Get this Discord's invitelink.", description=">>>Invite Link\nThis sends a message with the invite link to the Iron Fleet's Discord.\n\nAliases:")
     async def invitelink(self, ctx):
-        await ctx.message.author.send("Use this link to invite people to the Iron Fleet's Discord: https://discord.gg/ttNYzkQ")
+        await ctx.message.author.send("Use this link to invite people to the Iron Fleet's Discord: https://discord.gg/cSZPMF7")
 
     @isGod()
     @commands.command(hidden=True)

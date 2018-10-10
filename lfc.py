@@ -32,7 +32,7 @@ class LFC:
         author=ctx.message.author
         role=discord.utils.get(guild.roles,name="lfc")
         if role in author.roles:
-            await self.client.remove_roles(author, role)
+            await author.remove_roles(role)
             await ctx.send("You are no longer *looking for a crew*.")
 
 def setup(client):
