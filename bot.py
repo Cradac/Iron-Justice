@@ -47,7 +47,6 @@ async def on_ready():
 	print("Bot is ready!")
 	game = discord.Game("the Iron Price")
 	await client.change_presence(status=discord.Status.online, activity=game)
-	await client.change_presence()
 	print("Logged in as: " + client.user.name)
 	print("Bot ID: " + str(client.user.id))
 	for guild in client.guilds:
@@ -56,38 +55,38 @@ async def on_ready():
 	conn = create_connection(db_file)
 	with conn:
 		cur = conn.cursor()
-		#try:
-		cur.execute("SELECT guild_id FROM guilds;")
-		guilds = cur.fetchall()
-		guildIDlist = []
-		for guild in guilds:
-			guildIDlist.append(int(guild[0]))
-		for guild in client.guilds:
-			if guild.id not in guildIDlist:
-				cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
-				conn.commit()
-		cur.execute("SELECT * FROM guilds")
-		rows = cur.fetchall()
-		for row in rows:
-			guild_id = int(row[0])
-			guild_name = row[1]
-			lfc_channels = []
-			profile_channels = []
-			if row[2] is not None:
-				enabled = row[2].split(",")
-				enabled_dict = {"lfc" : enabled[0], "profile" : enabled[1]}
-			else:
-				enabled_dict = {}
-			if row[3] is not None:
-				for el in row[3].split(","):
-					lfc_channels.append(int(el))
-			if row[4] is not None:
-				for el in row[4].split(","):
-					profile_channels.append(int(el))
-			client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
-		print("Successfully imported all Guilds.")
-		#except:
-		#	print("Fatal error or some shit.")
+		try:
+			cur.execute("SELECT guild_id FROM guilds;")
+			guilds = cur.fetchall()
+			guildIDlist = []
+			for guild in guilds:
+				guildIDlist.append(int(guild[0]))
+			for guild in client.guilds:
+				if guild.id not in guildIDlist:
+					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
+					conn.commit()
+			cur.execute("SELECT * FROM guilds")
+			rows = cur.fetchall()
+			for row in rows:
+				guild_id = int(row[0])
+				guild_name = row[1]
+				lfc_channels = []
+				profile_channels = []
+				if row[2] is not None:
+					enabled = row[2].split(",")
+					enabled_dict = {"lfc" : enabled[0], "profile" : enabled[1]}
+				else:
+					enabled_dict = {}
+				if row[3] is not None and row[3] is not '':
+					for el in row[3].split(","):
+						lfc_channels.append(int(el))
+				if row[4] is not None and row[4] is not '':
+					for el in row[4].split(","):
+						profile_channels.append(int(el))
+				client.dictGuilds[guild_id]=Guilds(guild_name, guild_id, enabled_dict, lfc_channels, profile_channels)
+			print("Successfully imported all Guilds.")
+		except:
+			print("Fatal error or some shit.")
 		#for guildID in client.dictGuilds.keys():
 		#	print(guildID)
 		#for guild in client.dictGuilds.values():
