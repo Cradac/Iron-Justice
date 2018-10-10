@@ -30,8 +30,7 @@ client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description
 #bot_token = sys.argv[1]
 bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = 116222914327478274
-#welcome = 479301249351548928
-welcome= 460860007693418496
+welcome = 479301249351548928
 
 client.dictGuilds = {}
 serverids = []
