@@ -5,7 +5,7 @@ import guilds
 import sqlite3
 from sqlite3 import Error
 import datetime
-from checks import matchprofilechannel,matchlfcchannel
+from checks import matchprofilechannel,matchlfcchannel,memberSearch
 
 db_file = "JusticeDB.db"
 
@@ -27,9 +27,13 @@ class Profile:
 
     @matchprofilechannel()
     @commands.command(brief="Shows your Player Profile.", description=">>>Profile:\nThis shows your player profile.\nAdd your XBox Profile name with '!gt <Your Gamertag>'.\nYou can update your levels with '!levels <GH> <OOS> <MA> [AF]'.\nIf you tag a player after '!profile [member]' you can see his/her profile.\n\nAliases:")
-    async def profile(self, ctx, member:discord.Member=None):
+    async def profile(self, ctx, member:str=None):
         if member is None:
             member = ctx.message.author
+        else:
+            member = await memberSearch(ctx, self.client, member)
+            if member is None:
+                return
         fr = member.top_role.name
         conn = self.create_connection(db_file)
         with conn:

@@ -208,7 +208,7 @@ async def setup(ctx):
 
 	if lfc_enabled:
 		await ctx.send("In which channels should the LFC commands be usable? **Please tag one or multiple channels you want it enabled in.**")
-		msg = await client.wait_for('message', check=message_check)
+		msg = await client.wait_for('message', timeout=60.0, check=message_check)
 		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
 			await ctx.send("Canceled Setup.")
 			return

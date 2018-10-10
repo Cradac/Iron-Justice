@@ -3,7 +3,7 @@ from discord.ext import commands
 import asyncio
 import datetime
 import guilds
-from checks import isAdmin, isMod
+from checks import isAdmin, isMod, roleSearch
 import math
 
 class Misc:
@@ -73,10 +73,7 @@ class Misc:
 
     @commands.command(brief="Return every member of a role.", description=">>>Who is\nGet a list of members who are in a certain role.\nPLEASE WRAP ROLES WITH SPACES IN QUOTATIONMARKS!\n\nAliases:")
     async def whois(self, ctx, rolename : str, page : int=1 ):
-        role = discord.utils.get(ctx.message.guild.roles, name=rolename)
-        if role == None:
-            ctx.send("This is not a valid role name.")
-            return
+        role = await roleSearch(ctx, self.client, rolename)
         users = []
         members = ctx.message.guild.members
         for member in members:
@@ -95,7 +92,7 @@ class Misc:
             except IndexError:
                 break
 
-        title = "__Users with the role '{}':__".format(role.name)
+        title = "__Users with the role '{}':__".format(role)
         emb=discord.Embed(color=0xffd700, timestamp=datetime.datetime.utcnow(), title=title, description=desctext)
         if member.avatar_url == "":
             emb.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.default_avatar_url)
