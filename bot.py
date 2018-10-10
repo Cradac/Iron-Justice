@@ -106,7 +106,7 @@ async def on_message(message):
 	if message.author.id != client.user.id and not message.author.bot:
 		await log_channel.send("{}`{}` just said in {}: *'{}'*".format(message.author.name, message.author.id, message.channel.mention, message.clean_content.replace("@","")))
 		for att in message.attachments:
-			await log_channel.send(att.get("url"))
+			await log_channel.send(att.url)
 		await client.process_commands(message)
 
 """ @client.event
