@@ -3,7 +3,7 @@
 #Secondary intention: gimicks like the profile System
 #Author Maxe aka. Cradac
 
-#Version: 2.0 SNAPSHOT
+#Version: 2.0
 
 import discord
 from discord.ext.commands import Bot

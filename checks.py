@@ -7,6 +7,7 @@ from sqlite3 import Error
 god = 116222914327478274
 crimson_id = 116222914327478274 #"231187226288062464"
 servers=[479300072077787160,421650482176589835]
+rogueID = 455901088164478976
 db_file = "JusticeDB.db"
 
 #connecting to db
@@ -28,7 +29,7 @@ def isGod():
 
 def isAdmin():
 	def admincheck(ctx):
-		if ctx.message.author == ctx.message.guild.owner:
+		if ctx.author == ctx.message.guild.owner or ctx.author.id == god:
 			return True
 		for role in ctx.message.author.roles:
 			if role.permissions.administrator:
@@ -69,6 +70,13 @@ def matchprofilechannel():
 def isIronFleet():
     def inServer(ctx):
         if ctx.message.guild.id in servers:
+            return True
+        return False
+    return commands.check(inServer)
+
+def isRogueLegends():
+    def inServer(ctx):
+        if ctx.message.guild.id == rogueID:
             return True
         return False
     return commands.check(inServer)
