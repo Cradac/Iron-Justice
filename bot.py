@@ -16,11 +16,11 @@ from sqlite3 import Error
 import datetime
 import random
 import traceback
-from guilds import Guilds
-from member import Members
-from checks import isMod, isAdmin, isGod
-from checks import servers
-from checks import create_connection, db_file
+from cogs.guilds import Guilds
+from cogs.member import Members
+from cogs.checks import isMod, isAdmin, isGod
+from cogs.checks import servers
+from cogs.checks import create_connection
 
 print(sys.version)
 print(discord.__version__)
@@ -31,11 +31,12 @@ client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description
 bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = 116222914327478274
 welcome = 479301249351548928
+db_file = "JusticeDB.db"
 
 client.dictGuilds = {}
 serverids = []
 
-extensions = ["lfc", "profile", "ironfleet", "misc"]
+extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.roguelegends", "cogs.misc"]
 
 
 
@@ -109,8 +110,8 @@ async def on_message(message):
 			await log_channel.send(att.url)
 		await client.process_commands(message)
 
-""" @client.event
-async def on_command_error(error, ctx):
+@client.event
+async def on_command_error(ctx, error):
 	if isinstance(error, commands.CheckFailure) or isinstance(error, commands.CommandNotFound):
 		pass
 	else:
@@ -118,7 +119,7 @@ async def on_command_error(error, ctx):
 			raise error
 		except Exception as error:
 			tb = traceback.format_exc()
-			print(error, tb) """
+			print(error, tb)
 
 @client.event
 async def on_guild_join(guild):

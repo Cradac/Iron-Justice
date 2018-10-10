@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 import asyncio
 import datetime
-import guilds
-from checks import isAdmin, isMod, roleSearch
+import cogs.guilds
+from cogs.checks import isAdmin, isMod, roleSearch
 import math
 
 class Misc:

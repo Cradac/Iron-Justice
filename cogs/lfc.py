@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 import asyncio
-import guilds
-from checks import matchlfcchannel
+import cogs.guilds
+from cogs.checks import matchlfcchannel
 
 class LFC:
     def __init__(self, client):

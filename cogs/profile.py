@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands
 import asyncio
-import guilds
+import cogs.guilds
 import sqlite3
 from sqlite3 import Error
 import datetime
-from checks import matchprofilechannel,matchlfcchannel,memberSearch
+from cogs.checks import matchprofilechannel,matchlfcchannel,memberSearch
 
 db_file = "JusticeDB.db"
 

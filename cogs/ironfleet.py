@@ -3,9 +3,9 @@ from discord.ext import commands
 import asyncio
 import sqlite3
 from sqlite3 import Error 
-from checks import isGod, isAdmin, isMod, isIronFleet#, isCrimson, crimson_id
-from checks import create_connection, db_file
-from checks import isGod, isAdmin, isMod, isIronFleet
+from cogs.checks import isGod, isAdmin, isMod, isIronFleet#, isCrimson, crimson_id
+from cogs.checks import create_connection, db_file
+from cogs.checks import isGod, isAdmin, isMod, isIronFleet
 
 
 
