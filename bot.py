@@ -25,8 +25,8 @@ from checks import create_connection, db_file
 print(sys.version)
 print(discord.__version__)
 
-Client = discord.Client()
-client = commands.Bot(command_prefix = ["?", "!"], description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron")
+#Client = discord.Client()
+client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.0. For questions please contact Cradac aka. Max.\n#beMoreIron", pm_help=False)
 #bot_token = sys.argv[1]
 bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 god = 116222914327478274
@@ -49,7 +49,7 @@ async def on_ready():
 	await client.change_presence(status=discord.Status.online, activity=game)
 	await client.change_presence()
 	print("Logged in as: " + client.user.name)
-	print("Bot ID: "+client.user.id)
+	print("Bot ID: "+ client.user.id)
 	for guild in client.guilds:
 		print ("Connected to server: {}".format(guild))
 	print("------")
@@ -146,10 +146,7 @@ async def on_member_join(member):
 		description=maintext,
 		timestamp=datetime.datetime.utcnow()
 	)
-	if member.avatar_url == "":
-		embed.set_author(name=member.name,icon_url=member.default_avatar_url)
-	else:
-		embed.set_author(name=member.name,icon_url=member.avatar_url)
+	embed.set_author(name=member.name,icon_url=member.avatar_url)
 	guild = member.guild
 	embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
 	footertext = "#{} Ironborn".format(member_count)
@@ -195,7 +192,6 @@ async def setup(ctx):
 	msg = await ctx.send("Do you want to enable the 'Looking For Crew'-Helper?\n **Please react below.**")
 	await msg.add_reaction("✅")
 	await msg.add_reaction("❌")
-	#lfc_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
 	try:
 		reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=reaction_check)
 	except asyncio.TimeoutError:
@@ -213,7 +209,6 @@ async def setup(ctx):
 
 	if lfc_enabled:
 		await ctx.send("In which channels should the LFC commands be usable? **Please tag one or multiple channels you want it enabled in.**")
-		#msg = await client.wait_for_message(author=ctx.message.author)
 		msg = await client.wait_for('message', check=message_check)
 		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
 			await ctx.send("Canceled Setup.")
@@ -232,7 +227,6 @@ async def setup(ctx):
 	except asyncio.TimeoutError:
 		await ctx.send("Cancelled the Setup.")
 
-	#profile_enabled = await client.wait_for_reaction(["✅","❌"], user=ctx.message.author, message=msg)
 	if str(reaction.emoji) == "✅":
 		profile_enabled = True
 		await ctx.send("Profile Module is enabled.")
@@ -245,7 +239,6 @@ async def setup(ctx):
 
 	if profile_enabled:
 		await ctx.send("In which channels should the Profile commands be usable?** Please tag one or multiple channels you want it enabled in.**")
-		#msg = await client.wait_for_message(author=ctx.message.author)
 		msg = await client.wait_for('message', check=message_check)
 		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
 			await ctx.send("Canceled Setup.")

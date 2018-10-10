@@ -49,10 +49,7 @@ class Profile:
                     color=0xffd700,
                     timestamp=datetime.datetime.utcnow()
                 )
-                if member.avatar_url == "":
-                    embed.set_author(name=member.name,icon_url=member.default_avatar_url)
-                else:
-                    embed.set_author(name=member.name,icon_url=member.avatar_url)
+                embed.set_author(name=member.name,icon_url=member.avatar_url)
                 guild = ctx.message.guild
                 embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
@@ -80,10 +77,7 @@ class Profile:
                 guild = ctx.message.guild
                 icon = "https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)
                 embed.set_footer(icon_url=icon)
-                if member.avatar_url == "":
-                    embed.set_author(name=member.name,icon_url=member.default_avatar_url)
-                else:
-                    embed.set_author(name=member.name,icon_url=member.avatar_url)
+                embed.set_author(name=member.name,icon_url=member.avatar_url)
                 embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> [AF]`.", inline=False)
                 embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
                 embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
@@ -92,7 +86,6 @@ class Profile:
     @matchprofilechannel()
     @commands.command(aliases=["gamertag"], brief="Update your Gamertag.", description=">>>Gamertag:\nWith this command you can update your Gamertag so people can invite you easier.\n\nAliases:")
     async def gt(self, ctx, *gamertag):
-        #if ctx.message.channel.name == "crew-ledger" or ctx.message.channel.name == "looking-for-crew":
         if len(gamertag) > 0:
             gt = " ".join(gamertag)
             if gt == "":
