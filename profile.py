@@ -148,7 +148,8 @@ class Profile:
     @matchprofilechannel()
     @commands.command(aliases=["image", "img"], brief="Set a picture for your profile.", description=">>>Set Image\nWith this command you can set a picture for your profile.\nMake sure your URL ends with '.png', '.jpg' or '.gif'.\nIf you want no profile picture type '!set-image none'.\n\n Aliases:")
     async def set_image(self, ctx, img_url:str="none"):
-        #if ctx.message.channel.name == "crew-ledger":
+        if img_url == "none" and len(ctx.message.attachments) > 0:
+            img_url = ctx.message.attachments[0].url
         if img_url.endswith(".png") or img_url.endswith(".jpg") or img_url.endswith(".gif") or img_url == "none":
             conn = self.create_connection(db_file)
             with conn:
