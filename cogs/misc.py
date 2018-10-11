@@ -3,14 +3,13 @@ from discord.ext import commands
 import asyncio
 import datetime
 import cogs.guilds
-from cogs.checks import isAdmin, isMod, roleSearch, god
+from cogs.checks import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file
 import math
 
 class Misc:
     def __init__(self, client):
         self.client = client
 
-    @isAdmin()
     @commands.command(aliases=["guildinfo"], brief="Gives Admin Information about this guild and this bots setup")
     async def serverinfo(self, ctx):
         guild = ctx.message.guild
@@ -61,20 +60,6 @@ class Misc:
             return
         await ctx.send(embed=embed)
 
-    @isMod()
-    @commands.command(hidden=True, brief="Bans a member by ID.", description=">>>Ban\n Ban a member just by user ID.\n\n Usage:")
-    async def ban(self,ctx, banID):
-        member = discord.utils.get(ctx.message.guild.members, id=int(banID))
-        await member.ban(delete_message_days=7)
-        await ctx.send("Just banned '{}'`{}`".format(member.name, member.id))
-
-    @isMod()
-    @commands.command(hidden=True)
-    async def id(self, ctx, member:discord.Member):
-        memberName = member.display_name
-        memberID = member.id
-        await ctx.send("{}'s ID is `{}`".format(memberName, memberID))
-
     @commands.command(brief="Return every member of a role.", description=">>>Who is\nGet a list of members who are in a certain role.\nPLEASE WRAP ROLES WITH SPACES IN QUOTATIONMARKS!\n\nAliases:")
     async def whois(self, ctx, rolename : str, page : int=1 ):
         role = await roleSearch(ctx, self.client, rolename)
@@ -105,6 +90,36 @@ class Misc:
         emb.set_footer(text="Page {}/{}".format(page, sumpages))
         await ctx.send(embed=emb)
 
+    @isMod()
+    @commands.command(hidden=True, brief="Bans a member by ID.", description=">>>Ban\n Ban a member just by user ID.\n\n Usage:")
+    async def ban(self,ctx, banID):
+        member = discord.utils.get(ctx.message.guild.members, id=int(banID))
+        await member.ban(delete_message_days=7)
+        await ctx.send("Just banned '{}'`{}`".format(member.name, member.id))
+
+    @isMod()
+    @commands.command(hidden=True)
+    async def id(self, ctx, member:discord.Member):
+        memberName = member.display_name
+        memberID = member.id
+        await ctx.send("{}'s ID is `{}`".format(memberName, memberID))
+
+    @isMod()
+    @commands.command(hidden=True, aliases=["nick"])
+    async def nickname(self, ctx, member, *new_name : str):
+        new_name = (" ").join(new_name)
+        member = await memberSearch(ctx, self.client, member)
+        await member.edit(nick=new_name)
+        await ctx.send("`{}` is now called *'{}'*".format(member, new_name))
+
+    @isGod()
+    @commands.command(hidden=True)
+    async def sql(self, *query : str):
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            cur.execute(query)
+            conn.commit()
 
 def setup(client):
     client.add_cog(Misc(client))
