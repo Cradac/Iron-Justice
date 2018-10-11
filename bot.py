@@ -111,6 +111,10 @@ async def on_message(message):
 		await client.process_commands(message)
 
 @client.event
+async def on_message_edit(before, after):
+	await client.process_commands(after)
+
+@client.event
 async def on_command_error(ctx, error):
 	if isinstance(error, commands.CheckFailure) or isinstance(error, commands.CommandNotFound):
 		pass
@@ -290,6 +294,7 @@ async def kill(ctx):
 @client.command(hidden=True)
 async def load(ctx, extension_name : str):
 	try:
+		extension_name = "cogs.{}".format(extension_name)
 		client.load_extension(extension_name)
 	except (AttributeError, ImportError) as e:
 		print("{}: {}".format(type(e).__name__, str(e)))
@@ -299,6 +304,7 @@ async def load(ctx, extension_name : str):
 @isGod()
 @client.command(hidden=True)
 async def unload(ctx, extension_name : str):
+	extension_name = "cogs.{}".format(extension_name)
 	client.unload_extension(extension_name)
 	print("'{}' unloaded.".format(extension_name))
 

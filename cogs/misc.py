@@ -3,7 +3,7 @@ from discord.ext import commands
 import asyncio
 import datetime
 import cogs.guilds
-from cogs.checks import isAdmin, isMod, roleSearch
+from cogs.checks import isAdmin, isMod, roleSearch, god
 import math
 
 class Misc:
@@ -55,6 +55,9 @@ class Misc:
             profile_text = "`disabled`"
         embed.add_field(name="__Profile-Module__", value=profile_text, inline=True)
 
+        if ctx.author.id == god:
+            await ctx.author.send(embed=embed)
+            return
         await ctx.send(embed=embed)
 
     @isMod()

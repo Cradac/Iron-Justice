@@ -5,24 +5,21 @@ import cogs.guilds
 import sqlite3
 from sqlite3 import Error
 import datetime
-from cogs.checks import matchprofilechannel,matchlfcchannel,memberSearch
-
-db_file = "JusticeDB.db"
-
+from cogs.checks import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file
 
 class Profile:
     def __init__(self, client):
         self.client = client	
-
+    """ 
     #connecting to db 
     def create_connection(self, db_file):
-        """ create a database connection to a SQLite database """
+        create a database connection to a SQLite database
         try:
             conn = sqlite3.connect(db_file)
             return conn
         except Error as e:
             print(e)
-        return None
+        return None """
 
 
     @matchprofilechannel()
@@ -35,7 +32,7 @@ class Profile:
             if member is None:
                 return
         fr = member.top_role.name
-        conn = self.create_connection(db_file)
+        conn = create_connection(db_file)
         with conn:
             cur = conn.cursor()
             try:
@@ -88,36 +85,10 @@ class Profile:
                 await ctx.send(embed=embed)
 
     @matchprofilechannel()
-    @commands.command(aliases=["gamertag"], brief="Update your Gamertag.", description=">>>Gamertag:\nWith this command you can update your Gamertag so people can invite you easier.\n\nAliases:")
-    async def gt(self, ctx, *gamertag):
-        if len(gamertag) > 0:
-            gt = " ".join(gamertag)
-            if gt == "":
-                gt = "None"
-            conn = self.create_connection(db_file)
-            with conn:
-                cur = conn.cursor()
-                if len(ctx.message.mentions) == 0:
-                    try:
-                        cur.execute("UPDATE users SET tag = '{}' WHERE user_id = '{}'".format(gt, ctx.message.author.id))
-                        conn.commit()
-                        await ctx.send("Successfully updated your Gamertag to *'{}'*.".format(gt))
-                    except:
-                        await ctx.send("Something went wrong there. Try again some time later.")
-                else:
-                    uid = ctx.message.mentions[0].id
-                    cur.execute("SELECT tag FROM users WHERE user_id='{}'".format(uid))
-                    gamertag = "%s" % cur.fetchone()
-                    embed=discord.Embed(
-                    color=0xffd700,
-                    timestamp=datetime.datetime.utcnow()
-                    )
-                    embed.set_author(name=ctx.message.mentions[0].name,icon_url=ctx.message.mentions[0].avatar_url)
-                    embed.add_field(name="Gamertag", value=gamertag, inline=False)
-                    embed.set_footer()
-                    await ctx.send(embed=embed)
-        else: 
-            conn = self.create_connection(db_file)
+    @commands.group(brief="Show your own Gamertag.", description=">>>Gamertag:\nWith this command you can post your Gamertag fast so people can invite you easier.\n\nAliases:")
+    async def gt(self, ctx):
+        if ctx.invoked_subcommand is None:
+            conn = create_connection(db_file)
             with conn:
                 cur = conn.cursor()
                 cur.execute("SELECT tag FROM users WHERE user_id='{}'".format(ctx.message.author.id))
@@ -132,11 +103,45 @@ class Profile:
                 await ctx.send(embed=embed)
 
     @matchprofilechannel()
+    @gt.command(brief="Edit your own Gamertag.")
+    async def edit(self, ctx, *gt):
+        gt = " ".join(gt)
+        if gt == "":
+            gt = "None"
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            try:
+                cur.execute("UPDATE users SET tag = '{}' WHERE user_id = '{}'".format(gt, ctx.message.author.id))
+                conn.commit()
+                await ctx.send("Successfully updated your Gamertag to *'{}'*.".format(gt))
+            except:
+                await ctx.send("Something went wrong there. Try again some time later.")
+
+    @matchprofilechannel()
+    @gt.command(aliases=["see", "search"], brief="Show someones gamertag.")
+    async def show(self, ctx, *member):
+        member = await memberSearch(ctx, self.client, " ".join(member))
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            cur.execute("SELECT tag FROM users WHERE user_id='{}'".format(member.id))
+            gamertag = "%s" % cur.fetchone()
+            embed=discord.Embed(
+            color=0xffd700,
+            timestamp=datetime.datetime.utcnow()
+            )
+            embed.set_author(name=member.name,icon_url=member.avatar_url)
+            embed.add_field(name="Gamertag", value=gamertag, inline=False)
+            embed.set_footer()
+            await ctx.send(embed=embed)
+
+    @matchprofilechannel()
     @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh = Gold Hoarders\noos = Order of Souls\nma = Merchant Aliance\naf(optional) = Athena's Fortune\n\nAliases:")
     async def levels(self, ctx, gh:int=0, oos:int=0, ma:int=0, af:int=None):
         #if ctx.message.channel.name == "crew-ledger":
         if 0< gh <=50 and 0< oos <=50 and 0 < ma <=50:	
-            conn = self.create_connection(db_file)
+            conn = create_connection(db_file)
             with conn:
                 cur = conn.cursor()
                 try:
@@ -150,13 +155,13 @@ class Profile:
                     await ctx.send("Something went wrong. Please try again later.")
 
     @matchprofilechannel()
-    @commands.command(aliases=["image", "img"], brief="Set a picture for your profile.", description=">>>Set Image\nWith this command you can set a picture for your profile.\nMake sure your URL ends with '.png', '.jpg' or '.gif'.\nIf you want no profile picture type '!set-image none'.\n\n Aliases:")
-    async def set_image(self, ctx, img_url:str="none"):
+    @commands.command(aliases=["set_image"], brief="Set a picture for your profile.", description=">>>Set Image\nWith this command you can set a picture for your profile.\nMake sure your URL ends with '.png', '.jpg' or '.gif'.\nIf you want no profile picture type '!set-image none'.\n\n Aliases:")
+    async def img(self, ctx, img_url:str="none"):
         print(img_url)
         if img_url == "none" and len(ctx.message.attachments) > 0:
             img_url = ctx.message.attachments[0].url
         if img_url.endswith(".png") or img_url.endswith(".jpg") or img_url.endswith(".gif") or img_url == "none":
-            conn = self.create_connection(db_file)
+            conn = create_connection(db_file)
             with conn:
                 cur = conn.cursor()
                 try:
@@ -175,7 +180,7 @@ class Profile:
     async def piratename(self, ctx, *pname):
         #if ctx.message.channel.name == "crew-ledger":
         pname = " ".join(pname)
-        conn = self.create_connection(db_file)
+        conn = create_connection(db_file)
         with conn:
             cur = conn.cursor()
             try:
