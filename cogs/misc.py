@@ -57,6 +57,7 @@ class Misc:
 
         if ctx.author.id == god:
             await ctx.author.send(embed=embed)
+            await ctx.message.delete()
             return
         await ctx.send(embed=embed)
 

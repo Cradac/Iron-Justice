@@ -10,7 +10,7 @@ class LFC:
 
     async def auto_remove(self, member, role):
         await asyncio.sleep(3600)
-        await self.client.remove_roles(member,role)
+        await member.remove_roles(role)
     
     @matchlfcchannel()
     @commands.command(aliases=["lfg"],brief="Sets LFC status.", description=">>>'Looking for Crew':\nThis gives you the 'Looking for Crew' role. You can be tagged with it and tag others.\nYou can only use this in the LFC Channel.\nType !nlfc once you're in a crew to avoid getting LFC notifications.\n\nAliases:")
