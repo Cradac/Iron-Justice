@@ -51,7 +51,7 @@ class Profile:
                     timestamp=datetime.datetime.utcnow()
                 )
                 embed.set_author(name=member.name,icon_url=member.avatar_url)
-                guild = ctx.message.guild
+                guild = ctx.guild
                 embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 if pname != "none":

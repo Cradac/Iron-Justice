@@ -67,7 +67,7 @@ def isIronFleet():
 
 def isRogueLegends():
     def inServer(ctx):
-        if ctx.message.guild.id == rogueID:
+        if ctx.guild.id == rogueID or ctx.guild.id == 421650482176589835:
             return True
         return False
     return commands.check(inServer)
