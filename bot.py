@@ -31,7 +31,6 @@ if len(sys.argv) == 1:
 	bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 else:
 	bot_token = sys.argv[1]
-god = 116222914327478274
 welcome = 479301249351548928
 db_file = "JusticeDB.db"
 
@@ -175,7 +174,6 @@ async def on_member_remove(member):
 
 ##########################################################################################################################################
 
-
 @isAdmin()
 @client.command(hidden=True, brief="This command takes you through a small install wizard for this bot.", description="This command takes you through a small install wizard for this bot.")
 async def setup(ctx):
@@ -310,6 +308,18 @@ async def unload(ctx, extension_name : str):
 	client.unload_extension(extension_name)
 	print("'{}' unloaded.".format(extension_name))
 
+@isGod()
+@client.command(hidden=True)
+async def reload(ctx, extension_name : str):
+	try:
+		extension_name = "{}".format(extension_name)
+		client.unload_extension(extension_name)
+		client.load_extension(extension_name)
+	except (AttributeError, ImportError) as e:
+		print("{}: {}".format(type(e).__name__, str(e)))
+		return
+	print("'{}' reloaded.".format(extension_name))
+
 if __name__ == "__main__":
 	for extension in extensions:
 		try:
@@ -319,17 +329,5 @@ if __name__ == "__main__":
 			exc = '{}: {}'.format(type(e).__name__, e)
 			print('Failed to load extension {}\n{}'.format(extension, exc))
 
-#await client.start(bot_token)
 client.run(bot_token)
-
-""" async def connect():
-	print("Logging in...")
-	while not client.is_closed:
-		try:
-			await client.start(bot_token)
-		except:
-			await asyncio.sleep(5)
-		
-client.loop.run_until_complete(connect())
- """
 
