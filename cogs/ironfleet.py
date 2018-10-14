@@ -17,6 +17,8 @@ class IronFleet:
     @commands.command(hidden=True, aliases=["member"], brief="This roles grant a player basic member status.", description=">>>add Membership\nTo use this command tag a member or type his full name. His 'Stowaway' role will be removed and he will receive the ranks of 'Member' and 'Fledgling'.\n\nAliases:")
     async def membership(self, ctx, *member):
         member = await memberSearch(ctx, self.client, " ".join(member))
+        if member is None:
+            return
         guild = ctx.message.guild
         for role in guild.roles:
             if role.name == "Member":

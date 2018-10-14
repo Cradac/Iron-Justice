@@ -122,6 +122,8 @@ class Profile:
     @gt.command(aliases=["see", "search"], brief="Show someones gamertag.")
     async def show(self, ctx, *member):
         member = await memberSearch(ctx, self.client, " ".join(member))
+        if member is None:
+            return
         conn = create_connection(db_file)
         with conn:
             cur = conn.cursor()

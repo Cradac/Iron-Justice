@@ -75,6 +75,8 @@ def isRogueLegends():
 async def memberSearch(ctx, client, name):
 		results = []
 		resultsdict = {}
+		if len(ctx.message.mentions) > 0:
+			return ctx.message.mentions[0]
 		for member in ctx.guild.members:
 			if name.lower() in member.name.lower() or name.lower() in member.display_name.lower():
 				results.append(member)
@@ -103,6 +105,8 @@ async def memberSearch(ctx, client, name):
 async def roleSearch(ctx, client, name):
 	results = []
 	resultsdict = {}
+	if len(ctx.message.role_mentions) > 0:
+		return ctx.message.role_mentions[0]
 	for role in ctx.guild.roles:
 		if name.lower() in role.name.lower():
 			results.append(role)

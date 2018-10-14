@@ -109,6 +109,8 @@ class Misc:
     async def nickname(self, ctx, member, *new_name : str):
         new_name = (" ").join(new_name)
         member = await memberSearch(ctx, self.client, member)
+        if member is None:
+            return
         await member.edit(nick=new_name)
         await ctx.send("`{}` is now called *'{}'*".format(member, new_name))
 
