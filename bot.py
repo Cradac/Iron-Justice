@@ -54,7 +54,7 @@ extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc"]
 @client.event
 async def on_ready():
 	print("Bot is ready!")
-	game = discord.Game("the Iron Price")
+	game = discord.Game("the Iron Price | ?help")
 	await client.change_presence(status=discord.Status.online, activity=game)
 	print("Logged in as: " + client.user.name)
 	print("Bot ID: " + str(client.user.id))
