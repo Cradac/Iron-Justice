@@ -160,9 +160,10 @@ async def on_member_join(member):
 	)
 	embed.set_author(name=member.name,icon_url=member.avatar_url)
 	guild = member.guild
-	embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
+	icon = guild.icon_url_as(format='png', size=1024)
+	embed.set_thumbnail(url=icon) #"https://i.imgur.com/od8TIcs.png"
 	footertext = "#{} Ironborn".format(member_count)
-	embed.set_footer(text=footertext, icon_url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
+	embed.set_footer(text=footertext, icon_url=icon) #"https://i.imgur.com/od8TIcs.png"
 	rules = "Please take a moment to read our {} and {}.".format(rules_channel.mention, info_channel.mention)
 	embed.add_field(name="__Rules and Info__", value=rules)
 	embed.add_field(name="__Pinned Messages__", value="After you enter the server, please check out the pinned messages in each channel for explicit rule lists and channel specific bot commands. This will give you an idea of all we have to offer! If you're unsure of anything, feel free to ask anyone!")
