@@ -9,17 +9,7 @@ from cogs.checks import matchprofilechannel,matchlfcchannel,memberSearch,create_
 
 class Profile:
     def __init__(self, client):
-        self.client = client	
-    """ 
-    #connecting to db 
-    def create_connection(self, db_file):
-        create a database connection to a SQLite database
-        try:
-            conn = sqlite3.connect(db_file)
-            return conn
-        except Error as e:
-            print(e)
-        return None """
+        self.client = client
 
 
     @matchprofilechannel()
@@ -180,7 +170,6 @@ class Profile:
     @matchprofilechannel()
     @commands.command(aliases=["alias"], brief="Set a Piratename for your profile.", description=">>>Pirate Name\nWith this command you can set a pirate name for your profile.\nIf you want no pirate name type '!piratename none'.\n\n Aliases:")
     async def piratename(self, ctx, *pname):
-        #if ctx.message.channel.name == "crew-ledger":
         pname = " ".join(pname)
         conn = create_connection(db_file)
         with conn:
