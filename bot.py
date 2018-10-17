@@ -282,7 +282,7 @@ async def setup(ctx):
 		guilds = cur.fetchall()
 		guildIDlist = []
 		for guild in guilds:
-			guildIDlist.append(guild[0])
+			guildIDlist.append(int(guild[0]))
 		if ctx.message.guild.id not in guildIDlist:
 			guild = ctx.message.guild
 			cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
