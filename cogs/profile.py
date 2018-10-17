@@ -70,7 +70,7 @@ class Profile:
                 icon = "https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)
                 embed.set_footer(icon_url=icon)
                 embed.set_author(name=member.name,icon_url=member.avatar_url)
-                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> [AF]`.", inline=False)
+                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> [AF]`.", inline=False)
                 embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
                 embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
                 await ctx.send(embed=embed)
