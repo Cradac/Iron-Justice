@@ -46,14 +46,16 @@ def isMod():
 
 def matchlfcchannel():
 	def does_it_match(ctx):
-		if ctx.message.channel.id in ctx.bot.dictGuilds[ctx.message.guild.id].lfc_channels:
+		lfc_channels =  ctx.bot.dictGuilds[ctx.message.guild.id].lfc_channels
+		if ctx.message.channel.id in lfc_channels or not lfc_channels:
 			return True
 		return False
 	return commands.check(does_it_match)
 	
 def matchprofilechannel():
 	def does_it_match(ctx):
-		if ctx.message.channel.id in ctx.bot.dictGuilds[ctx.message.guild.id].profile_channels:
+		profile_channels = ctx.bot.dictGuilds[ctx.message.guild.id].profile_channels
+		if ctx.message.channel.id in profile_channels or not profile_channels:
 			return True
 		return False
 	return commands.check(does_it_match)

@@ -9,17 +9,7 @@ from cogs.checks import matchprofilechannel,matchlfcchannel,memberSearch,create_
 
 class Profile:
     def __init__(self, client):
-        self.client = client	
-    """ 
-    #connecting to db 
-    def create_connection(self, db_file):
-        create a database connection to a SQLite database
-        try:
-            conn = sqlite3.connect(db_file)
-            return conn
-        except Error as e:
-            print(e)
-        return None """
+        self.client = client
 
 
     @matchprofilechannel()
@@ -52,7 +42,8 @@ class Profile:
                 )
                 embed.set_author(name=member.name,icon_url=member.avatar_url)
                 guild = ctx.guild
-                embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
+                icon = guild.icon_url_as(format='png', size=1024)
+                embed.set_thumbnail(url=icon) #"https://i.imgur.com/od8TIcs.png"
                 embed.add_field(name="Gamertag", value=gamertag, inline=False)
                 if pname != "none":
                     embed.add_field(name="<:jollyroger:486619773875126293> Pirate Name", value=pname, inline=False)
@@ -79,7 +70,7 @@ class Profile:
                 icon = "https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)
                 embed.set_footer(icon_url=icon)
                 embed.set_author(name=member.name,icon_url=member.avatar_url)
-                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> [AF]`.", inline=False)
+                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> [AF]`.", inline=False)
                 embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
                 embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
                 await ctx.send(embed=embed)
@@ -179,7 +170,6 @@ class Profile:
     @matchprofilechannel()
     @commands.command(aliases=["alias"], brief="Set a Piratename for your profile.", description=">>>Pirate Name\nWith this command you can set a pirate name for your profile.\nIf you want no pirate name type '!piratename none'.\n\n Aliases:")
     async def piratename(self, ctx, *pname):
-        #if ctx.message.channel.name == "crew-ledger":
         pname = " ".join(pname)
         conn = create_connection(db_file)
         with conn:

@@ -10,6 +10,7 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 from discord import HTTPException
 import asyncio
+import logging
 import sys
 import sqlite3
 from sqlite3 import Error 
@@ -25,6 +26,12 @@ from cogs.checks import create_connection
 print(sys.version)
 print(discord.__version__)
 
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+
 Client = discord.Client()
 client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.1 rewrite. For questions please contact Cradac aka. Max.\n#beMoreIron")
 if len(sys.argv) == 1:
@@ -37,7 +44,7 @@ db_file = "JusticeDB.db"
 client.dictGuilds = {}
 serverids = []
 
-extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.roguelegends", "cogs.misc"]
+extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole"]
 
 
 
@@ -47,7 +54,7 @@ extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.roguelegends",
 @client.event
 async def on_ready():
 	print("Bot is ready!")
-	game = discord.Game("the Iron Price")
+	game = discord.Game("the Iron Price | ?help")
 	await client.change_presence(status=discord.Status.online, activity=game)
 	print("Logged in as: " + client.user.name)
 	print("Bot ID: " + str(client.user.id))
@@ -65,7 +72,7 @@ async def on_ready():
 				guildIDlist.append(int(guild[0]))
 			for guild in client.guilds:
 				if guild.id not in guildIDlist:
-					cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
+					cur.execute("INSERT INTO guilds VALUES (?,?,'False, False',NULL,NULL)", (guild.id, guild.name))
 					conn.commit()
 			cur.execute("SELECT * FROM guilds")
 			rows = cur.fetchall()
@@ -133,7 +140,7 @@ async def on_guild_join(guild):
 	await guild.create_role(name="lfc", mentionable=True, colour=discord.Color(0xFFFFFF))
 	with conn:
 		cur = conn.cursor()
-		cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
+		cur.execute("INSERT INTO guilds VALUES (?,?,'False,False',NULL,NULL)", (guild.id, guild.name))
 
 @client.event
 async def on_member_join(member):
@@ -153,9 +160,10 @@ async def on_member_join(member):
 	)
 	embed.set_author(name=member.name,icon_url=member.avatar_url)
 	guild = member.guild
-	embed.set_thumbnail(url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
+	icon = guild.icon_url_as(format='png', size=1024)
+	embed.set_thumbnail(url=icon) #"https://i.imgur.com/od8TIcs.png"
 	footertext = "#{} Ironborn".format(member_count)
-	embed.set_footer(text=footertext, icon_url="https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)) #"https://i.imgur.com/od8TIcs.png"
+	embed.set_footer(text=footertext, icon_url=icon) #"https://i.imgur.com/od8TIcs.png"
 	rules = "Please take a moment to read our {} and {}.".format(rules_channel.mention, info_channel.mention)
 	embed.add_field(name="__Rules and Info__", value=rules)
 	embed.add_field(name="__Pinned Messages__", value="After you enter the server, please check out the pinned messages in each channel for explicit rule lists and channel specific bot commands. This will give you an idea of all we have to offer! If you're unsure of anything, feel free to ask anyone!")
@@ -192,7 +200,7 @@ async def setup(ctx):
 
 	
 
-	await ctx.send("Starting the setup of this bot now. **You can stop at any point by typing 'cancel' or reacting with any odd Emoji to the current Question.**")
+	await ctx.send("Starting the setup of this bot now. **You can stop at any point by typing `cancel`.**")
 	msg = await ctx.send("Do you want to enable the 'Looking For Crew'-Helper?\n **Please react below.**")
 	await msg.add_reaction("✅")
 	await msg.add_reaction("❌")
@@ -212,9 +220,11 @@ async def setup(ctx):
 		return
 
 	if lfc_enabled:
-		await ctx.send("In which channels should the LFC commands be usable? **Please tag one or multiple channels you want it enabled in.**")
+		await ctx.send("In which channels should the LFC commands be usable? **Please tag one or multiple channels you want it enabled in.\nType `all` to have it enabled in all channels.**")
 		msg = await client.wait_for('message', timeout=60.0, check=message_check)
-		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
+		if msg.content.lower() == "all":
+			pass
+		elif msg.content.lower() == "cancel":
 			await ctx.send("Canceled Setup.")
 			return
 		for ch in msg.channel_mentions:
@@ -242,9 +252,11 @@ async def setup(ctx):
 		return
 
 	if profile_enabled:
-		await ctx.send("In which channels should the Profile commands be usable?** Please tag one or multiple channels you want it enabled in.**")
+		await ctx.send("In which channels should the Profile commands be usable?** Please tag one or multiple channels you want it enabled in.\nType `all` to have it enabled in all channels.**")
 		msg = await client.wait_for('message', check=message_check)
-		if msg.content.lower() == "cancel" or len(msg.channel_mentions) == 0:
+		if msg.content.lower() == "all":
+			pass
+		elif msg.content.lower() == "cancel":
 			await ctx.send("Canceled Setup.")
 			return
 		for ch in msg.channel_mentions:
@@ -270,7 +282,7 @@ async def setup(ctx):
 		guilds = cur.fetchall()
 		guildIDlist = []
 		for guild in guilds:
-			guildIDlist.append(guild[0])
+			guildIDlist.append(int(guild[0]))
 		if ctx.message.guild.id not in guildIDlist:
 			guild = ctx.message.guild
 			cur.execute("INSERT INTO guilds VALUES (?,?,NULL,NULL,NULL)", (guild.id, guild.name))
@@ -312,7 +324,7 @@ async def unload(ctx, extension_name : str):
 @client.command(hidden=True)
 async def reload(ctx, extension_name : str):
 	try:
-		extension_name = "{}".format(extension_name)
+		extension_name = "cogs.{}".format(extension_name)
 		client.unload_extension(extension_name)
 		client.load_extension(extension_name)
 	except (AttributeError, ImportError) as e:
