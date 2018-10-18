@@ -44,7 +44,7 @@ db_file = "JusticeDB.db"
 client.dictGuilds = {}
 serverids = []
 
-extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc"]
+extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole"]
 
 
 
@@ -324,7 +324,7 @@ async def unload(ctx, extension_name : str):
 @client.command(hidden=True)
 async def reload(ctx, extension_name : str):
 	try:
-		extension_name = "{}".format(extension_name)
+		extension_name = "cogs.{}".format(extension_name)
 		client.unload_extension(extension_name)
 		client.load_extension(extension_name)
 	except (AttributeError, ImportError) as e:
