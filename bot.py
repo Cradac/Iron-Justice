@@ -42,7 +42,7 @@ welcome = 479301249351548928
 db_file = "JusticeDB.db"
 
 client.dictGuilds = {}
-serverids = []
+serverids = [] 
 
 extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole"]
 
