@@ -2,6 +2,7 @@
 
 This discord bot adds value to Sea of Thieves fleets by providing a "Looking for Crew" feature and a profile system to keep track of your pirate's levels.
 
+
 ## Setup
 
 With it come also a message-logger for the discord server to store every message.
@@ -11,11 +12,13 @@ If you invite the bot to your server you have to type `?setup` in a channel you 
 
 The set prefix for this bot is `?`.
 
+
 ## Looking for Crew
 
 The `Looking for Crew` can be used by typing `?lfc`. The bot will create a role called "**lfc**" which you should set to be taggable to help with the whole LFC process. If the automatic creation does not work, please create the role yourself. Pay attention to use lower case letters.
 
 This role will be removed from a user after 1 hour, but can manually be removed by typing `?nlfc`.
+
 
 ## Profile
 
