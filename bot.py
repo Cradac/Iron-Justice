@@ -112,7 +112,7 @@ async def on_message(message):
 	if log_channel is None:
 		await client.process_commands(message)
 		return
-	if message.author.id != client.user.id and not message.author.bot:
+	if not message.author.bot:
 		await log_channel.send("{}`{}` just said in {}: *'{}'*".format(message.author.name, message.author.id, message.channel.mention, message.clean_content.replace("@","")))
 		for att in message.attachments:
 			await log_channel.send(att.url)
