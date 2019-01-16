@@ -113,9 +113,19 @@ async def on_message(message):
 		await client.process_commands(message)
 		return
 	if not message.author.bot:
-		await log_channel.send("{}`{}` just said in {}: *'{}'*".format(message.author.name, message.author.id, message.channel.mention, message.clean_content.replace("@","")))
+		embed=discord.Embed(
+			color=0xffd700,
+			timestamp=datetime.datetime.utcnow(),
+			description="in {}:\n{}".format(message.channel.mention, message.content)
+		)
+		embed.set_author(name=message.author, icon_url=message.author.avatar_url)
+		embed.set_footer(text="{}".format(message.author.id))
+		if len(message.attachments) > 0:
+			embed.set_image(url = message.attachments[0].url)
+		await log_channel.send(embed=embed)
+		""" await log_channel.send("{}`{}` just said in {}: *'{}'*".format(message.author.name, message.author.id, message.channel.mention, message.clean_content.replace("@","")))
 		for att in message.attachments:
-			await log_channel.send(att.url)
+			await log_channel.send(att.url) """
 		await client.process_commands(message)
 
 @client.event
