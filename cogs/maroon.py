@@ -10,7 +10,7 @@ def addMessage(message:discord.Message):
 	conn = create_connection(db_file)
 	with conn:
 		cur = conn.cursor()
-		cur.execute('''INSERT INTO messages VALUES (?,?,?)''', (message.author.id, message.created_at,message.id,))
+		cur.execute('''INSERT INTO messages VALUES (?,?,?,?)''', (message.author.id, message.created_at,message.id,message.guild.id))
 		conn.commit()
 
 class Maroon:
@@ -18,7 +18,7 @@ class Maroon:
         self.client = client
 
     async def on_message(self, message):
-        if not message.author.bot:
+        if not message.author.bot and not message.content.startswith(('?', '!')):
             addMessage(message)
         await self.client.process_commands(message)
 
@@ -31,7 +31,8 @@ class Maroon:
             cur.execute('CREATE TABLE messages (\
                         authorid  INTEGER,\
                         datetime  TIMESTAMP,\
-                        messageid INTEGER\
+                        messageid INTEGER,\
+                        guildid INTEGER\
                         );')
 
     @isMod()
@@ -43,7 +44,7 @@ class Maroon:
         conn = create_connection(db_file)
         with conn:
             cur = conn.cursor()
-            cur.execute("SELECT Count(*) FROM messages WHERE authorid={}".format(member.id))
+            cur.execute("SELECT Count(*) FROM messages WHERE authorid={} AND guildid={}".format(member.id, member.guild.id))
             row = cur.fetchone()
             amnt = row[0] 
             if amnt == 0:
@@ -51,9 +52,10 @@ class Maroon:
                 return
                 #helper if no messages yet
             #gets amount of messages in the last 90 days
-            cur.execute('SELECT datetime "[timestamp]" FROM messages WHERE authorid={} ORDER BY datetime DESC LIMIT 1'.format(member.id))
+            cur.execute('SELECT datetime "[timestamp]" FROM messages WHERE authorid={} AND guildid={} ORDER BY datetime DESC LIMIT 1'.format(member.id, member.guild.id))
             row = cur.fetchone()
             last_message = row[0]
+            last_message = datetime.strptime(last_message, '%Y-%m-%d %H:%M:%S.%f')
             last_message_formatted = last_message.strftime("%b %d %Y - %H:%M:%S")
             #formatting timestamp into readable format
             embed = discord.Embed(colour=discord.Colour(0x7d0a00), timestamp=datetime.utcnow())
