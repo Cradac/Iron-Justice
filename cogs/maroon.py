@@ -1,7 +1,7 @@
 import discord, asyncio, cogs.guilds, math
 from discord.ext import commands
 from datetime import datetime
-from cogs.checks import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file
+from cogs.checks import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file, isntRogueLegends
 from operator import itemgetter
 
 #simply adds a message with author id, message id and timestamp into DB
@@ -15,24 +15,12 @@ def addMessage(message:discord.Message):
 class Maroon:
     def __init__(self, client):
         self.client = client
-
+    @isntRogueLegends()
     async def on_message(self, message):
         if not message.author.bot and not message.content.startswith(('?', '!')):
             addMessage(message)
 
-    @isGod()
-    @commands.command(hidden=True)
-    async def create_table(self, ctx):
-        conn = create_connection(db_file)
-        with conn:
-            cur = conn.cursor()
-            cur.execute('CREATE TABLE messages (\
-                        authorid  INTEGER,\
-                        datetime  TIMESTAMP,\
-                        messageid INTEGER,\
-                        guildid INTEGER\
-                        );')
-
+    @isntRogueLegends()
     @isMod()
     @commands.command(aliases=["userinfo", "info"], name="user-info", brief="Show a players activity.", description=">>>Play Activity\nThis command shows a players activity in chat on this server. The Justice records all messages within the last 90 days.\n")
     async def user_info(self, ctx, *member):
@@ -69,6 +57,7 @@ class Maroon:
             await ctx.send(embed=embed)
 
     @isAdmin()
+    @isntRogueLegends()
     @commands.command(aliases=["maroon"], brief="Manually invoke the checking routine.", hidden=True)
     async def marooning(self, ctx):
         conn = create_connection(db_file)

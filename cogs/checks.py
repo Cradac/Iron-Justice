@@ -74,6 +74,13 @@ def isRogueLegends():
         return False
     return commands.check(inServer)
 
+def isntRogueLegends():
+    def inServer(ctx):
+        if ctx.guild.id != rogueID:
+            return True
+        return False
+    return commands.check(inServer)
+
 async def memberSearch(ctx, client, name):
 		results = []
 		resultsdict = {}
