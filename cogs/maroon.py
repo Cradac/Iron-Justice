@@ -1,9 +1,8 @@
-import discord
+import discord, asyncio, cogs.guilds, math
 from discord.ext import commands
-import asyncio
 from datetime import datetime
-import cogs.guilds
 from cogs.checks import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file
+from operator import itemgetter
 
 #simply adds a message with author id, message id and timestamp into DB
 def addMessage(message:discord.Message):
@@ -20,7 +19,6 @@ class Maroon:
     async def on_message(self, message):
         if not message.author.bot and not message.content.startswith(('?', '!')):
             addMessage(message)
-        await self.client.process_commands(message)
 
     @isGod()
     @commands.command(hidden=True)
@@ -70,6 +68,59 @@ class Maroon:
             embed.add_field(name="__amount of messages (last 90 days)__", value=amnt, inline=False)
             await ctx.send(embed=embed)
 
+    @isAdmin()
+    @commands.command(aliases=["maroon"], brief="Manually invoke the checking routine.", hidden=True)
+    async def marooning(self, ctx):
+        conn = create_connection(db_file)
+        await ctx.send("**__Checking for inactivity now... This might take a while.__**")
+        with conn:
+            cur = conn.cursor()
+            memberlist = []
+            for member in ctx.guild.members:
+                if not member.bot:
+                    cur.execute('SELECT datetime "[timestamp]", messageid FROM messages WHERE authorid={} ORDER BY datetime DESC LIMIT 1'.format(member.id))
+                    row = cur.fetchone()
+                    #Check if each of the members has been inactive for this much
+                    comparedate = None
+                    hourzero = datetime(2019, 3, 1)
+                    joindate = member.joined_at
+                    if  row is not None and row[0] is not None:
+                        comparedate = row[0] #pick last message as date
+                        comparedate = datetime.strptime(comparedate, '%Y-%m-%d %H:%M:%S.%f')
+                    elif hourzero > joindate:
+                        comparedate = hourzero #pick bot starting as date
+                    else:
+                        comparedate = joindate #pick the date of the guy joining
+
+                    days_gone = abs((comparedate-datetime.utcnow()).days)
+                    if days_gone >= 14: 
+                        cur.execute("SELECT Count(*) FROM messages WHERE authorid={} AND guildid={}".format(member.id, ctx.guild.id))
+                        row = cur.fetchone()
+                        amnt = row[0]
+                        member_stats = {'member': member, 'days_gone': days_gone, 'amount_messages': amnt}
+                        memberlist.append(member_stats)
+
+            cur.execute('SELECT datetime "[timestamp]", messageid FROM messages')
+            rows = cur.fetchall()
+            for row in rows:
+                date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
+                if abs((date-datetime.utcnow()).days) > 90:
+                    cur.execute('DELETE * FROM messages WHERE messageid={} AND guildid={}'.format(row[1], ctx.guild.id))
+                    #delete all messages older than 90 days from DB
+            conn.commit()
+            memberlist.sort(key=itemgetter('days_gone'))
+            sumpages=math.ceil(len(memberlist)/20)
+            for page in range(0, sumpages-1):
+                title = "Member inactivity"
+                desctext = ""
+                for i in range(page*20, page*20+19):
+                    current_member = memberlist[i]
+                    desctext += "- {} has written {} messages. Last one {} days ago.\n".format(current_member['member'], current_member['amount_messages'], current_member['days_gone'])
+                emb=discord.Embed(color=0xffd700, timestamp=datetime.datetime.utcnow(), title=title, description=desctext)
+                emb.set_footer(text="Page {}/{}".format(page, sumpages))
+                await ctx.send(embed=emb)
+
+            await ctx.send("**__Finished checking.__**")
 
 def setup(client):
     client.add_cog(Maroon(client))    
