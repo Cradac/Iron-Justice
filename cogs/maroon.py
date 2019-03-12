@@ -41,7 +41,10 @@ class Maroon:
             cur.execute('SELECT datetime "[timestamp]" FROM messages WHERE authorid={} AND guildid={} ORDER BY datetime DESC LIMIT 1'.format(member.id, member.guild.id))
             row = cur.fetchone()
             last_message = row[0]
-            last_message = datetime.strptime(last_message, '%Y-%m-%d %H:%M:%S.%f')
+            try:
+                last_message = datetime.strptime(last_message, '%Y-%m-%d %H:%M:%S')
+            except:
+                last_message = datetime.strptime(last_message, '%Y-%m-%d %H:%M:%S.%f')
             last_message_formatted = last_message.strftime("%b %d %Y - %H:%M:%S")
             #formatting timestamp into readable format
             embed = discord.Embed(colour=discord.Colour(0x7d0a00), timestamp=datetime.utcnow())
