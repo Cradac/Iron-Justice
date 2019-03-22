@@ -38,7 +38,7 @@ class Maroon:
                 return
                 #helper if no messages yet
             #gets amount of messages in the last 90 days
-            cur.execute('SELECT datetime "[timestamp]" FROM messages WHERE authorid={} AND guildid={} ORDER BY datetime DESC LIMIT 1'.format(member.id, member.guild.id))
+            cur.execute('SELECT datetime as datetime "[timestamp]" FROM messages WHERE authorid={} AND guildid={} ORDER BY datetime DESC LIMIT 1'.format(member.id, member.guild.id))
             row = cur.fetchone()
             last_message = row[0]
             try:
@@ -70,7 +70,7 @@ class Maroon:
             memberlist = []
             for member in ctx.guild.members:
                 if not member.bot:
-                    cur.execute('SELECT datetime "[timestamp]", messageid FROM messages WHERE authorid={} ORDER BY datetime DESC LIMIT 1'.format(member.id))
+                    cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages WHERE authorid={} ORDER BY datetime DESC LIMIT 1'.format(member.id))
                     row = cur.fetchone()
                     #Check if each of the members has been inactive for this much
                     comparedate = None
@@ -78,7 +78,10 @@ class Maroon:
                     joindate = member.joined_at
                     if  row is not None and row[0] is not None:
                         comparedate = row[0] #pick last message as date
-                        comparedate = datetime.strptime(comparedate, '%Y-%m-%d %H:%M:%S.%f')
+                        try: 
+                            comparedate = datetime.strptime(comparedate, '%Y-%m-%d %H:%M:%S.%f')
+                        except ValueError:
+                            comparedate = datetime.strptime(comparedate, '%Y-%m-%d %H:%M:%S')
                     elif hourzero > joindate:
                         comparedate = hourzero #pick bot starting as date
                     else:
@@ -92,10 +95,13 @@ class Maroon:
                         member_stats = {'member': member, 'days_gone': days_gone, 'amount_messages': amnt}
                         memberlist.append(member_stats)
 
-            cur.execute('SELECT datetime "[timestamp]", messageid FROM messages')
+            cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages')
             rows = cur.fetchall()
             for row in rows:
-                date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
+                try: 
+                    date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
+                except ValueError:
+                    date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')                
                 if abs((date-datetime.utcnow()).days) > 90:
                     cur.execute('DELETE * FROM messages WHERE messageid={} AND guildid={}'.format(row[1], ctx.guild.id))
                     #delete all messages older than 90 days from DB
@@ -103,14 +109,14 @@ class Maroon:
             memberlist.sort(key=itemgetter('days_gone'))
             sumpages=math.ceil(len(memberlist)/20)
             for page in range(0, sumpages-1):
-                title = "Member inactivity"
+                #title = "Member inactivity"
                 desctext = ""
                 for i in range(page*20, page*20+19):
                     current_member = memberlist[i]
-                    desctext += "- {} has written {} messages. Last one {} days ago.\n".format(current_member['member'], current_member['amount_messages'], current_member['days_gone'])
-                emb=discord.Embed(color=0xffd700, timestamp=datetime.datetime.utcnow(), title=title, description=desctext)
-                emb.set_footer(text="Page {}/{}".format(page, sumpages))
-                await ctx.send(embed=emb)
+                    desctext += "- {} has written {} messages. Last one {} days ago.\n".format(current_member['member'].mention, current_member['amount_messages'], current_member['days_gone'])
+                #emb=discord.Embed(color=0xffd700, timestamp=datetime.utcnow(), title=title, description=desctext)
+                #emb.set_footer(text="Page {}/{}".format(page, sumpages))
+                await ctx.send(desctext)
 
             await ctx.send("**__Finished checking.__**")
 
