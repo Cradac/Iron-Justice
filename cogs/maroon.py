@@ -21,6 +21,15 @@ class Maroon:
             addMessage(message)
 
     @isntRogueLegends()
+    async def on_member_remove(self, member):
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            cur.execute('DELETE * FROM messages WHERE authorid={} and guildid={}'.format(member.id, member.guild.id))
+            conn.commit()
+
+
+    @isntRogueLegends()
     @isMod()
     @commands.command(aliases=["userinfo", "info"], name="user-info", brief="Show a players activity.", description=">>>Play Activity\nThis command shows a players activity in chat on this server. The Justice records all messages within the last 90 days.\n")
     async def user_info(self, ctx, *member):
@@ -38,7 +47,7 @@ class Maroon:
                 return
                 #helper if no messages yet
             #gets amount of messages in the last 90 days
-            cur.execute('SELECT datetime as datetime "[timestamp]" FROM messages WHERE authorid={} AND guildid={} ORDER BY datetime DESC LIMIT 1'.format(member.id, member.guild.id))
+            cur.execute('SELECT datetime as "datetime [timestamp]" FROM messages WHERE authorid={} AND guildid={} ORDER BY datetime DESC LIMIT 1'.format(member.id, member.guild.id))
             row = cur.fetchone()
             last_message = row[0]
             try:
