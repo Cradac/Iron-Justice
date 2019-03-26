@@ -63,6 +63,8 @@ class Misc:
     @commands.command(brief="Return every member of a role.", description=">>>Who is\nGet a list of members who are in a certain role.\nPLEASE WRAP ROLES WITH SPACES IN QUOTATIONMARKS!\n\nAliases:")
     async def whois(self, ctx, rolename : str, page : int=1 ):
         role = await roleSearch(ctx, self.client, rolename)
+        if role is None:
+            return
         users = []
         members = ctx.message.guild.members
         for member in members:

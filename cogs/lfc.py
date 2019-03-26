@@ -17,7 +17,14 @@ class LFC:
     async def lfc(self, ctx):
         guild=ctx.message.guild
         author=ctx.message.author
-        role=discord.utils.get(guild.roles,name="lfc")
+        try:
+            for it_role in guild.roles:
+                if role.name.lower() == 'lfc' or role.name.lower() == 'looking for crew':
+                    role = it_role
+                    break
+        except:
+            await ctx.send("There is no LFC role defined. Please contact an admin.")
+            return
         if role in author.roles:
             await ctx.send("You are already *looking for a crew*.")
         else:
