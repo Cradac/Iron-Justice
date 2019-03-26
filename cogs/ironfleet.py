@@ -8,7 +8,7 @@ from cogs.checks import create_connection, db_file
 
 
 
-class IronFleet:
+class IronFleet(commands.Cog):
     def __init__(self, client):
         self.client = client
     

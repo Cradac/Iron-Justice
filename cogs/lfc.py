@@ -4,7 +4,7 @@ import asyncio
 import cogs.guilds
 from cogs.checks import matchlfcchannel
 
-class LFC:
+class LFC(commands.Cog):
     def __init__(self, client):
         self.client = client
 

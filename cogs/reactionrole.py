@@ -7,7 +7,7 @@ from datetime import datetime
 import cogs.guilds
 from cogs.checks import isAdmin,roleSearch,create_connection,db_file
 
-class ReactionRole:
+class ReactionRole(commands.Cog):
 	def __init__(self, client):
 		self.client = client
 	

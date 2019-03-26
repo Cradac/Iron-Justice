@@ -6,7 +6,7 @@ import cogs.guilds
 from cogs.checks import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file
 import math
 
-class Misc:
+class Misc(commands.Cog):
     def __init__(self, client):
         self.client = client
 

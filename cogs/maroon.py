@@ -12,14 +12,16 @@ def addMessage(message:discord.Message):
 		cur.execute('''INSERT INTO messages VALUES (?,?,?,?)''', (message.author.id, message.created_at,message.id,message.guild.id))
 		conn.commit()
 
-class Maroon:
+class Maroon(commands.Cog):
     def __init__(self, client):
         self.client = client
+    @commands.Cog.listener()
     @isntRogueLegends()
     async def on_message(self, message):
         if not message.author.bot and not message.content.startswith(('?', '!')):
             addMessage(message)
-
+            
+    @commands.Cog.listener()
     @isntRogueLegends()
     async def on_member_remove(self, member):
         conn = create_connection(db_file)
