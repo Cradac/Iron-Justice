@@ -38,7 +38,7 @@ class IronFleet(commands.Cog):
             return
         guild_roles = ctx.message.guild.roles
         recruit_role = discord.utils.get(guild_roles, name='Recruit')
-        await member.add_role(recruit_role)
+        await member.add_roles(recruit_role, reason="Recruit Command")
         await ctx.message.delete()
         await ctx.send("{} is now an Ironborn Recruit! *What is dead may never die!*".format(member.mention))
 
