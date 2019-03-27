@@ -10,7 +10,6 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 from discord import HTTPException
 import asyncio
-import logging
 import sys
 import sqlite3
 from sqlite3 import Error 
@@ -26,18 +25,13 @@ from cogs.checks import create_connection
 print(sys.version)
 print(discord.__version__)
 
-logger = logging.getLogger('discord')
-logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
-
 Client = discord.Client()
 client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.1 rewrite. For questions please contact Cradac aka. Max.\n#beMoreIron")
 if len(sys.argv) == 1:
 	bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 else:
 	bot_token = sys.argv[1]
+	sys.stdout = open('console.log', 'w')
 welcome = 479301249351548928
 db_file = "JusticeDB.db"
 
