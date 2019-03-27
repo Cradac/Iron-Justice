@@ -292,6 +292,11 @@ async def setup(ctx):
 		except:
 		 	await ctx.send("Something went terribly wrong.")
 
+@isGod()
+@client.command(hidden=True, brief="Pong!")
+async def ping(ctx):
+	await ctx.send('Pong!', ctx.author.mention)
+
 ##########################################################################################################################################
 
 @isGod()
