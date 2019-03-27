@@ -295,8 +295,7 @@ async def setup(ctx):
 @isGod()
 @client.command(hidden=True, brief="Pong!")
 async def ping(ctx):
-	await ctx.send('Pong!', ctx.author.mention)
-
+	await ctx.send('Pong! `({} ms)`'.format(round(client.latency, 2)))
 ##########################################################################################################################################
 
 @isGod()
