@@ -22,11 +22,15 @@ from cogs.checks import isMod, isAdmin, isGod
 from cogs.checks import servers
 from cogs.checks import create_connection
 
+_version = 2.2
+
 print(sys.version)
 print(discord.__version__)
+print('bot version: {}'.format(_version))
+
 
 Client = discord.Client()
-client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description="This is the Iron Fleet's own bot THE IRON JUSTICE V2.1 rewrite. For questions please contact Cradac aka. Max.\n#beMoreIron")
+client = commands.Bot(command_prefix = ["?"], case_insensitive=True, description="This is the Iron Fleet's own bot THE IRON JUSTICE V{} rewrite. For questions please contact Cradac aka. Max.\n#beMoreIron".format(_version))
 if len(sys.argv) == 1:
 	bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 else:
@@ -292,10 +296,18 @@ async def setup(ctx):
 		except:
 		 	await ctx.send("Something went terribly wrong.")
 
-@isGod()
 @client.command(hidden=True, brief="Pong!")
 async def ping(ctx):
 	await ctx.send('Pong! `({} ms)`'.format(round(client.latency, 2)))
+
+@client.command(hidden=True, brief="Version Info")
+async def version(ctx):
+	await ctx.send('\
+		bot version: {}\
+		discord.py version: {}\
+		dystem info: {}\
+		'.format(_version, discord.__version__, sys.version))
+
 ##########################################################################################################################################
 
 @isGod()
