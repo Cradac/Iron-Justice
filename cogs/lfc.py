@@ -17,12 +17,12 @@ class LFC(commands.Cog):
     async def lfc(self, ctx):
         guild=ctx.message.guild
         author=ctx.message.author
-        try:
-            for it_role in guild.roles:
-                if role.name.lower() == 'lfc' or role.name.lower() == 'looking for crew':
-                    role = it_role
-                    break
-        except:
+        role = None
+        for it_role in guild.roles:
+            if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
+                role = it_role
+                break
+        if role is None:
             await ctx.send("There is no LFC role defined. Please contact an admin.")
             return
         if role in author.roles:
@@ -37,7 +37,13 @@ class LFC(commands.Cog):
     async def nlfc(self, ctx):
         guild=ctx.message.guild
         author=ctx.message.author
-        role=discord.utils.get(guild.roles,name="lfc")
+        for it_role in guild.roles:
+            if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
+                role = it_role
+                break
+        if role is None:
+            await ctx.send("There is no LFC role defined. Please contact an admin.")
+            return
         if role in author.roles:
             await author.remove_roles(role)
             await ctx.send("You are no longer *looking for a crew*.")
