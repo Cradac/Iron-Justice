@@ -303,9 +303,9 @@ async def ping(ctx):
 @client.command(hidden=True, brief="Version Info")
 async def version(ctx):
 	await ctx.send('\
-		bot version: {}\
-		discord.py version: {}\
-		dystem info: {}\
+		bot version: {}\n\
+		discord.py version: {}\n\
+		system info: {}\n\
 		'.format(_version, discord.__version__, sys.version))
 
 ##########################################################################################################################################
