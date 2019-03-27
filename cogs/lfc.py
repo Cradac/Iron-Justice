@@ -13,7 +13,7 @@ class LFC(commands.Cog):
         await member.remove_roles(role)
     
     @matchlfcchannel()
-    @commands.command(aliases=["lfg"],brief="Sets LFC status.", description=">>>'Looking for Crew':\nThis gives you the 'Looking for Crew' role. You can be tagged with it and tag others.\nYou can only use this in the LFC Channel.\nType !nlfc once you're in a crew to avoid getting LFC notifications.\n\nAliases:")
+    @commands.command(aliases=["lfg"],brief="Sets LFC status.", description=">>>'Looking for Crew':\nThis gives you the 'Looking for Crew' role. You can be tagged with it and tag others.\nYou can only use this in the LFC Channel.\nType ?nlfc once you're in a crew to avoid getting LFC notifications.\n\nAliases:")
     async def lfc(self, ctx):
         guild=ctx.message.guild
         author=ctx.message.author
@@ -33,7 +33,7 @@ class LFC(commands.Cog):
             await ctx.send("{}: {} is now *looking for a crew*.".format(role.mention, author.mention))
 
     @matchlfcchannel()
-    @commands.command(aliases=["nlfg"], brief="Removes LFC status.", description=">>>No longer 'Looking for Crew':\nThis removes the 'Looking for Crew' role.\nIf you are looking for a crew again use '!lfc'.\n\nAliases:")
+    @commands.command(aliases=["nlfg"], brief="Removes LFC status.", description=">>>No longer 'Looking for Crew':\nThis removes the 'Looking for Crew' role.\nIf you are looking for a crew again use '?lfc'.\n\nAliases:")
     async def nlfc(self, ctx):
         guild=ctx.message.guild
         author=ctx.message.author
