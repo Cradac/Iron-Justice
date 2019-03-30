@@ -100,6 +100,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+	if type(message.channel) is discord.DMChannel:
+		return
 	guild = message.guild
 	log_channel = discord.utils.get(guild.channels, name="message-log")
 	if log_channel is None:
