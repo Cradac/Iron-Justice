@@ -11,7 +11,7 @@ from cogs.checks import create_connection, db_file
 class IronFleet(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
+    '''
     @isIronFleet()
     @isMod()
     @commands.command(hidden=True, aliases=["member"], brief="This roles grant a player basic member status.", description=">>>add Membership\nTo use this command tag a member or type his full name. His 'Stowaway' role will be removed and he will receive the ranks of 'Member' and 'Fledgling'.\n\nAliases:")
@@ -28,6 +28,7 @@ class IronFleet(commands.Cog):
         await member.edit(roles=[role_member, role_fledge])
         await ctx.message.delete()
         await ctx.send("{} is now a true Ironborn! *What is dead may never die!*".format(member.mention))
+    '''
 
     @isIronFleet()
     @isMod()
@@ -38,7 +39,10 @@ class IronFleet(commands.Cog):
             return
         guild_roles = ctx.message.guild.roles
         recruit_role = discord.utils.get(guild_roles, name='Recruit')
+        canread_role = discord.utils.get(guild_roles, name='can read')
         await member.add_roles(recruit_role, reason="Recruit Command")
+        await asyncio.sleep(3)
+        await member.remove_roles(canread_role, reason="Recruit Command")
         await ctx.message.delete()
         await ctx.send("{} is now an Ironborn Recruit! *What is dead may never die!*".format(member.mention))
 
