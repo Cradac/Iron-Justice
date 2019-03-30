@@ -128,6 +128,7 @@ class Maroon(commands.Cog):
                 #emb=discord.Embed(color=0xffd700, timestamp=datetime.utcnow(), title=title, description=desctext)
                 #emb.set_footer(text="Page {}/{}".format(page, sumpages))
                 await ctx.send(desctext)
+                await asyncio.sleep(5)
 
             await ctx.send("**__Finished checking.__**")
 
