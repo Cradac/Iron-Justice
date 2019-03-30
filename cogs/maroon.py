@@ -67,7 +67,7 @@ class Maroon(commands.Cog):
             #calculating days gone
             last_message_text="{} ({} days ago)".format(last_message_formatted, days_gone)
             embed.add_field(name="__last message (UTC time)__", value=last_message_text, inline=False) 
-            embed.add_field(name="__amount of messages (last 90 days)__", value=amnt, inline=False)
+            embed.add_field(name="__amount of messages (last 30 days)__", value=amnt, inline=False)
             await ctx.send(embed=embed)
 
     @isAdmin()
