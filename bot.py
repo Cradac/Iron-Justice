@@ -36,7 +36,6 @@ if len(sys.argv) == 1:
 else:
 	bot_token = sys.argv[1]
 	sys.stdout = open(datetime.datetime.now().strftime('logs/discord_log_%Y_%m_%d_%Y_%M.log'), 'w+')
-welcome = 479301249351548928
 db_file = "JusticeDB.db"
 
 client.dictGuilds = {}
@@ -142,44 +141,6 @@ async def on_guild_join(guild):
 	with conn:
 		cur = conn.cursor()
 		cur.execute("INSERT INTO guilds VALUES (?,?,'False,False',NULL,NULL)", (guild.id, guild.name))
-
-@client.event
-async def on_member_join(member):
-	if not member.guild.id in servers or member.bot:
-		return
-	welcome_channel = discord.utils.get(member.guild.channels, id=welcome)
-	rules_channel = discord.utils.get(member.guild.channels, id=479301263461449768)
-	info_channel = discord.utils.get(member.guild.channels, id=479313811518652417)
-	intro_channel = discord.utils.get(member.guild.channels, id=481455365192548363)
-
-	member_count = str(len(member.guild.members))
-	maintext = "Excelsior! It seems {} has drunkenly washed ashore onto The Iron Islands!  Our forces have reached {} strong!\nIf you have come for Sea of Thieves please head [here](https://www.seaofthieves.com/forum/topic/30248/the-iron-fleet-official-recruitment-thread-economy-wages-market-gambling-rpg-discord-community/1) to apply on the official forum!".format(member.mention, member_count)
-	embed=discord.Embed(
-		color=0xffd700,
-		description=maintext,
-		timestamp=datetime.datetime.utcnow()
-	)
-	embed.set_author(name=member.name,icon_url=member.avatar_url)
-	guild = member.guild
-	icon = guild.icon_url_as(format='png', size=1024)
-	embed.set_thumbnail(url=icon) #"https://i.imgur.com/od8TIcs.png"
-	footertext = "#{} Ironborn".format(member_count)
-	embed.set_footer(text=footertext, icon_url=icon) #"https://i.imgur.com/od8TIcs.png"
-	rules = "Please take a moment to read our {} and {}.".format(rules_channel.mention, info_channel.mention)
-	embed.add_field(name="__Rules and Info__", value=rules)
-	embed.add_field(name="__Pinned Messages__", value="After you enter the server, please check out the pinned messages in each channel for explicit rule lists and channel specific bot commands. This will give you an idea of all we have to offer! If you're unsure of anything, feel free to ask anyone!")
-	jointext = "If you'd like to join our ranks, please leave a message in {} with the following information.\n\n--**Gamertag:**\n--**Age:**\n--**Platform:**\n--**Other** *(anything else about yourself you'd like to share)*".format(intro_channel.mention)
-	embed.add_field(name="__Join us!__", value=jointext)
-	gametext = "After you applied and we've set your rank please head to {} and **react with the emoji** according to the games you play to get access to their categories!".format(info_channel.mention)
-	embed.add_field(name="__Game Access__", value=gametext)
-	await welcome_channel.send(embed=embed)
-
-@client.event
-async def on_member_remove(member):
-	if not member.guild.id in servers or member.bot:
-		return
-	channel = discord.utils.get(member.guild.channels, id=welcome)
-	await channel.send("Oh my, **{}** lost their senses during a storm and drowned. Not worthy of being called an Ironborn! What is dead may never die!".format(member.display_name))
 
 ##########################################################################################################################################
 

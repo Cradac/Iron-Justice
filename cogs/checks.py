@@ -7,6 +7,7 @@ from sqlite3 import Error
 god = 116222914327478274
 servers=[479300072077787160,421650482176589835] #ironfleet servers
 rogueID = 455901088164478976
+welcome = 479301249351548928 #ironfleet welcome channel
 db_file = "JusticeDB.db"
 
 #connecting to db
