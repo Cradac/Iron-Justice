@@ -80,16 +80,16 @@ class IronFleet(commands.Cog):
 
 
         #PM EMBED
-        txt = '\
-Ahoy and welcome to the Iron Fleet!\n\
-Please take a moment to read the {} and click the reaction emoji to indicate that you\'ve done so.  To apply, submit an application in {}.\n\
+        txt1 = 'Please take a moment to read the {} and click the reaction emoji to indicate that you\'ve done so.'.format(rules_channel.mention)
+        txt2 = 'To apply, submit an application in {}.\n\
 Lastly, head over to {} and use the appropriate reaction to gain access to game specific channels.\n\
-Feel free to message a Senior or Junior Officer if you have any questions or need any help.'.format(rules_channel.mention, intro_channel.mention, info_channel.mention)
+Feel free to message a Senior or Junior Officer if you have any questions or need any help.'.format(intro_channel.mention, info_channel.mention)
         embed=discord.Embed(
             color=0xffd700,
-            description=txt,
             timestamp=datetime.utcnow()
         )
+        embed.add_field(name='Ahoy, {} and welcome to the Iron Fleet!'.format(member.name), value=txt1)
+        embed.add_field(name='Afterwards', value=txt2)
         guild = member.guild
         icon = guild.icon_url_as(format='png', size=1024)
         embed.set_thumbnail(url=icon)
