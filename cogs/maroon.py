@@ -27,7 +27,7 @@ class Maroon(commands.Cog):
         conn = create_connection(db_file)
         with conn:
             cur = conn.cursor()
-            cur.execute('DELETE * FROM messages WHERE authorid={} and guildid={}'.format(member.id, member.guild.id))
+            cur.execute('DELETE FROM messages WHERE authorid={} and guildid={}'.format(member.id, member.guild.id))
             conn.commit()
 
 
@@ -114,7 +114,7 @@ class Maroon(commands.Cog):
                 except ValueError:
                     date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')                
                 if abs((date-datetime.utcnow()).days) > 90:
-                    cur.execute('DELETE * FROM messages WHERE messageid={} AND guildid={}'.format(row[1], ctx.guild.id))
+                    cur.execute('DELETE FROM messages WHERE messageid={} AND guildid={}'.format(row[1], ctx.guild.id))
                     #delete all messages older than 90 days from DB
             conn.commit()
             memberlist.sort(key=itemgetter('days_gone'))
