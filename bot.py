@@ -35,7 +35,7 @@ if len(sys.argv) == 1:
 	bot_token = "NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko"
 else:
 	bot_token = sys.argv[1]
-	sys.stdout = open(datetime.datetime.now().strftime('logs/discord_log_%Y_%m_%d_%Y_%M.log'), 'w+')
+	sys.stdout = open(datetime.datetime.now().strftime('logs/discord_log_%Y_%m_%d_%H_%M_%S.log'), 'w+')
 db_file = "JusticeDB.db"
 
 client.dictGuilds = {}
