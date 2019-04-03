@@ -39,7 +39,7 @@ class IronFleet(commands.Cog):
             return
         guild_roles = ctx.message.guild.roles
         recruit_role = discord.utils.get(guild_roles, name='Recruit')
-        canread_role = discord.utils.get(guild_roles, name='can read')
+        canread_role = discord.utils.get(guild_roles, name='Prospective Recruit')
         await member.add_roles(recruit_role, reason="Recruit Command")
         await asyncio.sleep(3)
         await member.remove_roles(canread_role, reason="Recruit Command")
