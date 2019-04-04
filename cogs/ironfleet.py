@@ -11,24 +11,6 @@ from datetime import datetime
 class IronFleet(commands.Cog):
     def __init__(self, client):
         self.client = client
-    '''
-    @isIronFleet()
-    @isMod()
-    @commands.command(hidden=True, aliases=["member"], brief="This roles grant a player basic member status.", description=">>>add Membership\nTo use this command tag a member or type his full name. His 'Stowaway' role will be removed and he will receive the ranks of 'Member' and 'Fledgling'.\n\nAliases:")
-    async def membership(self, ctx, *member):
-        member = await memberSearch(ctx, self.client, " ".join(member))
-        if member is None:
-            return
-        guild = ctx.message.guild
-        for role in guild.roles:
-            if role.name == "Member":
-                role_member = role
-            if role.name == "Fledgling":
-                role_fledge = role
-        await member.edit(roles=[role_member, role_fledge])
-        await ctx.message.delete()
-        await ctx.send("{} is now a true Ironborn! *What is dead may never die!*".format(member.mention))
-    '''
 
     @isIronFleet()
     @isMod()
@@ -44,7 +26,8 @@ class IronFleet(commands.Cog):
         await asyncio.sleep(3)
         await member.remove_roles(canread_role, reason="Recruit Command")
         await ctx.message.delete()
-        await ctx.send("{} is now an Ironborn Recruit! *What is dead may never die!*".format(member.mention))
+        rr_channel = discord.utils.get(ctx.guild.channels, id=479313811518652417)
+        await ctx.send("{} is now an Ironborn Recruit! *What is dead may never die!*\nHead over to {} to get your games assigned.".format(member.mention, rr_channel.mention))
 
     @isIronFleet()
     @commands.command(aliases=["invite"], brief="Get this Discord's invitelink.", description=">>>Invite Link\nThis sends a message with the invite link to the Iron Fleet's Discord.\n\nAliases:")
@@ -59,7 +42,7 @@ class IronFleet(commands.Cog):
             return
         welcome_channel = discord.utils.get(member.guild.channels, id=welcome)
         rules_channel = discord.utils.get(member.guild.channels, id=479301263461449768)
-        info_channel = discord.utils.get(member.guild.channels, id=479313811518652417)
+        info_channel = discord.utils.get(member.guild.channels, id=563479453091495945)
         intro_channel = discord.utils.get(member.guild.channels, id=481455365192548363)
 
         #WELCOME EMBED
