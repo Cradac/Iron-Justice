@@ -15,10 +15,14 @@ def addMessage(message:discord.Message):
 class Maroon(commands.Cog):
     def __init__(self, client):
         self.client = client
+        
     @commands.Cog.listener()
     @isntRogueLegends()
     async def on_message(self, message):
         if not message.author.bot and not message.content.startswith(('?', '!')):
+            if type(message.channel) is discord.DMChannel:
+                print('{}: {}'.format(message.author,message.content))
+                return
             addMessage(message)
             
     @commands.Cog.listener()
