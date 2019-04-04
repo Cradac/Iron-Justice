@@ -65,8 +65,8 @@ class IronFleet(commands.Cog):
         #PM EMBED
         txt1 = 'Please take a moment to read the {} and click the reaction emoji to indicate that you\'ve done so.'.format(rules_channel.mention)
         txt2 = 'To apply, submit an application in {}.\n\
-Lastly, head over to {} and use the appropriate reaction to gain access to game specific channels.\n\
-Feel free to message a Senior or Junior Officer if you have any questions or need any help.'.format(intro_channel.mention, info_channel.mention)
+Lastly, head over to {} to read up on our FAQ, get our social media links and general info about the fleet.\n\
+Feel free to message a Junior or Senior Officer if you have any questions or need any help.'.format(intro_channel.mention, info_channel.mention)
         embed=discord.Embed(
             color=0xffd700,
             timestamp=datetime.utcnow()
