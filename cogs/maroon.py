@@ -77,13 +77,21 @@ class Maroon(commands.Cog):
     @isAdmin()
     @isntRogueLegends()
     @commands.command(aliases=["maroon"], brief="Manually invoke the checking routine.", hidden=True)
-    async def marooning(self, ctx):
+    async def marooning(self, ctx, role:str=None):
         conn = create_connection(db_file)
         await ctx.send("**__Checking for inactivity now... This might take a while.__**")
+        memberlist = None
+        if role is None:
+            memberlist = ctx.guild.members
+        else:
+            role = roleSearch(ctx, self.client, role)
+            if role is None:
+                return
+            memberlist = role.members
         with conn:
             cur = conn.cursor()
             memberlist = []
-            for member in ctx.guild.members:
+            for member in memberlist:
                 if not member.bot:
                     cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages WHERE authorid={} ORDER BY datetime DESC LIMIT 1'.format(member.id))
                     row = cur.fetchone()
@@ -110,27 +118,37 @@ class Maroon(commands.Cog):
                         member_stats = {'member': member, 'days_gone': days_gone, 'amount_messages': amnt}
                         memberlist.append(member_stats)
 
-            cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages')
+
+            #PURGING UNUSABLE MESSAGES FROM DB
+            cur.execute('SELECT datetime as "datetime [timestamp]", messageid, authorid, guildid FROM messages')
             rows = cur.fetchall()
             for row in rows:
                 try: 
                     date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
                 except ValueError:
                     date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')                
-                if abs((date-datetime.utcnow()).days) > 90:
-                    cur.execute('DELETE FROM messages WHERE messageid={} AND guildid={}'.format(row[1], ctx.guild.id))
-                    #delete all messages older than 90 days from DB
+                if abs((date-datetime.utcnow()).days) > 30:
+                    cur.execute('DELETE FROM messages WHERE messageid={}}'.format(row[1]))
+                    #delete all messages older than 30 days from DB
+                check_guild = self.client.get_guild(row[3])
+                if check_guild is None:
+                    cur.execute('DELETE FROM messages WHERE guildid={}'.format(row[3]))
+                    #delete all messages from guilds the client is no longer part of
+                    continue
+                check_member = check_guild.get_member(row[2])
+                if check_member is None:
+                    cur.execute('DELETE FROM messages WHERE authorid={} and guildid={}'.format(row[2], row[3]))
+                    #delete all messages from members who are no longer part of that guild
+
+                
             conn.commit()
             memberlist.sort(key=itemgetter('days_gone'))
             sumpages=math.ceil(len(memberlist)/20)
             for page in range(0, sumpages-1):
-                #title = "Member inactivity"
                 desctext = ""
                 for i in range(page*20, page*20+19):
                     current_member = memberlist[i]
-                    desctext += "- {} has written {} messages. Last one {} days ago.\n".format(current_member['member'].mention, current_member['amount_messages'], current_member['days_gone'])
-                #emb=discord.Embed(color=0xffd700, timestamp=datetime.utcnow(), title=title, description=desctext)
-                #emb.set_footer(text="Page {}/{}".format(page, sumpages))
+                    desctext += "- {} has written {} messages. Last one (over) {} days ago.\n".format(current_member['member'].mention, current_member['amount_messages'], current_member['days_gone'])
                 await ctx.send(desctext)
                 await asyncio.sleep(5)
 
