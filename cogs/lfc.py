@@ -46,7 +46,6 @@ class LFC(commands.Cog):
             except discord.errors.Forbidden:
                 continue
             guildlist.append((guild, role))
-        print(guildlist)
         self.client.loop.create_task(self.auto_remove(author.id,guildlist))
 
 
