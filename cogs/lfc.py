@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import cogs.guilds
-from cogs.checks import matchlfcchannel
+from cogs.helper import matchlfcchannel
 
 class LFC(commands.Cog):
     def __init__(self, client):

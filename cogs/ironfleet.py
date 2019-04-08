@@ -3,8 +3,8 @@ from discord.ext import commands
 import asyncio
 import sqlite3
 from sqlite3 import Error 
-from cogs.checks import isGod, isAdmin, isMod, isIronFleet, memberSearch
-from cogs.checks import create_connection, db_file, welcome, servers
+from cogs.helper import isGod, isAdmin, isMod, isIronFleet, memberSearch
+from cogs.helper import create_connection, db_file, welcome, servers
 from datetime import datetime
 
 

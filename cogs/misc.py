@@ -3,7 +3,7 @@ from discord.ext import commands
 import asyncio
 import datetime
 import cogs.guilds
-from cogs.checks import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file
+from cogs.helper import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file
 import math
 
 class Misc(commands.Cog):

@@ -5,7 +5,7 @@ import sqlite3
 from sqlite3 import Error
 from datetime import datetime
 import cogs.guilds
-from cogs.checks import isAdmin,roleSearch,create_connection,db_file
+from cogs.helper import isAdmin,roleSearch,create_connection,db_file
 
 class ReactionRole(commands.Cog):
 	def __init__(self, client):
