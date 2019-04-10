@@ -22,7 +22,7 @@ from cogs.helper import isMod, isAdmin, isGod
 from cogs.helper import servers
 from cogs.helper import create_connection
 
-_version = 2.3
+_version = 2.4
 
 print(sys.version)
 print(discord.__version__)

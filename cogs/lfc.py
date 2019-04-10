@@ -9,7 +9,7 @@ class LFC(commands.Cog):
         self.client = client
 
     async def auto_remove(self, user_id, guildlist):
-        await asyncio.sleep(5)
+        await asyncio.sleep(7200)
         for tup in guildlist:
             try:
                 await tup[0].get_member(user_id).remove_roles(tup[1])
