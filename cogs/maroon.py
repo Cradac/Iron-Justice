@@ -80,18 +80,18 @@ class Maroon(commands.Cog):
     async def marooning(self, ctx, role:str=None):
         conn = create_connection(db_file)
         await ctx.send("**__Checking for inactivity now... This might take a while.__**")
-        memberlist = None
+        list_to_check = None
         if role is None:
-            memberlist = ctx.guild.members
+            list_to_check = ctx.guild.members
         else:
-            role = roleSearch(ctx, self.client, role)
+            role = await roleSearch(ctx, self.client, role)
             if role is None:
                 return
-            memberlist = role.members
+            list_to_check = role.members
         with conn:
             cur = conn.cursor()
             memberlist = []
-            for member in memberlist:
+            for member in list_to_check:
                 if not member.bot:
                     cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages WHERE authorid={} ORDER BY datetime DESC LIMIT 1'.format(member.id))
                     row = cur.fetchone()
@@ -118,9 +118,8 @@ class Maroon(commands.Cog):
                         member_stats = {'member': member, 'days_gone': days_gone, 'amount_messages': amnt}
                         memberlist.append(member_stats)
 
-
             #PURGING UNUSABLE MESSAGES FROM DB
-            cur.execute('SELECT datetime as "datetime [timestamp]", messageid, authorid, guildid FROM messages')
+            cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages')
             rows = cur.fetchall()
             for row in rows:
                 try: 
@@ -128,16 +127,24 @@ class Maroon(commands.Cog):
                 except ValueError:
                     date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')                
                 if abs((date-datetime.utcnow()).days) > 30:
-                    cur.execute('DELETE FROM messages WHERE messageid={}}'.format(row[1]))
+                    cur.execute('DELETE FROM messages WHERE messageid={}'.format(row[1]))
                     #delete all messages older than 30 days from DB
-                check_guild = self.client.get_guild(row[3])
+            cur.execute('SELECT DISTINCT guildid FROM messages')
+            rows = cur.fetchall()
+            for row in rows:
+                #TODO get list again, make guild distinct
+                check_guild = self.client.get_guild(row[0])
                 if check_guild is None:
-                    cur.execute('DELETE FROM messages WHERE guildid={}'.format(row[3]))
+                    cur.execute('DELETE FROM messages WHERE guildid={}'.format(row[0]))
                     #delete all messages from guilds the client is no longer part of
-                    continue
-                check_member = check_guild.get_member(row[2])
+            cur.execute('SELECT DISTINCT guildid, authorid FROM messages')
+            rows = cur.fetchall()
+            for row in rows:
+                #TODO get list again, make member and guild distinct
+                check_guild = self.client.get_guild(row[0])
+                check_member = check_guild.get_member(row[1])
                 if check_member is None:
-                    cur.execute('DELETE FROM messages WHERE authorid={} and guildid={}'.format(row[2], row[3]))
+                    cur.execute('DELETE FROM messages WHERE authorid={} and guildid={}'.format(row[1], row[0]))
                     #delete all messages from members who are no longer part of that guild
 
                 
