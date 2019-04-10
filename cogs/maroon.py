@@ -97,7 +97,6 @@ class Maroon(commands.Cog):
                     row = cur.fetchone()
                     #Check if each of the members has been inactive for this much
                     comparedate = None
-                    hourzero = datetime(2019, 3, 1)
                     joindate = member.joined_at
                     if  row is not None and row[0] is not None:
                         comparedate = row[0] #pick last message as date
@@ -105,19 +104,21 @@ class Maroon(commands.Cog):
                             comparedate = datetime.strptime(comparedate, '%Y-%m-%d %H:%M:%S.%f')
                         except ValueError:
                             comparedate = datetime.strptime(comparedate, '%Y-%m-%d %H:%M:%S')
-                    elif hourzero > joindate:
-                        comparedate = hourzero #pick bot starting as date
-                    else:
+                    if row is None or row[0] is None:
                         comparedate = joindate #pick the date of the guy joining
-
+                    if comparedate is None:
+                        await ctx.send("Something's fucked.")
                     days_gone = abs((comparedate-datetime.utcnow()).days)
-                    if days_gone >= 14: 
+                    min_time_away = 14
+                    if role is not None:
+                        min_time_away = 2
+                    if days_gone >= min_time_away: 
                         cur.execute("SELECT Count(*) FROM messages WHERE authorid={} AND guildid={}".format(member.id, ctx.guild.id))
                         row = cur.fetchone()
                         amnt = row[0]
                         member_stats = {'member': member, 'days_gone': days_gone, 'amount_messages': amnt}
                         memberlist.append(member_stats)
-
+                    
             #PURGING UNUSABLE MESSAGES FROM DB
             cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages')
             rows = cur.fetchall()
@@ -129,6 +130,7 @@ class Maroon(commands.Cog):
                 if abs((date-datetime.utcnow()).days) > 30:
                     cur.execute('DELETE FROM messages WHERE messageid={}'.format(row[1]))
                     #delete all messages older than 30 days from DB
+
             cur.execute('SELECT DISTINCT guildid FROM messages')
             rows = cur.fetchall()
             for row in rows:
@@ -151,11 +153,14 @@ class Maroon(commands.Cog):
             conn.commit()
             memberlist.sort(key=itemgetter('days_gone'))
             sumpages=math.ceil(len(memberlist)/20)
-            for page in range(0, sumpages-1):
+            for page in range(0, sumpages):
                 desctext = ""
-                for i in range(page*20, page*20+19):
-                    current_member = memberlist[i]
-                    desctext += "- {} has written {} messages. Last one (over) {} days ago.\n".format(current_member['member'].mention, current_member['amount_messages'], current_member['days_gone'])
+                try:
+                    for i in range(page*20, page*20+19):
+                        current_member = memberlist[i]
+                        desctext += "- {} has written {} messages. Last one (over) {} days ago.\n".format(current_member['member'].mention, current_member['amount_messages'], current_member['days_gone'])
+                except IndexError:
+                    pass
                 await ctx.send(desctext)
                 await asyncio.sleep(5)
 
