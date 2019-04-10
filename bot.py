@@ -18,9 +18,9 @@ import random
 import traceback
 from cogs.guilds import Guilds
 from cogs.member import Members
-from cogs.checks import isMod, isAdmin, isGod
-from cogs.checks import servers
-from cogs.checks import create_connection
+from cogs.helper import isMod, isAdmin, isGod
+from cogs.helper import servers
+from cogs.helper import create_connection
 
 _version = 2.3
 
