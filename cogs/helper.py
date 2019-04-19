@@ -143,33 +143,25 @@ async def roleSearch(ctx, client, name):
 			await ctx.send("Cancelled command.")
 			return None
 
-def createEmbed(*, title=None, description=None, colour=None, author=None,thumbnail=None, image=None, fields=[], footer=None):
+def createEmbed(*, title=None, description=None, colour=None, author:discord.Member=None):
 	if colour == 'iron':
 		colour = 0xffd700
 	elif colour == 'rogue':
 		colour = 0x7d0a00
 	embed = discord.Embed(
+			title = title,
+			description=description,
+			timestamp = datetime.utcnow()
+		)
+	if colour is not None:
+		embed = discord.Embed(
 		title=title,
 		description=description,
 		timestamp=datetime.utcnow(),
 		colour=colour
 	)
-	if colour is None:
-		embed = discord.Embed(
-			title = title,
-			description=description,
-			timestamp = datetime.utcnow()
-		)
 	if author is not None:
-		embed.set_author(name=author['name'], icon_url=author['icon'])
-	if thumbnail is not None:
-		embed.set_thumbnail(url=thumbnail)
-	if image is not None:
-		embed.set_image(url=image)
-	for	field in fields:
-		embed.add_field(name=field['name'], value=field['value'], inline=field['inline']) 
-	if footer is not None:
-		embed.set_footer(text=footer['text'], icon_url=footer['icon'])
+		embed.set_author(name=author, icon_url=author.avatar_url)
 
 
 

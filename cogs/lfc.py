@@ -8,11 +8,12 @@ class LFC(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    async def auto_remove(self, user_id, guildlist):
+    async def auto_remove(self, user_id, guildlist, ctx):
         await asyncio.sleep(7200)
         for tup in guildlist:
             try:
-                await tup[0].get_member(user_id).remove_roles(tup[1])
+                if ctx.bot.dictGuilds[tup[0].id].enabled['lfc']:
+                    await tup[0].get_member(user_id).remove_roles(tup[1])
             except:
                 continue
     
@@ -34,6 +35,8 @@ class LFC(commands.Cog):
 
         #iterate through all guilds and try to add LFC
         for guild in self.client.guilds:
+            if not ctx.bot.dictGuilds[guild.id].enabled['lfc']:
+                continue
             for it_role in guild.roles:
                 if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
                     role = it_role
@@ -46,7 +49,7 @@ class LFC(commands.Cog):
             except discord.errors.Forbidden:
                 continue
             guildlist.append((guild, role))
-        self.client.loop.create_task(self.auto_remove(author.id,guildlist))
+        self.client.loop.create_task(self.auto_remove(author.id,guildlist, ctx))
 
 
     @matchlfcchannel()
@@ -63,6 +66,8 @@ class LFC(commands.Cog):
         await ctx.send("You are no longer *looking for a crew*.")
 
         for guild in self.client.guilds:
+            if not ctx.bot.dictGuilds[guild.id].enabled['lfc']:
+                continue
             for it_role in guild.roles:
                 if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
                     role = it_role

@@ -22,7 +22,7 @@ from cogs.helper import isMod, isAdmin, isGod
 from cogs.helper import servers
 from cogs.helper import create_connection
 
-_version = 2.4
+_version = '2.4.1'
 
 print(sys.version)
 print(discord.__version__)
@@ -41,7 +41,7 @@ db_file = "JusticeDB.db"
 client.dictGuilds = {}
 serverids = [] 
 
-extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole", "cogs.maroon"]
+extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole", "cogs.maroon", "cogs.auto_voice"]
 
 
 
