@@ -4,7 +4,7 @@ from random import choice
 from cogs.helper import isMod, isAdmin, isGod, createEmbed
 
 
-channel_names = ['Silence', 'Iron Victory', 'Leviathan', 'Kraken\'s Kiss', 'Reaper\'s Wind']
+channel_names = ['Silence', 'Iron Victory', 'Leviathan', 'Kraken\'s Kiss', 'Reaper\'s Wind', 'Black Wind', ' Sea Bitch', 'Silence', 'Noble Lady', 'Red God\'s Wrath', 'Shrike', 'Shade', 'Ghost', 'Slaver\'s Scream', 'Sea Song', 'Thunderer', 'Nighflyer', 'Silverfin', 'Black Wind', 'Great Kraken']
 created_channels = []
 
 class AutoVoice(commands.Cog):
@@ -13,21 +13,22 @@ class AutoVoice(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        if before.channel is None and after.channel.name == "Get Ship!":                #Joined Get Ship Voice
+        if after.channel is not None and after.channel.name == "Get Ship!":                #Joined Get Ship Voice
             category = self.client.get_channel(after.channel.category_id)
-            if len(channel_names == 0):
+            if len(channel_names) == 0:
                 name = "Iron Fleet Ship"
             else:
                 name = choice(channel_names)
                 channel_names.remove(name)
-            voice_channel = await category.create_voice(name, reason='Created ship channel.', position=len(category.channels)-1)
+            voice_channel = await category.create_voice_channel(name, reason='Created ship channel.', position=len(category.channels)-1)
             created_channels.append(voice_channel)
-            member.move_to(voice_channel, reason='Moved to created channel.')
-
-        elif before.channel in created_channels and after.channel is None and len(before.channel.members) == 1:               #Left any of the created Voice Channels
-            await before.channel.delete()
+            await member.move_to(voice_channel, reason='Moved to created channel.')
+        
+        if before.channel in created_channels and len(before.channel.members) == 0:               #Left any of the created Voice Channels
+            await before.channel.delete(reason='Ship unmanned.')
             created_channels.remove(before.channel)
             channel_names.append(before.channel.name)
+
 
     @isAdmin()
     @commands.command()
@@ -45,6 +46,10 @@ class AutoVoice(commands.Cog):
         if used_names == '':
             used_names = 'None used.'
         embed.add_field(name='__Used Ship Names:__', value=used_names)
+        embed.set_thumbnail(url=ctx.guild.icon_url_as(format='png', size=1024))
         await ctx.send(embed=embed)
 
 
+
+def setup(client):
+    client.add_cog(AutoVoice(client))
