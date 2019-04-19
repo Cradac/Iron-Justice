@@ -25,7 +25,10 @@ class AutoVoice(commands.Cog):
             await member.move_to(voice_channel, reason='Moved to created channel.')
         
         if before.channel in created_channels and len(before.channel.members) == 0:               #Left any of the created Voice Channels
-            await before.channel.delete(reason='Ship unmanned.')
+            try:
+                await before.channel.delete(reason='Ship unmanned.')
+            except discord.errors.NotFound:
+                pass
             created_channels.remove(before.channel)
             channel_names.append(before.channel.name)
 
