@@ -20,7 +20,9 @@ class AutoVoice(commands.Cog):
             else:
                 name = choice(channel_names)
                 channel_names.remove(name)
-            voice_channel = await category.create_voice_channel(name, reason='Created ship channel.', position=len(category.channels)-1)
+            pos = len(category.channels)-1
+            voice_channel = await category.create_voice_channel(name, reason='Created ship channel.')
+            await voice_channel.edit(position=pos, reason='Moved Ship Channel.')
             created_channels.append(voice_channel)
             await member.move_to(voice_channel, reason='Moved to created channel.')
         
