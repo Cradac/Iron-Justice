@@ -153,16 +153,14 @@ def createEmbed(*, title=None, description=None, colour=None, author:discord.Mem
 			description=description,
 			timestamp = datetime.utcnow()
 		)
-	if colour is not None:
+	if colour:
 		embed = discord.Embed(
 		title=title,
 		description=description,
 		timestamp=datetime.utcnow(),
 		colour=colour
 	)
-	if author is not None:
+	if author:
 		embed.set_author(name=author, icon_url=author.avatar_url)
-
-
 
 	return embed

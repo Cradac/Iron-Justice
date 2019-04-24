@@ -5,7 +5,7 @@ import cogs.guilds
 import sqlite3
 from sqlite3 import Error
 import datetime
-from cogs.helper import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file
+from cogs.helper import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file, createEmbed
 
 class Profile(commands.Cog):
     def __init__(self, client):
@@ -26,21 +26,18 @@ class Profile(commands.Cog):
         with conn:
             cur = conn.cursor()
             try:
-                cur.execute("SELECT tag, gh, oos, ma, af, img_url, pirate_name FROM users WHERE user_id = {}".format(member.id))
-                rows = cur.fetchall()
-                for row in rows:
-                    gamertag = row[0]
-                    gh = int(row[1])
-                    oos = int(row[2])
-                    ma = int(row[3])
-                    af = int(row[4])
-                    img = row[5]
-                    pname = row[6]
-                embed=discord.Embed(
-                    color=0xffd700,
-                    timestamp=datetime.datetime.utcnow()
-                )
-                embed.set_author(name=member.name,icon_url=member.avatar_url)
+                cur.execute("SELECT tag, gh, oos, ma, hc, sd, af, img_url, pirate_name FROM users WHERE user_id = {}".format(member.id))
+                row = cur.fetchone()
+                gamertag = row[0]
+                gh = int(row[1])
+                oos = int(row[2])
+                ma = int(row[3])
+                hc = int(row[4])
+                sd = int(row[5])
+                af = int(row[6])
+                img = row[7]
+                pname = row[8]
+                embed=createEmbed(colour='iron', author=member)
                 guild = ctx.guild
                 icon = guild.icon_url_as(format='png', size=1024)
                 embed.set_thumbnail(url=icon) #"https://i.imgur.com/od8TIcs.png"
@@ -51,11 +48,15 @@ class Profile(commands.Cog):
                 embed.add_field(name="<:gh:486619774424449036> Gold Hoarders", value=gh, inline=True)
                 embed.add_field(name="<:oos:486619776593166336> Order of Souls", value=oos, inline=True)
                 embed.add_field(name="<:ma:486619774688952320> Merchant Alliance", value=ma, inline=True)
-                embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value="{}".format(af), inline=False)
-                embed.set_footer()
+                embed.add_field(name=" Hunter's Call", value=hc, inline=True)
+                embed.add_field(name="Sea Dogs", value=sd, inline=True)
+                embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value=af, inline=False)
+                embed.set_footer(icon_url=icon)
                 if img != "none":
                     embed.set_image(url=img)
-                if gh >= 50 and oos >= 50 and ma >= 50:
+                alliances = [gh==50,oos==50,ma==50,hc==50,sd==50]
+                true_count = sum(0 for a in alliances if a)
+                if true_count >= 3:
                     embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
                 await ctx.send(embed=embed)
             except:
@@ -66,11 +67,11 @@ class Profile(commands.Cog):
                     timestamp=datetime.datetime.utcnow(),
                     title="__Your Profile was created!__"
                 )
-                guild = ctx.message.guild
-                icon = "https://cdn.discordapp.com/icons/{}/{}.png".format(guild.id, guild.icon)
+                guild = ctx.guild
+                icon = guild.icon_url_as(format='png', size=512)
                 embed.set_footer(icon_url=icon)
                 embed.set_author(name=member.name,icon_url=member.avatar_url)
-                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> [AF]`.", inline=False)
+                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> <HC> <SD> [AF]`.", inline=False)
                 embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
                 embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
                 await ctx.send(embed=embed)
@@ -130,21 +131,36 @@ class Profile(commands.Cog):
             await ctx.send(embed=embed)
 
     @matchprofilechannel()
-    @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh = Gold Hoarders\noos = Order of Souls\nma = Merchant Aliance\naf(optional) = Athena's Fortune\n\nAliases:")
-    async def levels(self, ctx, gh:int=0, oos:int=0, ma:int=0, af:int=None):
-        if 0< gh <=50 and 0< oos <=50 and 0 < ma <=50:	
-            conn = create_connection(db_file)
-            with conn:
-                cur = conn.cursor()
-                try:
-                    if af == None:
-                        cur.execute("UPDATE users SET gh='{}', oos='{}', ma='{}' WHERE user_id = '{}'".format(gh, oos, ma, ctx.message.author.id))
-                    else:
-                        if 0<= af <=10:
-                            cur.execute("UPDATE users SET gh='{}', oos='{}', ma='{}', af='{}' WHERE user_id = '{}'".format(gh, oos, ma, af, ctx.message.author.id))	
-                    await ctx.send("{}, your levels are updated.".format(ctx.message.author.mention))
-                except:
-                    await ctx.send("Something went wrong. Please try again later.")
+    @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter's Call\nsd: Sea Dogs\naf(optional): Athena's Fortune\n\nUsage:\n?levels gh=50\n?levels af=5 hc=50 gh=50 sd=50 ma=50 oos=50\n\nAliases:")
+    async def levels(self, ctx, *args):
+        comps = {}
+        for arg in args:
+            arg = arg.split('=')
+            try:
+                comps[arg[0].lower()] = int(arg[1])
+            except ValueError:
+                await ctx.send("Please only pass integers for levels.")
+                return
+        print(comps)
+        for comp,lvl in comps.items():
+            if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af']:
+                await ctx.send(f'`{comp}` is not a correct trading company abbreviation.\nPossible abbreviations are: `gh`, `oos`, `ma`, `hc`, `sd`, `af`.')
+                return
+            if comp == 'af' and (not isinstance(lvl, int) or not 0 <= lvl <=10):
+                await ctx.send('Athena\'s levels can only be between 0 and 10.')
+                return
+            if not isinstance(lvl, int) or not 0 < lvl <= 50:
+                await ctx.send('Levels can only be between 1 and 50.')
+                return
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            uid = ctx.message.author.id
+            for comp,lvl in comps.items():
+                cur.execute(f"UPDATE users SET {comp}={lvl} WHERE user_id='{uid}'")
+        await ctx.send(f'Your levels have been updated, {ctx.message.author.mention}.')
+
+
 
     @matchprofilechannel()
     @commands.command(aliases=["set_image"], brief="Set a picture for your profile.", description=">>>Set Image\nWith this command you can set a picture for your profile.\nMake sure your URL ends with '.png', '.jpg' or '.gif'.\nIf you want no profile picture type '!set-image none'.\n\n Aliases:")
