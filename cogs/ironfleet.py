@@ -4,7 +4,7 @@ import asyncio
 import sqlite3
 from sqlite3 import Error 
 from cogs.helper import isGod, isAdmin, isMod, isIronFleet, memberSearch
-from cogs.helper import create_connection, db_file, welcome, servers
+from cogs.helper import create_connection, db_file, welcome, if_servers
 from datetime import datetime
 
 
@@ -38,7 +38,7 @@ class IronFleet(commands.Cog):
     #MEMBER JOIN MESSAGE
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        if not member.guild.id in servers or member.bot:
+        if not member.guild.id in if_servers or member.bot:
             return
         welcome_channel = discord.utils.get(member.guild.channels, id=welcome)
         rules_channel = discord.utils.get(member.guild.channels, id=479301263461449768)
@@ -84,7 +84,7 @@ Feel free to message a Junior or Senior Officer if you have any questions or nee
     #MEMBER REMOVE MESSAGE
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        if not member.guild.id in servers or member.bot:
+        if not member.guild.id in if_servers or member.bot:
             return
         channel = discord.utils.get(member.guild.channels, id=welcome)
         await channel.send("Oh my, **{}** lost their senses during a storm and drowned. Not worthy of being called an Ironborn! What is dead may never die!".format(member))

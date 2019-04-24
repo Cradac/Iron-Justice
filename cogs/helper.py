@@ -6,7 +6,7 @@ from datetime import datetime
 import sqlite3
 from sqlite3 import Error 
 god = 116222914327478274
-servers=[479300072077787160,421650482176589835] #ironfleet servers
+if_servers=[479300072077787160,421650482176589835] #ironfleet servers
 rogueID = 455901088164478976
 welcome = 479301249351548928 #ironfleet welcome channel
 db_file = "JusticeDB.db"
@@ -64,7 +64,7 @@ def matchprofilechannel():
 
 def isIronFleet():
     def inServer(ctx):
-        if ctx.message.guild.id in servers:
+        if ctx.message.guild.id in if_servers:
             return True
         return False
     return commands.check(inServer)

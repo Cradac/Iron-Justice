@@ -1,29 +1,66 @@
 import discord, asyncio, cogs.guilds, math
 from discord.ext import commands
 from datetime import datetime
-from cogs.helper import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file, isntRogueLegends
+from cogs.helper import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file, isntRogueLegends, if_servers
 from operator import itemgetter
 
 #simply adds a message with author id, message id and timestamp into DB
-def addMessage(message:discord.Message):
-	conn = create_connection(db_file)
-	with conn:
-		cur = conn.cursor()
-		cur.execute('''INSERT INTO messages VALUES (?,?,?,?)''', (message.author.id, message.created_at,message.id,message.guild.id))
-		conn.commit()
+
 
 class Maroon(commands.Cog):
     def __init__(self, client):
         self.client = client
-        
+    
+    def addMessage(self, message:discord.Message):
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            cur.execute('''INSERT INTO messages VALUES (?,?,?,?)''', (message.author.id, message.created_at,message.id,message.guild.id))
+            conn.commit()
+
+    def purge_DB(self):
+        conn = create_connection(db_file)
+        with conn:
+            cur = conn.cursor()
+            cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages')
+            rows = cur.fetchall()
+            for row in rows:
+                try: 
+                    date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
+                except ValueError:
+                    date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')                
+                if abs((date-datetime.utcnow()).days) > 30:
+                    cur.execute('DELETE FROM messages WHERE messageid={}'.format(row[1]))
+                    #delete all messages older than 30 days from DB
+
+            cur.execute('SELECT DISTINCT guildid FROM messages')
+            rows = cur.fetchall()
+            for row in rows:
+                #TODO get list again, make guild distinct
+                check_guild = self.client.get_guild(row[0])
+                if check_guild is None:
+                    cur.execute('DELETE FROM messages WHERE guildid={}'.format(row[0]))
+                    #delete all messages from guilds the client is no longer part of
+            cur.execute('SELECT DISTINCT guildid, authorid FROM messages')
+            rows = cur.fetchall()
+            for row in rows:
+                #TODO get list again, make member and guild distinct
+                check_guild = self.client.get_guild(row[0])
+                check_member = check_guild.get_member(row[1])
+                if check_member is None:
+                    cur.execute('DELETE FROM messages WHERE authorid={} and guildid={}'.format(row[1], row[0]))
+                    #delete all messages from members who are no longer part of that guild   
+            conn.commit()
+
     @commands.Cog.listener()
-    @isntRogueLegends()
     async def on_message(self, message):
         if not message.author.bot and not message.content.startswith(('?', '!')):
             if type(message.channel) is discord.DMChannel:
                 print('{}: {}'.format(message.author,message.content))
                 return
-            addMessage(message)
+            elif not type(message.channel) is discord.DMChannel and message.guild.id not in if_servers:     #only record messages in our server
+                return
+            self.addMessage(message)
             
     @commands.Cog.listener()
     @isntRogueLegends()
@@ -78,7 +115,6 @@ class Maroon(commands.Cog):
     @isntRogueLegends()
     @commands.command(aliases=["maroon"], brief="Manually invoke the checking routine.", hidden=True)
     async def marooning(self, ctx, role:str=None):
-        conn = create_connection(db_file)
         await ctx.send("**__Checking for inactivity now... This might take a while.__**")
         list_to_check = None
         if role is None:
@@ -88,8 +124,14 @@ class Maroon(commands.Cog):
             if role is None:
                 return
             list_to_check = role.members
+        #PURGING UNUSABLE MESSAGES FROM DB
+        self.purge_DB()
+
+        conn = create_connection(db_file)
         with conn:
             cur = conn.cursor()
+
+            #select inactive members
             memberlist = []
             for member in list_to_check:
                 if not member.bot:
@@ -109,48 +151,15 @@ class Maroon(commands.Cog):
                     if comparedate is None:
                         await ctx.send("Something's fucked.")
                     days_gone = abs((comparedate-datetime.utcnow()).days)
-                    min_time_away = 14
-                    if role is not None:
-                        min_time_away = 2
-                    if days_gone >= min_time_away: 
+                    if days_gone > 30:
+                        days_gone = 30
+                    if days_gone >= 14: 
                         cur.execute("SELECT Count(*) FROM messages WHERE authorid={} AND guildid={}".format(member.id, ctx.guild.id))
                         row = cur.fetchone()
                         amnt = row[0]
                         member_stats = {'member': member, 'days_gone': days_gone, 'amount_messages': amnt}
                         memberlist.append(member_stats)
-                    
-            #PURGING UNUSABLE MESSAGES FROM DB
-            cur.execute('SELECT datetime as "datetime [timestamp]", messageid FROM messages')
-            rows = cur.fetchall()
-            for row in rows:
-                try: 
-                    date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S.%f')
-                except ValueError:
-                    date = datetime.strptime(row[0], '%Y-%m-%d %H:%M:%S')                
-                if abs((date-datetime.utcnow()).days) > 30:
-                    cur.execute('DELETE FROM messages WHERE messageid={}'.format(row[1]))
-                    #delete all messages older than 30 days from DB
 
-            cur.execute('SELECT DISTINCT guildid FROM messages')
-            rows = cur.fetchall()
-            for row in rows:
-                #TODO get list again, make guild distinct
-                check_guild = self.client.get_guild(row[0])
-                if check_guild is None:
-                    cur.execute('DELETE FROM messages WHERE guildid={}'.format(row[0]))
-                    #delete all messages from guilds the client is no longer part of
-            cur.execute('SELECT DISTINCT guildid, authorid FROM messages')
-            rows = cur.fetchall()
-            for row in rows:
-                #TODO get list again, make member and guild distinct
-                check_guild = self.client.get_guild(row[0])
-                check_member = check_guild.get_member(row[1])
-                if check_member is None:
-                    cur.execute('DELETE FROM messages WHERE authorid={} and guildid={}'.format(row[1], row[0]))
-                    #delete all messages from members who are no longer part of that guild
-
-                
-            conn.commit()
             memberlist.sort(key=itemgetter('days_gone'))
             sumpages=math.ceil(len(memberlist)/20)
             for page in range(0, sumpages):
@@ -166,5 +175,12 @@ class Maroon(commands.Cog):
 
             await ctx.send("**__Finished checking.__**")
 
+    @isAdmin()
+    @isntRogueLegends()
+    @commands.command(brief="Clean the database of old messages.", hidden=True)
+    async def purge(self, ctx):
+        await ctx.send('**__Purging the Database of old entries now... This might take a bit.__**')
+        self.purge_DB()
+        await ctx.send('**__Finished purging__**')
 def setup(client):
     client.add_cog(Maroon(client))    
