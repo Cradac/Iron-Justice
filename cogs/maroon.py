@@ -36,7 +36,6 @@ class Maroon(commands.Cog):
             cur.execute('SELECT DISTINCT guildid FROM messages')
             rows = cur.fetchall()
             for row in rows:
-                #TODO get list again, make guild distinct
                 check_guild = self.client.get_guild(row[0])
                 if check_guild is None:
                     cur.execute('DELETE FROM messages WHERE guildid={}'.format(row[0]))
@@ -44,7 +43,6 @@ class Maroon(commands.Cog):
             cur.execute('SELECT DISTINCT guildid, authorid FROM messages')
             rows = cur.fetchall()
             for row in rows:
-                #TODO get list again, make member and guild distinct
                 check_guild = self.client.get_guild(row[0])
                 check_member = check_guild.get_member(row[1])
                 if check_member is None:
