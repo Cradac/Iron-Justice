@@ -6,6 +6,7 @@ import sqlite3
 from sqlite3 import Error
 import datetime
 from cogs.helper import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file, createEmbed
+import re
 
 class Profile(commands.Cog):
     def __init__(self, client):
@@ -13,7 +14,7 @@ class Profile(commands.Cog):
 
 
     @matchprofilechannel()
-    @commands.command(brief="Shows your Player Profile.", description=">>>Profile:\nThis shows your player profile.\nAdd your XBox Profile name with '!gt <Your Gamertag>'.\nYou can update your levels with '!levels <GH> <OOS> <MA> [AF]'.\nIf you tag a player after '!profile [member]' you can see his/her profile.\n\nAliases:")
+    @commands.command(brief="Shows your Player Profile.", description=">>>Profile:\nThis shows your player profile.\nAdd your XBox Profile name with '?gt edit <Your Gamertag>'.\nYou can update your levels with `?levels gh=<gh> oos=<oos>` etc...\nIf you tag a player after '?profile [member]' you can see his/her profile.\n\nAliases:")
     async def profile(self, ctx, member:str=None):
         if member is None:
             member = ctx.message.author
@@ -55,7 +56,7 @@ class Profile(commands.Cog):
                 if img != "none":
                     embed.set_image(url=img)
                 alliances = [gh==50,oos==50,ma==50,hc==50,sd==50]
-                true_count = sum(0 for a in alliances if a)
+                true_count = sum(alliances)
                 if true_count >= 3:
                     embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
                 await ctx.send(embed=embed)
@@ -71,7 +72,7 @@ class Profile(commands.Cog):
                 icon = guild.icon_url_as(format='png', size=512)
                 embed.set_footer(icon_url=icon)
                 embed.set_author(name=member.name,icon_url=member.avatar_url)
-                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels <GH> <OoS> <MA> <HC> <SD> [AF]`.", inline=False)
+                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc...", inline=False)
                 embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
                 embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
                 await ctx.send(embed=embed)
@@ -131,9 +132,13 @@ class Profile(commands.Cog):
             await ctx.send(embed=embed)
 
     @matchprofilechannel()
-    @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter's Call\nsd: Sea Dogs\naf(optional): Athena's Fortune\n\nUsage:\n?levels gh=50\n?levels af=5 hc=50 gh=50 sd=50 ma=50 oos=50\n\nAliases:")
+    @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter's Call\nsd: Sea Dogs\naf: Athena's Fortune\n\nUsage:\n?levels gh=50\n?levels af=5 hc=50 gh=50 sd=50 ma=50 oos=50\n\nAliases:")
     async def levels(self, ctx, *args):
         comps = {}
+        r = re.compile('^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
+        if not r.match(" ".join(args) + " "):
+            await ctx.send("The Syntax is not correct. Try like this:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`")
+            return
         for arg in args:
             arg = arg.split('=')
             try:
@@ -141,7 +146,6 @@ class Profile(commands.Cog):
             except ValueError:
                 await ctx.send("Please only pass integers for levels.")
                 return
-        print(comps)
         for comp,lvl in comps.items():
             if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af']:
                 await ctx.send(f'`{comp}` is not a correct trading company abbreviation.\nPossible abbreviations are: `gh`, `oos`, `ma`, `hc`, `sd`, `af`.')
