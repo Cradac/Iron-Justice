@@ -6,6 +6,7 @@ import sqlite3
 from sqlite3 import Error
 import datetime
 from cogs.helper import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file, createEmbed
+import re
 
 class Profile(commands.Cog):
     def __init__(self, client):
@@ -55,7 +56,7 @@ class Profile(commands.Cog):
                 if img != "none":
                     embed.set_image(url=img)
                 alliances = [gh==50,oos==50,ma==50,hc==50,sd==50]
-                true_count = sum(0 for a in alliances if a)
+                true_count = sum(alliances)
                 if true_count >= 3:
                     embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
                 await ctx.send(embed=embed)
@@ -134,6 +135,10 @@ class Profile(commands.Cog):
     @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter's Call\nsd: Sea Dogs\naf: Athena's Fortune\n\nUsage:\n?levels gh=50\n?levels af=5 hc=50 gh=50 sd=50 ma=50 oos=50\n\nAliases:")
     async def levels(self, ctx, *args):
         comps = {}
+        r = re.compile('^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
+        if not r.match(" ".join(args) + " "):
+            await ctx.send("The Syntax is not correct. Try like this:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`")
+            return
         for arg in args:
             arg = arg.split('=')
             try:
@@ -141,7 +146,6 @@ class Profile(commands.Cog):
             except ValueError:
                 await ctx.send("Please only pass integers for levels.")
                 return
-        print(comps)
         for comp,lvl in comps.items():
             if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af']:
                 await ctx.send(f'`{comp}` is not a correct trading company abbreviation.\nPossible abbreviations are: `gh`, `oos`, `ma`, `hc`, `sd`, `af`.')
