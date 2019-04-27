@@ -19,7 +19,6 @@ import traceback
 from cogs.guilds import Guilds
 from cogs.member import Members
 from cogs.helper import isMod, isAdmin, isGod
-from cogs.helper import servers
 from cogs.helper import create_connection
 
 _version = '2.4.1'
@@ -41,7 +40,7 @@ db_file = "JusticeDB.db"
 client.dictGuilds = {}
 serverids = [] 
 
-extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole", "cogs.maroon", "cogs.auto_voice"]
+extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole", "cogs.auto_voice"]
 
 
 

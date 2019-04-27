@@ -6,7 +6,7 @@ from datetime import datetime
 import sqlite3
 from sqlite3 import Error 
 god = 116222914327478274
-servers=[479300072077787160,421650482176589835] #ironfleet servers
+if_servers=[479300072077787160,421650482176589835] #ironfleet servers
 rogueID = 455901088164478976
 welcome = 479301249351548928 #ironfleet welcome channel
 db_file = "JusticeDB.db"
@@ -64,7 +64,7 @@ def matchprofilechannel():
 
 def isIronFleet():
     def inServer(ctx):
-        if ctx.message.guild.id in servers:
+        if ctx.message.guild.id in if_servers:
             return True
         return False
     return commands.check(inServer)
@@ -153,16 +153,14 @@ def createEmbed(*, title=None, description=None, colour=None, author:discord.Mem
 			description=description,
 			timestamp = datetime.utcnow()
 		)
-	if colour is not None:
+	if colour:
 		embed = discord.Embed(
 		title=title,
 		description=description,
 		timestamp=datetime.utcnow(),
 		colour=colour
 	)
-	if author is not None:
+	if author:
 		embed.set_author(name=author, icon_url=author.avatar_url)
-
-
 
 	return embed
