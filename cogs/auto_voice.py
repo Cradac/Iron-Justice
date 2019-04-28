@@ -13,7 +13,7 @@ class AutoVoice(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        if after.channel is not None and after.channel.name == "Get Ship!":                #Joined Get Ship Voice
+        if after.channel is not None and after.channel.name == "Get a Ship!":                #Joined Get Ship Voice
             category = self.client.get_channel(after.channel.category_id)
             if len(channel_names) == 0:
                 name = "Iron Fleet Ship"
