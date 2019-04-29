@@ -78,7 +78,10 @@ Feel free to message a Junior or Senior Officer if you have any questions or nee
         embed.set_thumbnail(url=icon)
         footertext = "#{} Ironborn".format(member_count)
         embed.set_footer(text=footertext, icon_url=icon)
-        await member.send(embed=embed)
+        try:
+            await member.send(embed=embed)
+        except discord.errors.Forbidden:
+            print(f'Couldn\'t send welcome message to {member}.')
 
 
     #MEMBER REMOVE MESSAGE
