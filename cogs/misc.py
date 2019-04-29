@@ -118,12 +118,15 @@ class Misc(commands.Cog):
 
     @isGod()
     @commands.command(hidden=True)
-    async def sql(self, *query : str):
+    async def sql(self, ctx, *query : str):
+        query = " ".join(query)
+        
         conn = create_connection(db_file)
         with conn:
             cur = conn.cursor()
             cur.execute(query)
             conn.commit()
+            await ctx.send(f'Executed SQL Query `{query}` successfully.')
 
 def setup(client):
     client.add_cog(Misc(client))
