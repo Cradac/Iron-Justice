@@ -49,8 +49,8 @@ class Profile(commands.Cog):
                 embed.add_field(name="<:gh:486619774424449036> Gold Hoarders", value=gh, inline=True)
                 embed.add_field(name="<:oos:486619776593166336> Order of Souls", value=oos, inline=True)
                 embed.add_field(name="<:ma:486619774688952320> Merchant Alliance", value=ma, inline=True)
-                embed.add_field(name="Hunter's Call", value=hc, inline=True)
-                embed.add_field(name="Sea Dogs", value=sd, inline=True)
+                embed.add_field(name="<:hc:573788002455650314> Hunter's Call", value=hc, inline=True)
+                embed.add_field(name="<:sd:573788001407205376> Sea Dogs", value=sd, inline=True)
                 embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value=af, inline=False)
                 embed.set_footer(icon_url=icon)
                 if img != "none":

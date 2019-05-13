@@ -40,7 +40,7 @@ db_file = "JusticeDB.db"
 client.dictGuilds = {}
 serverids = [] 
 
-extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole", "cogs.auto_voice"]
+extensions = ["cogs.lfc", "cogs.profile", "cogs.ironfleet", "cogs.misc", "cogs.reactionrole", "cogs.auto_voice", "cogs.maroon"]
 
 
 
