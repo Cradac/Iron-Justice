@@ -5,7 +5,7 @@ import cogs.guilds
 import sqlite3
 from sqlite3 import Error
 import datetime
-from cogs.helper import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file, createEmbed
+from cogs.utils import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file, createEmbed
 import re
 
 class Profile(commands.Cog):

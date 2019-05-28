@@ -1,7 +1,7 @@
 import discord, asyncio, cogs.guilds, math
 from discord.ext import commands
 from datetime import datetime
-from cogs.helper import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file, isntRogueLegends, if_servers
+from cogs.utils import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file, isntRogueLegends, if_servers
 from operator import itemgetter
 
 #simply adds a message with author id, message id and timestamp into DB
