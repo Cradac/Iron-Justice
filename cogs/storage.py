@@ -2,21 +2,23 @@ import discord
 from utils import createEmbed
 #import mysql
 
-#  conn = mysql.connector.connect(user='NAME', databse='DB', passwd='PW')
 conn = None
 
 
 def connect_db():
     # global conn
+    # conn = mysql.connector.connect(user='NAME', databse='DB', passwd='PW')
     # cur = conn.cursor()
     cur = None
     return cur
 
-def execute_query(query: str):
+def execute_query(query: str, commit: bool = False):
     global conn
-    cur = connect_db()
+    #conn = mysql.connector.connect(user='NAME', databse='DB', passwd='PW')
+    cur = conn.cursor()
     cur.execute(query)
-    conn.commit()
+    if commit:
+        conn.commit()
     return cur
 
 
@@ -66,9 +68,9 @@ def get_xbox_tag(user: discord.Member):
 
 def create_profile(ctx, user: discord.Member):
     query = f'INSERT INTO sot_profile (uid) VALUES ({user.id});'
-    execute_query(query)
+    execute_query(query)                                                #CAN I ONLY COMMIT ONCE?
     query = f'INSERT INTO gamertags (uid) VALUES ({user.id});'
-    execute_query(query)
+    execute_query(query, commit=True)
     embed = createEmbed(title='**__Profile Created__**', colour='iron', author=user)
     embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc... Use `?help levels` for more info.", inline=False)
     embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
@@ -76,10 +78,11 @@ def create_profile(ctx, user: discord.Member):
     await ctx.send(embed=embed)
 
 def update_levels(user: discord.Member, comps: dict):
+    global conn
     cur = connect_db()
     cur.executemany(f'UPDATE profile SET %s=%s WHERE uid={user.id}', comps.items())
     conn.commit()
 
 def update_gamertag(user: discord.Member, platform: str, gamertag: str):
     query = f'UPDATE gamertags SET {platform}={gamertag}'
-    execute_query(query)
+    execute_query(query, commit=True)
