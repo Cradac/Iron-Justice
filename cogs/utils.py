@@ -143,7 +143,7 @@ async def roleSearch(ctx, client, name):
 			await ctx.send("Cancelled command.")
 			return None
 
-def createEmbed(*, title=None, description=None, colour=None, author:discord.Member=None):
+def createEmbed(*, title: str = '', description: str = '', colour = None, author: discord.Member = None):
 	if colour == 'iron':
 		colour = 0xffd700
 	elif colour == 'rogue':

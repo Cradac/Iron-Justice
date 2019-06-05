@@ -1,7 +1,7 @@
 import discord, asyncio, cogs.guilds
 from discord.ext import commands
 from random import choice
-from cogs.helper import isMod, isAdmin, isGod, createEmbed
+from cogs.utils import isMod, isAdmin, isGod, createEmbed
 
 
 channel_names = ['Silence', 'Iron Victory', 'Leviathan', 'Kraken\'s Kiss', 'Reaper\'s Wind', 'Black Wind', ' Sea Bitch', 'Silence', 'Noble Lady', 'Red God\'s Wrath', 'Shrike', 'Shade', 'Ghost', 'Slaver\'s Scream', 'Sea Song', 'Thunderer', 'Nighflyer', 'Silverfin', 'Black Wind', 'Great Kraken']
