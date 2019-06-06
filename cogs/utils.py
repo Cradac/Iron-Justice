@@ -143,7 +143,7 @@ async def roleSearch(ctx, client, name):
 			await ctx.send("Cancelled command.")
 			return None
 
-def createEmbed(*, title: str = '', description: str = '', colour = None, author: discord.Member = None):
+def createEmbed(*, title: str = '', description: str = '', colour = None, author: discord.Member = None, guild: discord.Guild = None):
 	if colour == 'iron':
 		colour = 0xffd700
 	elif colour == 'rogue':
@@ -162,5 +162,8 @@ def createEmbed(*, title: str = '', description: str = '', colour = None, author
 	)
 	if author:
 		embed.set_author(name=author, icon_url=author.avatar_url)
+	if guild:
+		embed.set_footer(text=guild.name, icon_url=guild.icon_url_as(format='png', size=128))
+		embed.set_thumbnail(url=guild.icon_url_as(format='png', size=512))
 
 	return embed

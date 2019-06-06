@@ -65,9 +65,7 @@ class Storage:
             'img': r[6],
             'alias': r[7],
         }
-        query = f'SELECT xbox FROM gamertags WHERE uid={user.id};'
-        r = self.execute_query(query)
-        profile['gtag'] = r[0]
+        profile['gtag'] = self.get_xbox_tag(user)
         return profile
 
     def get_tag_profile(self, user: discord.Member):
@@ -99,14 +97,13 @@ class Storage:
         await ctx.send(embed=embed)
 
     def update_levels(self, user: discord.Member, comps: dict):
-        
         cur = self.get_cursor()
-        cur.executemany(f'UPDATE profile SET %s=%s WHERE uid={user.id};', comps.items())
+        cur.executemany(f'UPDATE sot_profile SET %s=%s WHERE uid={user.id};', comps.items())
         self.conn.commit()
         cur.close()
 
     def update_gamertag(self, user: discord.Member, platform: str, gamertag: str):
-        query = f'UPDATE gamertags SET {platform}={gamertag} WHERE uid={user.id};'
+        query = f'UPDATE gamertags SET {platform}=\'{gamertag}\' WHERE uid={user.id};'
         self.execute_query(query, commit=True)
 
     '''
@@ -144,7 +141,7 @@ class Storage:
         settings = dict()
         query = f'SELECT profile FROM settings WHERE gid={guild.id};'
         settings['status'] = self.execute_query(query)[0]
-        query = 'SELECT cid FROM profile_channels WHERE gid={guild.id};'
+        query = f'SELECT cid FROM profile_channels WHERE gid={guild.id};'
         r = self.execute_query_many(query)
         settings['channels'] = [guild.get_channel(c[0]) for c in r]
         return settings
@@ -187,7 +184,7 @@ class Storage:
     
     def add_auto_voice_names(self, guild:discord.Guild, names: list(str)):
         cur = self.get_cursor()
-        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUE (\'%s\',{guild.id});', names)
+        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES (\'%s\',{guild.id});', names)
         self.conn.commit()
         cur.close()
 
