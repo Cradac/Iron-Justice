@@ -1,5 +1,6 @@
 import discord
 from utils import createEmbed
+from datetime import datetime
 #import mysql
 
 
@@ -14,6 +15,7 @@ class Storage:
             passwd=Configuration.DBPassword,
             database=Configuration.DBName
         )'''
+        self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
 
     
     def get_cursor(self):
@@ -41,9 +43,21 @@ class Storage:
         cur.close()
         return r
 
+
+    '''
+        CLEAN UP AND GENERAL FUNCTIONS
+    '''
+
+
     def add_server(self, guild: discord.Guild):
         query = f'INSERT INTO settings (gid) VALUES ({guild.id})'
         self.execute_query(query, commit=True)
+
+
+    def guild_leave(self, guild: discord.Guild):
+        query = f'DELETE FROM messages WHERE gid={guild.id};'
+        self.execute_query(query)
+        #TODO add more queries for cleanup
 
 
     async def get_sot_profile(self, ctx, user: discord.Member):
@@ -213,3 +227,35 @@ class Storage:
     def delete_all_auto_voice_names(self, guild:discord.Guild):
         query = f'DELETE FROM auto_voice_names WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
+
+
+    '''
+        `Activity Logging` Functions
+    '''
+
+    def cleanup_messages(self, guilds:list(discord.Guild)):
+        cur = self.get_cursor()
+        query = f'DELETE FROM messages WHERE datetime < DATE_SUB(NOW(), INTERVAL 30 DAY) OR gid NOT IN ({",".join(g.id for g in guilds)});'
+        cur.execute(query)
+        self.conn.commit()
+        count = cur.rowcount
+        cur.close()
+        return count
+
+    def user_leave(self, user:discord.Member):
+        query = f'DELETE FROM messages WHERE aid={user.id} and gid={user.guild.id};'
+        self.execute_query(query, commit=True)
+
+    def add_message(self, m: discord.Message):
+        timestamp = m.created_at.strftime(self.datetime_scheme)
+        query = f'INSERT INTO messages (mid,aid,gid,timestamp) VALUES({m.id},{m.author.id},{m.guild.id},{timestamp};'
+        self.execute_query(query, commit=True)
+
+    def get_user_activity(self, user:discord.Member):
+        info = dict()
+        query = f'SELECT Count(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id}'
+        info['amnt'] = self.execute_query(query)[0]
+        query = f'SELECT datetime FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY datetime DESC LIMIT 1'
+        timestamp = self.execute_query(query)[0]
+        info['timestamp'] = datetime.strptime(timestamp, self.datetime_scheme)
+        return info
