@@ -96,7 +96,7 @@ class Storage:
         embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
         await ctx.send(embed=embed)
 
-    def update_levels(self, user: discord.Member, comps: dict):
+    def update_levels(self, user: discord.Member, comps: dict(str, int)):
         cur = self.get_cursor()
         cur.executemany(f'UPDATE sot_profile SET %s=%s WHERE uid={user.id};', comps.items())
         self.conn.commit()
@@ -105,6 +105,22 @@ class Storage:
     def update_gamertag(self, user: discord.Member, platform: str, gamertag: str):
         query = f'UPDATE gamertags SET {platform}=\'{gamertag}\' WHERE uid={user.id};'
         self.execute_query(query, commit=True)
+
+    def update_img(self, user: discord.Member, url: str):
+        query = f'UPDATE sot_profile SET img=\'{url}\' WHERE uid={user.id};'
+        self.execute_query(query, commit=True)
+    
+    def remove_img(self, user:discord.Member):
+        query = f'UPDATE sot_profile SET img=NULL WHERE uid={user.id};'
+        self.execute_query(query, commit=True)
+        
+    def update_alias(self, user: discord.Member, alias: str):
+        query = f'UPDATE sot_profile SET alias=\'{alias}\' WHERE uid={user.id};'
+        self.execute_query(query, commit=True)
+
+    def remove_alias(self, user: discord.Member):
+        query = f'UPDATE sot_profile SET alias=NULL WHERE uid={user.id};'
+        self.execute_query
 
     '''
         `Looking for Crew`-Module Settings

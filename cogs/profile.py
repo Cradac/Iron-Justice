@@ -6,138 +6,192 @@ import sqlite3
 from sqlite3 import Error
 import datetime
 from cogs.utils import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file, createEmbed
+from cogs.storage import Storage
 import re
 
 class Profile(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+        self.Storage = Storage()
+        self.profile_messages = list(int)
+        self.profile_status = dict(int, str)
 
-    @matchprofilechannel()
-    @commands.command(brief="Shows your Player Profile.", description=">>>Profile:\nThis shows your player profile.\nAdd your XBox Profile name with '?gt edit <Your Gamertag>'.\nYou can update your levels with `?levels gh=<gh> oos=<oos>` etc...\nIf you tag a player after '?profile [member]' you can see his/her profile.\n\nAliases:")
-    async def profile(self, ctx, member:str=None):
-        if member is None:
-            member = ctx.message.author
+        self.steam_emoji = self.client.get_emoji(586475562772725780)
+        self.xbox_emoji = self.client.get_emoji(563799115201249301)
+        self.psn_emoji = self.client.get_emoji(563799160021712922)
+        self.nintendo_emoji = self.client.get_emoji(534433688025563137)
+        self.sot_emoji = self.client.get_emoji(488445174536601600)
+        self.game_emoji = '🎮'
+        self.game_emoji_url = 'https://discordapp.com/assets/7d600babcd1bddfd7a7d35acc1ed4cd3.svg'
+        self.stop_emoji = '⏹'
+
+        self.emojis = [self.xbox_emoji, self.sot_emoji, self.game_emoji, self.stop_emoji]
+
+
+    @commands.Cog.listener()
+    def on_reaction_add(self, reaction, user):
+        if reaction.message.id in self.profile_messages:
+            if reaction.emoji in self.emojis:
+                await reaction.remove(user)
+                if user == reaction.message.author:
+                    if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
+                        embed = self.get_xbox_page(user)
+                        self.profile_status[reaction.message.id] = 'xbox'
+                    elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
+                        embed = self.get_sot_page(None, user)
+                        self.profile_status[reaction.message.id] = 'sot'
+                    elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
+                        embed = self.get_game_page
+                        self.profile_status[reaction.message.id] = 'game'
+                    elif reaction.emoji == self.stop_emoji:
+                        await self.reaction_menu_timeout(reaction.message, wait=False)
+                        return
+                    await reaction.message.edit(embed=embed)
+
+    async def reaction_menu_timeout(self, message: discord.Message, wait: bool = True):
+        if wait:
+            await asyncio.sleep(300)
+        await message.clear_reactions()
+        self.profile_messages.remove(message.id)
+        del self.profile_status[message.id]
+
+    async def prepare_reaction_menu(self, message: discord.Message):
+        for emoji in self.emojis:
+            await message.add_reaction(emoji)
+
+    def get_xbox_page(self, member: discord.Member):
+        gtag = self.Storage.get_xbox_tag(member)
+        embed = createEmbed(colour='iron', author=member)
+        icon = member.guild.icon_url_as(format='png', size=512)
+        embed.set_thumbnail(url=icon)
+        embed.set_footer(icon_url=self.xbox_emoji.url, text='Xbox')
+        if gtag:
+            pass
         else:
-            member = await memberSearch(ctx, self.client, member)
-            if member is None:
-                return
-        fr = member.top_role.name
-        conn = create_connection(db_file)
-        with conn:
-            cur = conn.cursor()
-            try:
-                cur.execute("SELECT tag, gh, oos, ma, hc, sd, af, img_url, pirate_name FROM users WHERE user_id = {}".format(member.id))
-                row = cur.fetchone()
-                gamertag = row[0]
-                gh = int(row[1])
-                oos = int(row[2])
-                ma = int(row[3])
-                hc = int(row[4])
-                sd = int(row[5])
-                af = int(row[6])
-                img = row[7]
-                pname = row[8]
-                embed=createEmbed(colour='iron', author=member)
-                guild = ctx.guild
-                icon = guild.icon_url_as(format='png', size=1024)
-                embed.set_thumbnail(url=icon) #"https://i.imgur.com/od8TIcs.png"
-                embed.add_field(name="Gamertag", value=gamertag, inline=False)
-                if pname != "none":
-                    embed.add_field(name="<:jollyroger:486619773875126293> Pirate Name", value=pname, inline=False)
-                embed.add_field(name="<:rank:486619774445551626> Rank", value=fr, inline=False)
-                embed.add_field(name="<:gh:486619774424449036> Gold Hoarders", value=gh, inline=True)
-                embed.add_field(name="<:oos:486619776593166336> Order of Souls", value=oos, inline=True)
-                embed.add_field(name="<:ma:486619774688952320> Merchant Alliance", value=ma, inline=True)
-                embed.add_field(name="<:hc:573788002455650314> Hunter's Call", value=hc, inline=True)
-                embed.add_field(name="<:sd:573788001407205376> Sea Dogs", value=sd, inline=True)
-                embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value=af, inline=False)
-                embed.set_footer(icon_url=icon)
-                if img != "none":
-                    embed.set_image(url=img)
-                alliances = [gh==50,oos==50,ma==50,hc==50,sd==50]
-                true_count = sum(alliances)
-                if true_count >= 3:
-                    embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
-                await ctx.send(embed=embed)
-            except:
-                cur.execute("INSERT INTO users VALUES (?, ?, 0, 0, 0, 0, 0, 0, 'none', 'none', 'none');", (member.id, member.name))
-                conn.commit()
-                embed=discord.Embed(
-                    color=0xffd700,
-                    timestamp=datetime.datetime.utcnow(),
-                    title="__Your Profile was created!__"
-                )
-                guild = ctx.guild
-                icon = guild.icon_url_as(format='png', size=512)
-                embed.set_footer(icon_url=icon)
-                embed.set_author(name=member.name,icon_url=member.avatar_url)
-                embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc... Use `?help levels` for more info.", inline=False)
-                embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
-                embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
-                await ctx.send(embed=embed)
+            embed.description = 'There is no Xbox Gamertag set for this profile.\n\
+                If this is your profile you can add it with `?gt edit <gamertag>`.'
+        return embed
+
+    async def get_sot_page(self, ctx: commands.Context, member: discord.Member):
+        info = await self.Storage.get_sot_profile(ctx, member)
+        embed = createEmbed(colour='iron', author=member)
+        icon = member.guild.icon_url_as(format='png', size=512)
+        embed.set_thumbnail(url=icon)
+        embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
+        embed.add_field(name="Gamertag", value=info['gtag'], inline=False)
+        if info['alias']:
+            embed.add_field(name="<:jollyroger:486619773875126293> Pirate Alias", value=info['alias'], inline=False)
+        embed.add_field(name="<:rank:486619774445551626> Rank", value=member.top_role.name, inline=False)
+        embed.add_field(name="<:gh:486619774424449036> Gold Hoarders", value=info['gh'], inline=True)
+        embed.add_field(name="<:oos:486619776593166336> Order of Souls", value=info['oos'], inline=True)
+        embed.add_field(name="<:ma:486619774688952320> Merchant Alliance", value=info['ma'], inline=True)
+        embed.add_field(name="<:hc:573788002455650314> Hunter's Call", value=info['hc'], inline=True)
+        embed.add_field(name="<:sd:573788001407205376> Sea Dogs", value=info['sd'], inline=True)
+        embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value=info['af'], inline=False)
+        if info['img']:
+            embed.set_image(url=info['img'])
+        alliances = [info['gh'] == 50, info['oos'] == 50, info['ma'] == 50, info['hc'] == 50, info['sd'] == 50]
+        true_count = sum(alliances)
+        if true_count >= 3:
+            embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
+        return embed
+
+    def get_game_page(self, member: discord.Member):
+        info = self.Storage.get_tag_profile(member)
+        embed = createEmbed(colour='iron', author=member)
+        icon = member.guild.icon_url_as(format='png', size=512)
+        embed.set_thumbnail(url=icon)
+        embed.set_footer(icon_url=self.game_emoji_url, text='Gamertags')
+        embed.add_field(name=str(self.steam_emoji) + 'Steam', value=info['steam'], inline=True)
+        embed.add_field(name=str(self.xbox_emoji) + 'Xbox Live', value=info['xbox'], inline=True)
+        embed.add_field(name=str(self.psn_emoji) + 'Playstation Network', value=info['psn'], inline=True)
+        embed.add_field(name=str(self.nintendo_emoji) + 'Nintendo Friend Code', value=info['nintendo'], inline=True)
+        return embed
+
 
     @matchprofilechannel()
-    @commands.group(brief="Show your own Gamertag.", description=">>>Gamertag:\nWith this command you can post your Gamertag fast so people can invite you easier.\n\nAliases:")
-    async def gt(self, ctx):
-        if ctx.invoked_subcommand is None:
-            conn = create_connection(db_file)
-            with conn:
-                cur = conn.cursor()
-                cur.execute("SELECT tag FROM users WHERE user_id='{}'".format(ctx.message.author.id))
-                gamertag = "%s" % cur.fetchone()
-                embed=discord.Embed(
-                color=0xffd700,
-                timestamp=datetime.datetime.utcnow()
-                )
-                embed.set_author(name=ctx.message.author.name,icon_url=ctx.message.author.avatar_url)
-                embed.add_field(name="Gamertag", value=gamertag, inline=False)
-                embed.set_footer()
-                await ctx.send(embed=embed)
-
-    @matchprofilechannel()
-    @gt.command(brief="Edit your own Gamertag.")
-    async def edit(self, ctx, *gt):
-        gt = " ".join(gt)
-        if gt == "":
-            gt = "None"
-        conn = create_connection(db_file)
-        with conn:
-            cur = conn.cursor()
-            try:
-                cur.execute("UPDATE users SET tag = '{}' WHERE user_id = '{}'".format(gt, ctx.message.author.id))
-                conn.commit()
-                await ctx.send("Successfully updated your Gamertag to *'{}'*.".format(gt))
-            except:
-                await ctx.send("Something went wrong there. Try again some time later.")
-
-    @matchprofilechannel()
-    @gt.command(aliases=["see", "search"], brief="Show someones gamertag.")
-    async def show(self, ctx, *member):
-        member = await memberSearch(ctx, self.client, " ".join(member))
-        if member is None:
+    @commands.command(
+        brief='Shows a member\' profile.',
+        description='This command shows a member\'s profile.\n\
+            You can navigate the pages with the reaction menu for 5 minutes. If you are done please click the `STOP` emoji.',
+        usage='?profile [member]'
+    )
+    async def profile(self, ctx, *, member: str = None):
+        member = await memberSearch(ctx, self.client, member) if member else ctx.message.author
+        if not member:
             return
-        conn = create_connection(db_file)
-        with conn:
-            cur = conn.cursor()
-            cur.execute("SELECT tag FROM users WHERE user_id='{}'".format(member.id))
-            gamertag = "%s" % cur.fetchone()
-            embed=discord.Embed(
-            color=0xffd700,
-            timestamp=datetime.datetime.utcnow()
-            )
-            embed.set_author(name=member.name,icon_url=member.avatar_url)
-            embed.add_field(name="Gamertag", value=gamertag, inline=False)
-            embed.set_footer()
-            await ctx.send(embed=embed)
+        embed = self.get_sot_page(ctx, member)
+        msg = await ctx.send(embed=embed)
+        await self.prepare_reaction_menu(msg)
+        self.profile_messages.append(msg.id)
+        self.profile_status[msg.id] = 'sot'
+
 
     @matchprofilechannel()
-    @commands.command(aliases=["lvl"], brief="Update your Ingame Levels.", description=">>>Levels:\nUse this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter's Call\nsd: Sea Dogs\naf: Athena's Fortune\n\nUsage:\nUpdate individual levels:\n?levels gh=50\nUpdate multiple levels:\n?levels af=5 hc=50 gh=50 sd=50 ma=50 oos=50\n\nAliases:")
-    async def levels(self, ctx, *args):
-        comps = {}
+    @commands.command(
+        brief='Show your own Gamertag',
+        description='This command shows the Gamertag page of the profile.\n\
+            There are some subcommands to alter your gamertags or show someone elses gamertags.\n\
+            You can navigate the pages with the reaction menu for 5 minutes. If you are done please click the `STOP` emoji.',
+        usage='?gt [edit|show] [*args]'
+    )
+    async def gt(self, ctx):
+        embed = self.get_game_page(ctx.author)
+        msg = await ctx.send(embed=embed)
+        await self.prepare_reaction_menu(msg)
+        self.profile_messages.append(msg.id)
+        self.profile_status[msg.id] = 'game'
+
+
+    @matchprofilechannel()
+    @gt.command(
+        brief='Edit your one of your gamertags.',
+        description='Use this to edit your gamertag.\n\
+            You can choose of these platforms: `steam`, `xbox`, `psn`, `nintendo`.',
+        usage='?gt edit <platform> <gamertag>'
+    )
+    async def edit(self, ctx, platform: str , *, gamertag: str):
+        platforms = ['steam', 'xbox', 'psn', 'nintendo']
+        if platform not in platforms:
+            await ctx.send(f'You need to select one of these platforms:\n• ' + '\n• '.join(platforms))
+            return
+        self.Storage.update_gamertag(ctx.author, platform, gamertag)
+        embed = createEmbed(description=f'Your {platform} gamertag has been updated to `{gamertag}`.', author=ctx.author)
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Gamertag updated')
+        await ctx.send(embed=embed)
+
+
+    @matchprofilechannel()
+    @gt.command(
+        brief='Show another member\'s gamertag profile page.',
+        description='This command can show another member\'s gamertag.',
+        usage='?gt show <member>',
+        aliases=['see', 'search']
+    )
+    async def show(self, ctx, *, member: str):
+        member = await memberSearch(ctx, self.client, member) if member else ctx.message.author
+        if not member:
+            return
+        embed = self.get_game_page(member)
+        msg = await ctx.send(embed=embed)
+        await self.prepare_reaction_menu(msg)
+        self.profile_messages.append(msg.id)
+        self.profile_status[msg.id] = 'game'
+
+
+    @matchprofilechannel()
+    @commands.command(
+        aliases=['lvl'],
+        brief='Update your Ingame Levels.',
+        description='Use this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter\'s Call\nsd: Sea Dogs\naf: Athena\'s Fortune',
+        usage='?levels *[<company>=<level>]'
+    )
+    async def levels(self, ctx, *, args: str):
+        comps = dict()
         r = re.compile('^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
-        if not r.match(" ".join(args) + " "):
-            await ctx.send("The Syntax is not correct. Try this instead:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`")
+        if not r.match(args + ' '):
+            await ctx.send('The Syntax is not correct. Try this instead:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`')
             return
         for arg in args:
             arg = arg.split('=')
@@ -155,53 +209,53 @@ class Profile(commands.Cog):
                 return
             if not isinstance(lvl, int) or not 0 < lvl <= 50:
                 await ctx.send('Levels can only be between 1 and 50.')
-                return
-        conn = create_connection(db_file)
-        with conn:
-            cur = conn.cursor()
-            uid = ctx.message.author.id
-            for comp,lvl in comps.items():
-                cur.execute(f"UPDATE users SET {comp}={lvl} WHERE user_id='{uid}'")
-        await ctx.send(f'Your levels have been updated, {ctx.message.author.mention}.')
+        self.Storage.update_levels(ctx.author, comps)
+        embed = createEmbed(description=f'Your levels have been updated.', author=ctx.author)
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Levels updated')
+        await ctx.send(embed=embed)
 
-
-
+    
     @matchprofilechannel()
-    @commands.command(aliases=["set_image"], brief="Set a picture for your profile.", description=">>>Set Image\nWith this command you can set a picture for your profile.\nMake sure your URL ends with '.png', '.jpg' or '.gif'.\nIf you want no profile picture type '!set-image none'.\n\n Aliases:")
-    async def img(self, ctx, img_url:str="none"):
-        print(img_url)
-        if img_url == "none" and len(ctx.message.attachments) > 0:
-            img_url = ctx.message.attachments[0].url
-        if img_url.endswith(".png") or img_url.endswith(".jpg") or img_url.endswith(".gif") or img_url == "none":
-            conn = create_connection(db_file)
-            with conn:
-                cur = conn.cursor()
-                try:
-                    cur.execute("UPDATE users SET img_url='{}' WHERE user_id = '{}'".format(img_url, ctx.message.author.id))
-                    if img_url != "none":
-                        await ctx.send("{}, your profile image was updated.".format(ctx.message.author.mention))
-                    else: 
-                        await ctx.send("{}, your profile image was deleted.".format(ctx.message.author.mention))
-                except:
-                    await ctx.send("Something went wrong. Please try again later.")
+    @commands.command(
+        aliases=['set-image'],
+        brief='Set a picture for your profile.',
+        description='With this command you can set a picture for your profile.\n\
+            Make sure your URL ends with \'.png\', \'.jpg\' or \'.gif\'.\n\
+            If you want to delete your profile picture, ommit all command arguments.')
+    async def img(self, ctx, url: str = None):
+        if not url and len(ctx.message.attachments) > 0:
+            url = ctx.message.attachments[0].url
+        if not url:
+            self.Storage.remove_img(ctx.author)
+            txt = 'Your profile image has been removed.'
+        elif url[-4:] in ['.jpg', '.png', '.gif']:
+            self.Storage.update_img(ctx.author, url)
+            txt = 'Your profile image has been updated.'
         else: 
-            await ctx.send("The link you are submitting **has** to end with `.png`, `.jpg` or `.gif`.")
+            await ctx.send('The image type as to be either jpg, png or gif.')
+            return
+        embed = createEmbed(description=txt, author=ctx.author)
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Image updated')
+        await ctx.send(embed=embed)
+
 
     @matchprofilechannel()
-    @commands.command(aliases=["alias"], brief="Set a Piratename for your profile.", description=">>>Pirate Name\nWith this command you can set a pirate name for your profile.\nIf you want no pirate name type '!piratename none'.\n\n Aliases:")
-    async def piratename(self, ctx, *pname):
-        pname = " ".join(pname)
-        conn = create_connection(db_file)
-        with conn:
-            cur = conn.cursor()
-            try:
-                cur.execute("UPDATE users SET pirate_name='{}' WHERE user_id = '{}'".format(pname, ctx.message.author.id))
-                if pname != "none":
-                    await ctx.send("{}, your pirate name was updated.".format(ctx.message.author.mention))
-                else: 
-                    await ctx.send("{}, your pirate name was deleted.".format(ctx.message.author.mention))
-            except:
-                await ctx.send("Something went wrong. Please try again later.")
+    @commands.command(
+        aliases=['piratename'],
+        brief='Set an alias for your pirate.',
+        description='With this command you can set an alias for your pirate.\n\
+            If you want to remove your alias, ommit all command arguments.'
+        )
+    async def alias(self, ctx, *, alias: str = None):
+        if not alias:
+            self.Storage.remove_alias(ctx.author)
+            txt = 'Your alias has been removed.'
+        else:
+            self.Storage.update_alias(ctx.author, alias)
+            txt = 'Your alias has been updated.'
+        embed = createEmbed(description=txt, author=ctx.author)
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Image updated')
+        await ctx.send(embed=embed)
 
 
 def setup(client):
