@@ -120,7 +120,7 @@ class Storage:
 
     def remove_alias(self, user: discord.Member):
         query = f'UPDATE sot_profile SET alias=NULL WHERE uid={user.id};'
-        self.execute_query
+        self.execute_query(query, commit=True)
 
     '''
         `Looking for Crew`-Module Settings
