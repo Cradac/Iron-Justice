@@ -1,6 +1,6 @@
 import discord
 import asyncio
-from cogs.guilds import Guilds
+from utils.guilds import Guilds
 from discord.ext import commands
 from datetime import datetime
 import sqlite3

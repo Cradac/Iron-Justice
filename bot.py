@@ -16,8 +16,8 @@ from sqlite3 import Error
 import datetime
 import random
 import traceback
-from cogs.guilds import Guilds
-from cogs.utils import isMod, isAdmin, isGod, create_connection, createEmbed
+from utils.guilds import Guilds
+from utils.utils import isMod, isAdmin, isGod, create_connection, createEmbed
 
 _version = '2.4.1'
 
@@ -139,7 +139,17 @@ async def on_command_error(ctx, error):
 		await ctx.send(embed=embed)
 	else:
 		try:
-			raise error
+			embed = createEmbed(
+				title='An error eccured',
+				description=f'\
+				**{type(error)}**\n\
+				```{error}```\n\n\
+				[to Message](https://discordapp.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id})',
+				author=ctx.author,
+				colour=0xff0000
+			)
+			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url_as(format='png', size=128))
+			await client.application_info().owner.send(embed=embed)
 		except Exception as error:
 			tb = traceback.format_exc()
 			print(error, tb)
@@ -274,11 +284,11 @@ async def ping(ctx):
 
 @client.command(hidden=True, brief="Version Info")
 async def version(ctx):
-	await ctx.send('\
-bot version: `{}`\n\
-discord.py version: `{}`\n\
-system info: `{}`\n\
-		'.format(_version, discord.__version__, sys.version))
+	await ctx.send(f'\
+		bot version: `{_version}`\n\
+		discord.py version: `{discord.__version__}`\n\
+		system info: `{sys.version}`')
+
 
 ##########################################################################################################################################
 
@@ -287,6 +297,8 @@ system info: `{}`\n\
 async def kill(ctx):
 	print("Bot shutting down...")
 	await client.close()
+
+
 @isGod()
 @client.command(hidden=True)
 async def load(ctx, extension_name : str):
