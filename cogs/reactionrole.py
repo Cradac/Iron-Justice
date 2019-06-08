@@ -1,11 +1,10 @@
 import discord
 from discord.ext import commands
-import asyncio
 import sqlite3
 from sqlite3 import Error
 from datetime import datetime
-import cogs.guilds
-from cogs.utils import isAdmin,roleSearch,create_connection,db_file
+import utils.guilds
+from utils.utils import isAdmin, roleSearch, create_connection, db_file
 
 class ReactionRole(commands.Cog):
 	def __init__(self, client):

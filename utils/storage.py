@@ -253,7 +253,7 @@ class Storage:
 
     def get_user_activity(self, user:discord.Member):
         info = dict()
-        query = f'SELECT Count(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id}'
+        query = f'SELECT COUNT(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id}'
         info['amnt'] = self.execute_query(query)[0]
         query = f'SELECT datetime FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY datetime DESC LIMIT 1'
         timestamp = self.execute_query(query)[0]

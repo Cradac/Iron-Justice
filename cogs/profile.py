@@ -1,12 +1,9 @@
 import discord
 from discord.ext import commands
 import asyncio
-import cogs.guilds
-import sqlite3
-from sqlite3 import Error
 import datetime
-from cogs.utils import matchprofilechannel,matchlfcchannel,memberSearch,create_connection,db_file, createEmbed
-from cogs.storage import Storage
+from utils.utils import matchprofilechannel, matchlfcchannel, memberSearch, createEmbed
+from utils.storage import Storage
 import re
 
 class Profile(commands.Cog):

@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
-import asyncio, utils, auto_voice
-from storage import Storage
+import asyncio, auto_voice
+from utils.storage import Storage
+from utils import utils
 
 
 class Settings(commands.Cog):
