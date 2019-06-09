@@ -34,12 +34,16 @@ class Settings(commands.Cog):
         brief='Configure the LFC-module in your guild.',
         description='You can either pass all arguments or none and be put through a setup wizard.\n\
             If you are asked to mention channels please use the auto complete feature of discord. They need to be clickable in the message.',
-        usage='?config lfc [enable|disable] *[channels]')
-    async def lfc(self, ctx, status:bool=None, channels:commands.Greedy[discord.TextChannel]=None):
+        usage='?config lfc [enable|disable] <@role> *[channels]')
+    async def lfc(self, ctx, status:bool=None, role: discord.Role=None, channels:commands.Greedy[discord.TextChannel]=None):
         if status is not None:
             self.Storage.update_lfc_status(ctx.guild, status)
-            if channels:
+            self.Storage.update_lfc_role(ctx.guild, role)
+            if channels and status:
                 self.Storage.add_lfc_channels(ctx.guild, channels)
+            else:
+                self.Storage.delete_all_lfc_channels(ctx.guild)
+
 
         # WIZARD
         else:
@@ -61,6 +65,17 @@ class Settings(commands.Cog):
             if status:
                 def message_check(msg):
                     return msg.author == ctx.author and msg.content
+                
+                #Select lfc role
+                await ctx.send('Which role should be used as a `Looking for Crew` role?')
+                try:
+                    msg = await self.client.wait_for('message', timeout=60.0, check=message_check)
+                except asyncio.TimeoutError:
+                    await ctx.send('Cancelled the Setup.')
+                role = await utils.roleSearch(ctx, self.client, msg)
+                self.Storage.update_lfc_role(ctx.guild, role)
+                await ctx.send(f'{role.mention} will now be used for the `Looking for Crew`-Module.')
+
                 # Select channels
                 await ctx.send('Please mention all channels you want to enable the module in. If you don\'t want to restrict it to certain channels just type `all`.')
                 try:
@@ -81,6 +96,7 @@ class Settings(commands.Cog):
         s = 'enabled' if status else 'disabled'
         embed = utils.createEmbed(title='**__`Looking for Crew`-Setup__**', description=f'The module is {s}.', colour='iron', guild=ctx.guild)
         ch = '`all`' if len(channels) == 0 else ' '.join(c.mention for c in channels)
+        embed.add_field(name='__Role__', value=role.mention)
         embed.add_field(name='__Channels__', value=ch)
         await ctx.send(embed=embed)
 
@@ -94,8 +110,10 @@ class Settings(commands.Cog):
     async def profile(self, ctx, status:bool=None, channels:commands.Greedy[discord.TextChannel]=None):
         if status is not None:
             self.Storage.update_profile_status(ctx.guild, status)
-            if channels:
+            if channels and status:
                 self.Storage.add_profile_channels(ctx.guild, channels)
+            else:
+                self.Storage.delete_all_profile_channels(ctx.guild)
 
         # WIZARD
         else:
@@ -143,18 +161,36 @@ class Settings(commands.Cog):
     @config.command(
         brief='Configure the Auto-Voice-module in your guild.',
         description='Here you set the voice channel, which acts as a `join here` channel and then redirects you to your own voice channel.\n\
-            Please either pass the whole and correct voice channel name or the channel\'s id.',
+            Please either pass the whole and correct voice channel name or the channel\'s id.\n\
+            If you want to disable it, ommit the channel parameter.',
         usage='?config auto-voice <Voice Channel>'
     )
-    async def auto_voice(self, ctx, channel:discord.VoiceChannel):
+    async def auto_voice(self, ctx, *, channel:discord.VoiceChannel = None):
         self.Storage.update_auto_voice_channel(ctx.guild, channel)
-        await ctx.send(f'Set the channel `{channel.name}` as Auto-Voice Channel.')
-        await ctx.send('If you want to add custom names please use the `?auto-voice-names add <names>` command.')
+        if channel:
+            await ctx.send(f'Set the channel `{channel.name}` as Auto-Voice Channel.')
+            await ctx.send('If you want to add custom names please use the `?auto-voice-names add <names>` command.')
+        else:
+            await ctx.send('Auto-Voice has been disabled.')
+        
 
     @auto_voice.error
     async def auto_voice_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send('Voice channel could not be found. Either use the channel ID or the full name.')
+
+    @config.command(
+        brief='',
+        decription='',
+        usage='?config activity-logging [enable|disable]'
+    )
+    async def activity_logging(self, ctx, status:bool):
+        self.Storage.update_activity_logging_status(ctx.guild, status)
+        s = 'enabled' if status else 'disabled'
+        embed = utils.createEmbed(title='**__`Activity-Logging`-Setup__**', description=f'The module is {s}.', colour='iron', guild=ctx.guild)
+        await ctx.send(embed=embed)
+
+
 
     '''
         Command Group to add and remove names to the voice channel list.

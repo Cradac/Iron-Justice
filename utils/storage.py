@@ -60,7 +60,7 @@ class Storage:
         #TODO add more queries for cleanup
 
     '''
-        PROFILE FUNCTIONS
+        `PROFILE` FUNCTIONS
     '''
 
     async def get_sot_profile(self, ctx, user: discord.Member):
@@ -98,8 +98,8 @@ class Storage:
 
     def get_xbox_tag(self, user: discord.Member):
         query = f'SELECT xbox FROM gamertags WHERE uid={user.id};'
-        r = self.execute_query(query)
-        return r[0]
+        r = self.execute_query(query)[0]
+        return r
 
     async def create_profile(self, ctx, user: discord.Member):
         query = f'INSERT INTO sot_profile (uid) VALUES ({user.id});'
@@ -140,6 +140,12 @@ class Storage:
         self.execute_query(query, commit=True)
 
     '''
+        `LOOKING FOR CREW` FUNCTIONS
+    '''
+
+        
+
+    '''
         `LOOKING FOR CREW`-MODULE SETTINGS
     '''
 
@@ -165,6 +171,20 @@ class Storage:
     def delete_all_lfc_channels(self, guild: discord.Guild):
         query = f'DELETE FROM lfc_channels WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
+
+    def get_lfc_enabled_guilds(self, client: discord.Client):
+        query = 'SELECT gid FROM settings WHERE lfc=TRUE;'
+        r = self.execute_query_many(query)
+        return [client.get_guild(gid[0]) for gid in r]
+
+    def update_lfc_role(self, guild: discord.Guild, role: discord.Role):
+        query = f'UPDATE settings SET lfc_role={role.id} WHERE gid={guild.id}'
+        self.execute_query(query, commit=True)
+
+    def get_lfc_role(self, guild: discord.Guild):
+        query = f'SELECT lfc_role FROM settings WHERE gid={guild.id}'
+        r = self.execute_query(query)[0]
+        return guild.get_role(r)
 
     '''
         `PROFILE`-MODULE SETTINGS
@@ -192,6 +212,11 @@ class Storage:
     def delete_all_profile_channels(self, guild: discord.Guild):
         query = f'DELETE FROM profile_channels WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
+
+    def get_profile_enabled_guilds(self, client: discord.Client):
+        query = 'SELECT gid FROM settings WHERE profile=TRUE;'
+        r = self.execute_query_many(query)
+        return [client.get_guild(gid[0]) for gid in r]
 
     '''
         `AUTO-VOICE`-MODULE SETTINGS
@@ -269,9 +294,9 @@ class Storage:
 
     def get_user_activity(self, user:discord.Member):
         info = dict()
-        query = f'SELECT COUNT(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id}'
+        query = f'SELECT COUNT(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id};'
         info['amnt'] = self.execute_query(query)[0]
-        query = f'SELECT datetime FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY datetime DESC LIMIT 1'
+        query = f'SELECT datetime FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY datetime DESC LIMIT 1;'
         timestamp = self.execute_query(query)[0]
         info['timestamp'] = datetime.strptime(timestamp, self.datetime_scheme)
         return info
