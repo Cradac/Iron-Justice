@@ -14,83 +14,37 @@ class IronFleet(commands.Cog):
 
     @isIronFleet()
     @isMod()
-    @commands.command(hidden=True, aliases=["recruit"], brief="This roles grant a player basic recruit status.", description=">>>add Recruit Rank\nTo use this command tag a member or type his full name. His 'Stowaway' role will be removed and he will receive the ranks of 'Recruit'.\n\nAliases:")
-    async def recruitment(self, ctx, *member):
-        member = await memberSearch(ctx, self.client, " ".join(member))
+    @commands.command(
+        hidden=True,
+        brief="This roles grant a member basic recruit status.",
+        description='To use this command tag a member or type his full name. His `Prospective Recruit` role will be removed and he will receive the ranks of `Recruit`.',
+        usage='?recruit <member>'
+    )
+    async def recruit(self, ctx, *, member):
+        member = await memberSearch(ctx, self.client, member)
         if member is None:
             return
         guild_roles = ctx.message.guild.roles
         recruit_role = discord.utils.get(guild_roles, name='Recruit')
         canread_role = discord.utils.get(guild_roles, name='Prospective Recruit')
-        await member.add_roles(recruit_role, reason="Recruit Command")
+        await member.add_roles(recruit_role, reason='Recruit Command')
         await asyncio.sleep(3)
-        await member.remove_roles(canread_role, reason="Recruit Command")
+        await member.remove_roles(canread_role, reason='Recruit Command')
         await ctx.message.delete()
         rr_channel = discord.utils.get(ctx.guild.channels, id=479313811518652417)
-        await ctx.send("{} is now an Ironborn Recruit! *What is dead may never die!*\nHead over to {} to get your games assigned.".format(member.mention, rr_channel.mention))
+        await ctx.send(f'{member.mention} is now an Ironborn Recruit! *What is dead may never die!*\nHead over to {rr_channel.mention} to get your games assigned.')
 
-    @isIronFleet()
-    @commands.command(aliases=["invite"], brief="Get this Discord's invitelink.", description=">>>Invite Link\nThis sends a message with the invite link to the Iron Fleet's Discord.\n\nAliases:")
-    async def invitelink(self, ctx):
-        await ctx.message.author.send("Use this link to invite people to the Iron Fleet's Discord: https://discord.gg/cSZPMF7")
-
-
-    #MEMBER JOIN MESSAGE
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        if not member.guild.id in if_servers or member.bot:
-            return
-        welcome_channel = discord.utils.get(member.guild.channels, id=welcome)
-        rules_channel = discord.utils.get(member.guild.channels, id=479301263461449768)
-        info_channel = discord.utils.get(member.guild.channels, id=563479453091495945)
-        intro_channel = discord.utils.get(member.guild.channels, id=481455365192548363)
-
-        #WELCOME EMBED
-        member_count = str(len(member.guild.members))
-        maintext = "Excelsior! It seems {} has drunkenly washed ashore onto The Iron Islands!  Our forces have reached {} strong!\n".format(member.mention, member_count)
-        embed=discord.Embed(
-            color=0xffd700,
-            description=maintext,
-            timestamp=datetime.utcnow()
-        )
-        embed.set_author(name=member,icon_url=member.avatar_url)
-        guild = member.guild
-        icon = guild.icon_url_as(format='png', size=1024)
-        embed.set_thumbnail(url=icon) #"https://i.imgur.com/od8TIcs.png"
-        footertext = "#{} Ironborn".format(member_count)
-        embed.set_footer(text=footertext, icon_url=icon) #"https://i.imgur.com/od8TIcs.png"
-        await welcome_channel.send(embed=embed)
-
-
-        #PM EMBED
-        txt1 = 'Please take a moment to read the {} and click the reaction emoji to indicate that you\'ve done so.'.format(rules_channel.mention)
-        txt2 = 'To apply, submit an application in {}.\n\
-Lastly, head over to {} to read up on our FAQ, get our social media links and general info about the fleet.\n\
-Feel free to message a Junior or Senior Officer if you have any questions or need any help.'.format(intro_channel.mention, info_channel.mention)
-        embed=discord.Embed(
-            color=0xffd700,
-            timestamp=datetime.utcnow()
-        )
-        embed.add_field(name='Ahoy, {} and welcome to the Iron Fleet!'.format(member.name), value=txt1)
-        embed.add_field(name='Afterwards', value=txt2)
-        guild = member.guild
-        icon = guild.icon_url_as(format='png', size=1024)
-        embed.set_thumbnail(url=icon)
-        footertext = "#{} Ironborn".format(member_count)
-        embed.set_footer(text=footertext, icon_url=icon)
+    @commands.command(
+        aliases=['invite'],
+        brief='Get this Guild\'s invitelink.',
+        description='This sends you a PM the invite link to this Guild.'
+    )
+    async def invite(self, ctx):
         try:
-            await member.send(embed=embed)
-        except discord.errors.Forbidden:
-            print(f'Couldn\'t send welcome message to {member}.')
-
-
-    #MEMBER REMOVE MESSAGE
-    @commands.Cog.listener()
-    async def on_member_remove(self, member):
-        if not member.guild.id in if_servers or member.bot:
-            return
-        channel = discord.utils.get(member.guild.channels, id=welcome)
-        await channel.send("Oh my, **{}** lost their senses during a storm and drowned. Not worthy of being called an Ironborn! What is dead may never die!".format(member))
+            link = ctx.guild.invites[0]
+        except:
+            link = ctx.guild.channels[0].create_invite(max_age=86400, reason=f'{ctx.author} requested an invite link.')
+        await ctx.author.send(f'Use this link to invite people to {ctx.guild.name}\'s Discord Server: {link.url}')
 
 def setup(client):
     client.add_cog(IronFleet(client))

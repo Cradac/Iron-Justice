@@ -1,5 +1,5 @@
 import discord
-from utils import createEmbed
+from utils.utils import createEmbed
 from datetime import datetime
 #import mysql
 
@@ -59,6 +59,9 @@ class Storage:
         self.execute_query(query)
         #TODO add more queries for cleanup
 
+    '''
+        PROFILE FUNCTIONS
+    '''
 
     async def get_sot_profile(self, ctx, user: discord.Member):
         query = f'SELECT hc,sd,gh,oos,ma,af,img,alias FROM sot_profile WHERE uid={user.id};'
@@ -137,7 +140,7 @@ class Storage:
         self.execute_query(query, commit=True)
 
     '''
-        `Looking for Crew`-Module Settings
+        `LOOKING FOR CREW`-MODULE SETTINGS
     '''
 
     def get_lfc_settings(self, guild: discord.Guild):
@@ -164,7 +167,7 @@ class Storage:
         self.execute_query(query, commit=True)
 
     '''
-        `Profile`-Module Settings
+        `PROFILE`-MODULE SETTINGS
     '''
 
     def get_profile_settings(self, guild: discord.Guild):
@@ -191,7 +194,7 @@ class Storage:
         self.execute_query(query, commit=True)
 
     '''
-        `Auto-Voice`-Module Settings
+        `AUTO-VOICE`-MODULE SETTINGS
     '''
 
     def get_auto_voice_settings(self, guild:discord.Guild):
@@ -230,7 +233,20 @@ class Storage:
 
 
     '''
-        `Activity Logging` Functions
+        `ACTIVITY-LOGGING` SETTINGS
+    '''
+
+    def get_activity_logging_status(self, guild: discord.Guild):
+        query = f'SELECT activity_logging FROM settings WHERE gid={guild.id}'
+        r = self.execute_query(query)[0]
+        return r        
+
+    def update_activity_logging_status(self, guild:discord.Guild, status: bool):
+        query = f'UPDATE settings SET activity_logging={str(status)} WHERE gid={guild.id}'
+        self.execute_query(query, commit=True)
+
+    '''
+        `ACTIVITY-LOGGING` FUNCTIONS
     '''
 
     def cleanup_messages(self, guilds:list(discord.Guild)):

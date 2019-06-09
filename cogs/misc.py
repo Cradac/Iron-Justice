@@ -128,5 +128,16 @@ class Misc(commands.Cog):
             conn.commit()
             await ctx.send(f'Executed SQL Query `{query}` successfully.')
 
+    @commands.command(
+        aliases=['invite'],
+        brief='Get this Guild\'s invitelink.',
+        description='This sends you a PM the invite link to this Guild.'
+    )
+    async def invite(self, ctx):
+        try:
+            link = ctx.guild.invites[0]
+        except:
+            link = ctx.guild.channels[0].create_invite(max_age=86400, reason=f'{ctx.author} requested an invite link.')
+        await ctx.author.send(f'Use this link to invite people to {ctx.guild.name}\'s Discord Server: {link.url}')
 def setup(client):
     client.add_cog(Misc(client))

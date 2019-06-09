@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-import asyncio, auto_voice
+import asyncio
+from  cogs import auto_voice
 from utils.storage import Storage
 from utils import utils
 
@@ -178,14 +179,19 @@ class Settings(commands.Cog):
 
     @auto_voice_names.command(
         brief='Add names for voice channel generation.',
-        description='You can add multiple names at a time. Please use `,` to seperate names.'
+        description='Add names to your custom voice channel name list. You can add multiple names at a time. Use `,` to seperate names.',
+        usage='?auto-voice-names add <name1,name2,...>'
     )
     async def add(self, ctx, *, names):
         names = [name.trim() for name in names.split(',')]
         self.Storage.add_auto_voice_names(ctx.guild, names)
         await ctx.invoke(self.client.get_command('auto_voice_names get'))
     
-    @auto_voice_names.command(aliases=['remove'])
+    @auto_voice_names.command(
+        aliases=['remove'],
+        description='Delete names out of your custom list of voice channel names. You can delete multiple names at a time. Use `,` to seperate names.',
+        usage='?auto-voice-names delete <name1,name2,...>'
+    )
     async def delete(self, ctx, *, names):
         names = [name.trim() for name in names.split(',')]
         self.Storage.delete_auto_voice_names(ctx.guild, names)

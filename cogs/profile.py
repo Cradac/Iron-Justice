@@ -27,7 +27,7 @@ class Profile(commands.Cog):
 
 
     @commands.Cog.listener()
-    def on_reaction_add(self, reaction, user):
+    async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
         if reaction.message.id in self.profile_messages:
             if reaction.emoji in self.emojis:
                 await reaction.remove(user)
