@@ -33,7 +33,7 @@ class LFC(commands.Cog):
     
     @matchlfcchannel()
     @commands.command(
-        brief='Sets the user into LFC status for 2 hours.',
+        brief='Sets the user into `Looking for Crew` status for 2 hours.',
         description='This command gives the user the set `Looking for Crew` role. \n\
             You can only use this command in the set channels.\n\
             Type ?nlfc once you\'re in a crew to avoid getting further notifications.\n\
@@ -57,7 +57,7 @@ class LFC(commands.Cog):
 
     @matchlfcchannel()
     @commands.command(
-        brief="Removes LFC status.",
+        brief='Removes the `Looking for Crew` status manually.',
         description='This removes the `Looking for Crew` status.\n\
             If you are looking for a crew again use `?lfc`.',
         usage='?nlfc'

@@ -1,15 +1,19 @@
-import discord, asyncio, utils.guilds, math
+import discord
 from discord.ext import commands
 from datetime import datetime
-from utils.utils import isAdmin, isMod, isGod, roleSearch, god, memberSearch, create_connection, db_file, isntRogueLegends, if_servers
+from utils.utils import isAdmin, isMod, isGod, roleSearch, god, memberSearch, isntRogueLegends, if_servers
 from operator import itemgetter
+from utils.storage import Storage
+import asyncio, utils.guilds, math
 
 #simply adds a message with author id, message id and timestamp into DB
 
 
-class Maroon(commands.Cog):
+class Activity_Logging(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+        self.Storage = Storage()
     
     def addMessage(self, message:discord.Message):
         conn = create_connection(db_file)
