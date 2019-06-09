@@ -1,10 +1,8 @@
 import discord
 from discord.ext import commands
-import asyncio
-import datetime
 from utils.utils import matchprofilechannel, matchlfcchannel, memberSearch, createEmbed
 from utils.storage import Storage
-import re
+import asyncio, datetime, re, xbox
 
 class Profile(commands.Cog):
     def __init__(self, client):
@@ -72,9 +70,7 @@ class Profile(commands.Cog):
 
     async def get_sot_page(self, ctx: commands.Context, member: discord.Member):
         info = await self.Storage.get_sot_profile(ctx, member)
-        embed = createEmbed(colour='iron', author=member)
-        icon = member.guild.icon_url_as(format='png', size=512)
-        embed.set_thumbnail(url=icon)
+        embed = createEmbed(colour='iron', author=member, guild=ctx.guild)
         embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
         embed.add_field(name="Gamertag", value=info['gtag'], inline=False)
         if info['alias']:
