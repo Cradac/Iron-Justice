@@ -84,7 +84,7 @@ async def on_command_error(ctx, error):
 			colour=0xff0000,
 			author=ctx.author)
 		await ctx.send(embed=embed)
-	else:
+	'''else:
 		try:
 			embed = utils.createEmbed(
 				title='An error eccured',
@@ -100,7 +100,7 @@ async def on_command_error(ctx, error):
 			await app.owner.send(embed=embed)
 		except Exception as error:
 			tb = traceback.format_exc()
-			print(error, tb)
+			print(error, tb)'''
 
 
 ##########################################################################################################################################
