@@ -16,7 +16,7 @@ class IronFleet(commands.Cog):
     @isMod()
     @commands.command(
         hidden=True,
-        brief="This roles grant a member basic recruit status.",
+        brief='This roles grant a member basic recruit status.',
         description='To use this command tag a member or type his full name. His `Prospective Recruit` role will be removed and he will receive the ranks of `Recruit`.',
         usage='?recruit <member>'
     )

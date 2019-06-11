@@ -49,15 +49,35 @@ class Storage:
     '''
 
 
-    def add_server(self, guild: discord.Guild):
-        query = f'INSERT INTO settings (gid) VALUES ({guild.id})'
+    def add_guild(self, guild: discord.Guild, role: discord.Role = None):
+        if role:
+            query = f'INSERT INTO settings (gid, lfc_role) VALUES ({guild.id}, {role.id});'
+        else:
+            query = f'INSERT INTO settings (gid) VALUES ({guild.id});'
         self.execute_query(query, commit=True)
 
+    def get_all_guilds(self, client: discord.Client):
+        query = f'SELECT gid FROM settings;'
+        r = self.execute_query_many(query)
+        return [client.get_guild(int(gid)[0]) for gid in r]
 
     def guild_leave(self, guild: discord.Guild):
         query = f'DELETE FROM messages WHERE gid={guild.id};'
         self.execute_query(query)
-        #TODO add more queries for cleanup
+        query = f'DELETE from settings WHERE gid={guild.id};'
+        self.execute_query(query)
+        query = f'DELETE from lfc_channels WHERE gid={guild.id};'
+        self.execute_query(query)
+        query = f'DELETE from profile_channels WHERE gid={guild.id};'
+        self.execute_query(query)
+        query = f'DELETE from auto_voice_names WHERE gid={guild.id};'
+        self.execute_query(query, commit=True)
+
+    def user_leave(self, user: discord.User):
+        query = f'DELETE FROM sot_profile WHERE uid={user.id};'
+        self.execute_query(query)
+        query = f'DELETE FROM gamertags WHERE uid={user.id};'
+        self.execute_query(query, commit=True)
 
     '''
         `PROFILE` FUNCTIONS
@@ -113,7 +133,7 @@ class Storage:
         embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
         await ctx.send(embed=embed)
 
-    def update_levels(self, user: discord.Member, comps: dict(str, int)):
+    def update_levels(self, user: discord.Member, comps: dict()):
         cur = self.get_cursor()
         cur.executemany(f'UPDATE sot_profile SET %s=%s WHERE uid={user.id};', comps.items())
         self.conn.commit()
@@ -152,19 +172,20 @@ class Storage:
     def get_lfc_settings(self, guild: discord.Guild):
         settings = dict()
         query = f'SELECT lfc FROM settings WHERE gid={guild.id};'
-        settings['status'] = self.execute_query(query)[0]
+        settings['status'] = self.execute_query(query)[0].upper() == 'TRUE'
         query = 'SELECT cid FROM lfc_channels WHERE gid={guild.id};'
         r = self.execute_query_many(query)
-        settings['channels'] = [guild.get_channel(c[0]) for c in r]
+        settings['channels'] = [guild.get_channel(int(c[0])) for c in r]
+        settings['role'] = self.get_lfc_role(guild)
         return settings
         
     def update_lfc_status(self, guild: discord.Guild, status: bool):
         query = f'UPDATE settings SET lfc={str(status)} WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
 
-    def add_lfc_channels(self, guild: discord.Guild, channels: list(discord.abc.GuildChannel)):
+    def add_lfc_channels(self, guild: discord.Guild, channels: list()):
         cur = self.get_cursor()
-        cur.executemany(f'INSERT INTO lfc_channels (cid,gid) VALUES (%s,{guild.id});', channels)
+        cur.executemany(f'INSERT INTO lfc_channels (cid,gid) VALUES (%s,{guild.id});', [c.id for c in channels])
         self.conn.commit()
         cur.close()
 
@@ -175,7 +196,7 @@ class Storage:
     def get_lfc_enabled_guilds(self, client: discord.Client):
         query = 'SELECT gid FROM settings WHERE lfc=TRUE;'
         r = self.execute_query_many(query)
-        return [client.get_guild(gid[0]) for gid in r]
+        return [client.get_guild(int(gid[0])) for gid in r]
 
     def update_lfc_role(self, guild: discord.Guild, role: discord.Role):
         query = f'UPDATE settings SET lfc_role={role.id} WHERE gid={guild.id}'
@@ -184,7 +205,8 @@ class Storage:
     def get_lfc_role(self, guild: discord.Guild):
         query = f'SELECT lfc_role FROM settings WHERE gid={guild.id}'
         r = self.execute_query(query)[0]
-        return guild.get_role(r)
+        return guild.get_role(int(r))
+    
 
     '''
         `PROFILE`-MODULE SETTINGS
@@ -193,7 +215,7 @@ class Storage:
     def get_profile_settings(self, guild: discord.Guild):
         settings = dict()
         query = f'SELECT profile FROM settings WHERE gid={guild.id};'
-        settings['status'] = self.execute_query(query)[0]
+        settings['status'] = self.execute_query(query)[0].upper() == 'TRUE'
         query = f'SELECT cid FROM profile_channels WHERE gid={guild.id};'
         r = self.execute_query_many(query)
         settings['channels'] = [guild.get_channel(c[0]) for c in r]
@@ -203,9 +225,9 @@ class Storage:
         query = f'UPDATE settings SET profile={str(status)} WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
 
-    def add_profile_channels(self, guild: discord.Guild, channels: list(discord.abc.GuildChannel)):
+    def add_profile_channels(self, guild: discord.Guild, channels: list()):
         cur = self.get_cursor()
-        cur.executemany(f'INSERT INTO profile_channels (cid,gid) VALUES (%s,{guild.id});', channels)
+        cur.executemany(f'INSERT INTO profile_channels (cid,gid) VALUES (%s,{guild.id});', [c.id for c in channels])
         self.conn.commit()
         cur.close()
 
@@ -216,7 +238,7 @@ class Storage:
     def get_profile_enabled_guilds(self, client: discord.Client):
         query = 'SELECT gid FROM settings WHERE profile=TRUE;'
         r = self.execute_query_many(query)
-        return [client.get_guild(gid[0]) for gid in r]
+        return [client.get_guild(int(gid[0])) for gid in r]
 
     '''
         `AUTO-VOICE`-MODULE SETTINGS
@@ -226,7 +248,7 @@ class Storage:
         settings = dict()
         query = f'SELECT auto_voice_channel FROM settings WHERE gid={guild.id};'
         r = self.execute_query(query)[0]
-        settings['auto_voice_channel'] = guild.get_channel(r)
+        settings['channel'] = guild.get_channel(int(r))
         settings['names'] = self.get_auto_voice_names(guild)
         return settings
 
@@ -240,13 +262,13 @@ class Storage:
         query = f'UPDATE settings SET auto_voice_channel={channel.id} WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
     
-    def add_auto_voice_names(self, guild:discord.Guild, names: list(str)):
+    def add_auto_voice_names(self, guild:discord.Guild, names: list()):
         cur = self.get_cursor()
         cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES (\'%s\',{guild.id});', names)
         self.conn.commit()
         cur.close()
 
-    def delete_auto_voice_names(self, guild:discord.Guild, names: list(str)):
+    def delete_auto_voice_names(self, guild:discord.Guild, names: list()):
         cur = self.get_cursor()
         cur.executemany(f'DELETE FROM auto_voice_names WHERE name=\'%s\' and gid={guild.id};', names)
         self.conn.commit()
@@ -263,7 +285,7 @@ class Storage:
 
     def get_activity_logging_status(self, guild: discord.Guild):
         query = f'SELECT activity_logging FROM settings WHERE gid={guild.id}'
-        r = self.execute_query(query)[0]
+        r = self.execute_query(query)[0].upper() == 'TRUE'
         return r        
 
     def update_activity_logging_status(self, guild:discord.Guild, status: bool):
@@ -274,7 +296,7 @@ class Storage:
         `ACTIVITY-LOGGING` FUNCTIONS
     '''
 
-    def cleanup_messages(self, guilds:list(discord.Guild)):
+    def cleanup_messages(self, guilds:list()):
         cur = self.get_cursor()
         query = f'DELETE FROM messages WHERE datetime < DATE_SUB(NOW(), INTERVAL 30 DAY) OR gid NOT IN ({",".join(g.id for g in guilds)});'
         cur.execute(query)
@@ -283,7 +305,7 @@ class Storage:
         cur.close()
         return count
 
-    def user_leave(self, user:discord.Member):
+    def user_leave_guild(self, user:discord.Member):
         query = f'DELETE FROM messages WHERE aid={user.id} and gid={user.guild.id};'
         self.execute_query(query, commit=True)
 
@@ -291,14 +313,20 @@ class Storage:
         timestamp = m.created_at.strftime(self.datetime_scheme)
         query = f'INSERT INTO messages (mid,aid,gid,timestamp) \
             SELECT {m.id},{m.author.id},{m.guild.id},{timestamp} FROM dual WHERE\
-                (SELECT activity_logging FROM settings WHERE gid={m.guild.id})=TRUE;'
+            (SELECT activity_logging FROM settings WHERE gid={m.guild.id})=TRUE;'
         self.execute_query(query, commit=True)
 
     def get_user_activity(self, user:discord.Member):
         info = dict()
         query = f'SELECT COUNT(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id};'
-        info['amnt'] = self.execute_query(query)[0]
-        query = f'SELECT datetime FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY datetime DESC LIMIT 1;'
-        timestamp = self.execute_query(query)[0]
+        info['amnt'] = int(self.execute_query(query)[0]) or 0
+        query = f'SELECT timestamp FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY timestamp DESC LIMIT 1;'
+        timestamp = self.execute_query(query)[0] or None
         info['timestamp'] = datetime.strptime(timestamp, self.datetime_scheme)
+        info['member'] = user
         return info
+
+    def get_activity_logging_enabled_guilds(self, client: discord.Client):
+        query = 'SELECT gid FROM settings WHERE activity_logging=TRUE;'
+        r = self.execute_query_many(query)
+        return [client.get_guild(gid[0]) for gid in r]
