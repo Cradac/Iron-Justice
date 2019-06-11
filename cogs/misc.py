@@ -26,8 +26,8 @@ class Misc(commands.Cog):
             if role in member.roles:
                 users.append(member)
         users.sort()
-        sumpages=math.ceil(len(users)/20)
-        page = sumpages if page > sumpages            
+        sumpages = math.ceil(len(users)/20)
+        page = sumpages if page > sumpages else page          
         pagestart = (page * 20)-20
         pageend = pagestart + 19
         desctext = "({} in total)\n".format(str(len(users)))

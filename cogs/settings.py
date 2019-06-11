@@ -25,7 +25,7 @@ class Settings(commands.Cog):
     async def on_member_remove(self, member):
         user = self.client.get_user(member.id)
         can_remove = True
-        if user in guild.members for guild in self.client.guilds:
+        (if user in guild.members) for guild in self.client.guilds:
             can_remove = False
         if can_remove:
             self.Storage.user_leave(user)
