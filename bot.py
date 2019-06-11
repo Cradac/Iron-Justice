@@ -73,20 +73,20 @@ async def on_command_error(ctx, error):
 	if isinstance(error, commands.CheckFailure) or isinstance(error, commands.CommandNotFound):
 		pass
 	elif isinstance(error, commands.BadArgument):
-		embed = createEmbed(
+		embed = utils.createEmbed(
 			description=f'Error: There was an error with the command arguments.\n\nUsage:\n`{ctx.command.usage}`',
 			colour=0xff0000,
 			author=ctx.author)
 		await ctx.send(embed=embed)
 	elif isinstance(error, commands.MissingRequiredArgument):
-		embed = createEmbed(
+		embed = utils.createEmbed(
 			description=f'Error: Your are missing an argument.\n\nUsage:\n`{ctx.command.usage}`',
 			colour=0xff0000,
 			author=ctx.author)
 		await ctx.send(embed=embed)
 	else:
 		try:
-			embed = createEmbed(
+			embed = utils.createEmbed(
 				title='An error eccured',
 				description=f'\
 				**{type(error)}**\n\
