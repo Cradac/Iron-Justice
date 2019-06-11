@@ -93,7 +93,7 @@ class Activity_Logging(commands.Cog):
             try:
                 for i in range(page*20, page*20+19):
                     current_member = info_list[i]
-                    text += f'- {current_member['member'].mention} has written {current_member['amnt']} messages. Last one (over) {current_member['days_gone']} days ago.\n'
+                    text += f'- {current_member["member"].mention} has written {current_member["amnt"]} messages. Last one (over) {current_member["days_gone"]} days ago.\n'
             except IndexError:
                 pass
             await ctx.send(text)
