@@ -180,10 +180,10 @@ class Profile(commands.Cog):
         description='Use this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter\'s Call\nsd: Sea Dogs\naf: Athena\'s Fortune',
         usage='?levels *[<company>=<level>]'
     )
-    async def levels(self, ctx, *, args: str):
+    async def levels(self, ctx, *args: str):
         comps = dict()
         r = re.compile('^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
-        if not r.match(args + ' '):
+        if not r.match(' '.join(args) + ' '):
             await ctx.send('The Syntax is not correct. Try this instead:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`')
             return
         for arg in args:

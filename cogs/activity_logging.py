@@ -82,7 +82,7 @@ class Activity_Logging(commands.Cog):
                 m_info = self.get_user_activity(member)
                 comparedate = m_info['timestamp'] or member.joined_at
                 m_info['days_gone'] = (datetime.utcnow() - comparedate).days()
-                if m_info['days_gone']> compare_days
+                if m_info['days_gone'] > compare_days:
                     info_list.append(m_info)
         
         #output found members

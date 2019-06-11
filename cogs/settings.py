@@ -65,7 +65,7 @@ class Settings(commands.Cog):
 
 
     @commands.command(
-        name='guild-info'
+        name='guild-info',
         aliases=['guildinfo'],
         brief='Gives information about this guild and the setup of the Iron Justice.',
         usage='?guild-info'
