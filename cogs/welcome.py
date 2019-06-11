@@ -6,7 +6,17 @@ from utils.utils import createEmbed
 class Welcome:
     def __init__(self, client):
         self.client = client
-        iron_guild = self.client.get_guild(479300072077787160)
+
+        self.iron_guild: discord.Guild = None
+        self.iron = dict()
+
+        self.rogue_guild: discord.Guild = None
+        self.rogue = dict()
+        
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.iron_guild = self.client.get_guild(479300072077787160)
         self.iron = {
             'guild': iron_guild,
             'welcome': iron_guild.get_channel(479301249351548928),
@@ -14,7 +24,7 @@ class Welcome:
             'info': iron_guild.get_channel(563479453091495945),
             'intro': iron_guild.get_channel(481455365192548363)
         }
-        rogue_guild = self.client.get_guild(455901088164478976)
+        self.rogue_guild = self.client.get_guild(455901088164478976)
         self.rogue = {
             'guild': rogue_guild,
             'welcome': rogue_guild.get_channel(459692275522338837),
@@ -24,6 +34,8 @@ class Welcome:
             'info': rogue_guild.get_channel(552115652555440149),
             'jenbot': rogue_guild.get_user(375060041813983242)
         }
+        print('Got all welcome guilds and channels.')
+
 
 
     def iron_welcome(self, user: discord.Member):

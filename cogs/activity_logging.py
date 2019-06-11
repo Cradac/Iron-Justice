@@ -45,7 +45,9 @@ class Activity_Logging(commands.Cog):
         description='This command shows a players activity in chat on this server. The Iron Justice records all messages within the last 30 days.'
     )
     async def user_info(self, ctx, *, member):
-        member = await memberSearch(ctx, self.client,member) or return
+        member = await memberSearch(ctx, self.client, member)
+        if not member:
+            return
 
         info = self.Storage.get_user_activity(member)
 
@@ -66,7 +68,9 @@ class Activity_Logging(commands.Cog):
     )
     async def maroon(self, ctx, compare_days: typing.Optional[int] = 14, role: str = None):
         await ctx.send("**__Checking for inactivity now... This might take a while.__**")
-        list_to_check = (await roleSearch(ctx, self.client, role).members if role else ctx.guild.members) or return
+        list_to_check = (await roleSearch(ctx, self.client, role).members if role else ctx.guild.members)
+        if not list_to_check:
+            return
 
         # Cleaning up DB
         self.Storage.cleanup_messages(client.guilds)
