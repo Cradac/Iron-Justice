@@ -11,7 +11,6 @@ import sys
 from datetime import datetime
 import traceback
 from utils import utils
-from utils.storage import Storage
 
 _version = '3.0.0a'
 
