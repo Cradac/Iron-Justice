@@ -2,12 +2,12 @@ import discord
 import asyncio
 from discord.ext import commands
 from datetime import datetime
-from utils.storage import Storage
+from utils import storage
 
 god = 116222914327478274
 
 
-Storage = Storage()
+storage.Storage = Storage()
 
 def isAdmin():
 	def admincheck(ctx):
