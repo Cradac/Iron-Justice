@@ -1,20 +1,20 @@
 import discord
 from utils.utils import createEmbed
 from datetime import datetime
-#import mysql
+import mysql
 
 
 class Storage:
     
     def __init__(self):
-        self.conn = None
-        '''
+        #self.conn = None
+        
         self.conn = mysql.connector.connect(
-            host="localhost",
-            user=Configuration.DBUsername,
-            passwd=Configuration.DBPassword,
-            database=Configuration.DBName
-        )'''
+            host='localhost',
+            user='ironjustice',
+            passwd='WhatIsDeadMayNeverDie',
+            database='IronJustice'
+        )
         self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
 
     
