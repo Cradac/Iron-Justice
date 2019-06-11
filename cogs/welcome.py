@@ -3,7 +3,7 @@ from discord.ext import commands
 
 from utils.utils import createEmbed
 
-class Welcome:
+class Welcome(commands.Cog):
     def __init__(self, client):
         self.client = client
 

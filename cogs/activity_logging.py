@@ -54,7 +54,7 @@ class Activity_Logging(commands.Cog):
         embed = utils.createEmbed(author=member, colour='iron', guild=ctx.guild)
         embed.set_footer(text="Activity Info", icon_url=ctx.guild.icon_url_as(format='png', size=128))
         timestamp_str = info['timestamp'].strftime(self.Storage.datetime_scheme)
-        days_gone = datetime.utcnow()-info['timestamp']).days
+        days_gone = (datetime.utcnow()-info['timestamp']).days
         embed.add_field(name='__joined guild__', value=member.joined_at.strftime('%d %b %Y'), inline=False)
         embed.add_field(name='__last message (UTC TIME)__', value=f'{timestamp_str} ({days_gone} days ago)', inline=False)
         embed.add_field(name='__amount of messages (last 30 days)__', value=info['amnt'], inline=False)

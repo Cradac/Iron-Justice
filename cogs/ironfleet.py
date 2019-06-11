@@ -1,10 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
-import sqlite3
-from sqlite3 import Error 
-from utils.utils import isGod, isAdmin, isMod, isIronFleet, memberSearch
-from utils.utils import create_connection, db_file, welcome, if_servers
+from utils import utils
 from datetime import datetime
 
 
@@ -12,8 +9,8 @@ class IronFleet(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @isIronFleet()
-    @isMod()
+    @utils.isIronFleet()
+    @utils.isMod()
     @commands.command(
         hidden=True,
         brief='This roles grant a member basic recruit status.',
@@ -21,14 +18,13 @@ class IronFleet(commands.Cog):
         usage='?recruit <member>'
     )
     async def recruit(self, ctx, *, member):
-        member = await memberSearch(ctx, self.client, member)
+        member = await utils.memberSearch(ctx, self.client, member)
         if member is None:
             return
         guild_roles = ctx.message.guild.roles
         recruit_role = discord.utils.get(guild_roles, name='Recruit')
         canread_role = discord.utils.get(guild_roles, name='Prospective Recruit')
         await member.add_roles(recruit_role, reason='Recruit Command')
-        await asyncio.sleep(3)
         await member.remove_roles(canread_role, reason='Recruit Command')
         await ctx.message.delete()
         rr_channel = discord.utils.get(ctx.guild.channels, id=479313811518652417)

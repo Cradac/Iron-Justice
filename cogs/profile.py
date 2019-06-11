@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
-from utils.utils import matchprofilechannel, matchlfcchannel, memberSearch, createEmbed
 from utils.storage import Storage
-import asyncio, datetime, re, xbox
+import asyncio, re, xbox
 
 class Profile(commands.Cog):
     def __init__(self, client):

@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
-import utils.guilds
-from utils.utils import matchlfcchannel
+from utils import utils
 from utils.storage import Storage
 
 class LFC(commands.Cog):
@@ -22,7 +21,7 @@ class LFC(commands.Cog):
                 except discord.Forbidden:
                     continue
     
-    @matchLFCChannel()
+    @utils.matchLFCChannel()
     @commands.command(
         brief='Sets the user into `Looking for Crew` status for 2 hours.',
         description='This command gives the user the set `Looking for Crew` role. \n\
@@ -46,7 +45,7 @@ class LFC(commands.Cog):
             self.client.loop.create_task(self.auto_remove(user))
 
 
-    @matchLFCChannel()
+    @utils.matchLFCChannel()
     @commands.command(
         brief='Removes the `Looking for Crew` status manually.',
         description='This removes the `Looking for Crew` status.\n\
