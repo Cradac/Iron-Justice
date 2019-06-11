@@ -191,7 +191,7 @@ class Profile(commands.Cog):
             try:
                 comps[arg[0].lower()] = int(arg[1])
             except ValueError:
-                await ctx.send("Please only pass integers for levels.")
+                await ctx.send('Please only pass integers for levels.')
                 return
         for comp,lvl in comps.items():
             if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af']:

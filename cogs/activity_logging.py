@@ -113,4 +113,4 @@ class Activity_Logging(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(Maroon(client))    
+    client.add_cog(Activity_Logging(client))    
