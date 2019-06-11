@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-
 from utils.utils import createEmbed
 
 class Welcome:
@@ -89,6 +88,21 @@ class Welcome:
             else:
                 return
             await welcome_channel.send(text)
+
+    @commands.command(
+        brief='Test the welcome message.',
+        description='A command to test the welcome message.',
+        usage='?welcome <channel>'
+    )
+    async def welcome(self, ctx, channel: discord.TextChannel):
+        if ctx.guild == self.iron['guild']:
+            embed = self.iron_welcome(ctx.author)
+        elif ctx.guild == self.rogue['guild']:
+            embed = self.rogue_welcome(ctx.author)
+        else:
+            app_info = await self.client.application_info()
+            await ctx.send(f'There is no custom welcome message set for your guild. Contact {app_info.owner}')
+        await channel.send(embed=embed)
 
 
 def setup(client):
