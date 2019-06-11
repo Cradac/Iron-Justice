@@ -158,7 +158,7 @@ async def reload(ctx, extension_name: str):
 if __name__ == "__main__":
 	for extension in extensions:
 		try:
-			client.load_extension('cog.s' + extension)
+			client.load_extension(f'cogs.{extension}')
 			print(f'Loaded Extension {extension} on boot-up.')
 		except Exception as e:
 			exc = f'{type(e).__name__}: {e}'
