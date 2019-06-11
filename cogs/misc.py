@@ -48,7 +48,9 @@ class Misc(commands.Cog):
         usage='?nick <user> <new name>'
     )
     async def nick(self, ctx, member, *, new_name : str):
-        member = await memberSearch(ctx, self.client, member) or return
+        member = await memberSearch(ctx, self.client, member)
+        if not member:
+            return
         await member.edit(nick=new_name)
         await ctx.send(f'{member.mention} is now called \'{new_name}\'.')
 
@@ -65,7 +67,6 @@ class Misc(commands.Cog):
 
 
     @commands.command(
-        aliases=['invite'],
         brief='Get this Guild\'s invitelink.',
         description='This sends you a PM the invite link to this Guild.'
     )

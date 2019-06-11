@@ -122,7 +122,7 @@ class Profile(commands.Cog):
 
 
     @utils.matchProfileChannel()
-    @commands.command(
+    @commands.group(
         brief='Show your own Gamertag',
         description='This command shows the Gamertag page of the profile.\n\
             There are some subcommands to alter your gamertags or show someone elses gamertags.\n\

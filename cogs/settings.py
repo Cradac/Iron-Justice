@@ -25,8 +25,9 @@ class Settings(commands.Cog):
     async def on_member_remove(self, member):
         user = self.client.get_user(member.id)
         can_remove = True
-        (if user in guild.members) for guild in self.client.guilds:
-            can_remove = False
+        for guild in self.client.guilds:
+            if user in guild.members:
+                can_remove = False
         if can_remove:
             self.Storage.user_leave(user)
 
@@ -302,6 +303,7 @@ class Settings(commands.Cog):
     async def auto_voice_names(self, ctx):
         if not ctx.invoked_subcommand:
             await ctx.send('Possible subcommands to invoke are:\n• ' + '\n• '.join(c.name for c in ctx.command.commands))
+    
     @utils.isAdmin()
     @auto_voice_names.command(
         brief='Show a list of all names used for voice channel generation.',
