@@ -96,7 +96,8 @@ async def on_command_error(ctx, error):
 				colour=0xff0000
 			)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url_as(format='png', size=128))
-			await client.application_info().owner.send(embed=embed)
+			app = await client.application_info()
+			await app.owner.send(embed=embed)
 		except Exception as error:
 			tb = traceback.format_exc()
 			print(error, tb)
