@@ -163,7 +163,7 @@ if __name__ == "__main__":
 			print(f'Loaded Extension {extension} on boot-up.')
 		except Exception as e:
 			exc = f'{type(e).__name__}: {e}'
-			print(f'Failed to load extension {extension}\n{exc}'
+			print(f'Failed to load extension {extension}\n{exc}')
 
 client.run(bot_token)
 
