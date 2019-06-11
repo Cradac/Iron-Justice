@@ -9,17 +9,29 @@ class Profile(commands.Cog):
         self.client = client
 
         self.Storage = Storage()
-        self.profile_messages = list(int)
-        self.profile_status = dict(int, str)
+        self.profile_messages = list()
+        self.profile_status = dict()
 
+        self.steam_emoji = None
+        self.xbox_emoji = None
+        self.psn_emoji = None
+        self.nintendo_emoji = None
+        self.sot_emoji = None
+        self.game_emoji = '🎮'
+        self.game_emoji_url = 'https://discordapp.com/assets/7d600babcd1bddfd7a7d35acc1ed4cd3.svg'
+        self.stop_emoji = '⏹'
+        
+        
+        self.emojis = list()
+
+
+    @commands.Cog.listener()
+    async def on_ready(self):
         self.steam_emoji = self.client.get_emoji(586475562772725780)
         self.xbox_emoji = self.client.get_emoji(563799115201249301)
         self.psn_emoji = self.client.get_emoji(563799160021712922)
         self.nintendo_emoji = self.client.get_emoji(534433688025563137)
         self.sot_emoji = self.client.get_emoji(488445174536601600)
-        self.game_emoji = '🎮'
-        self.game_emoji_url = 'https://discordapp.com/assets/7d600babcd1bddfd7a7d35acc1ed4cd3.svg'
-        self.stop_emoji = '⏹'
 
         self.emojis = [self.xbox_emoji, self.sot_emoji, self.game_emoji, self.stop_emoji]
 
