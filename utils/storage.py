@@ -58,7 +58,7 @@ class Storage:
     def get_all_guilds(self, client: discord.Client):
         query = f'SELECT gid FROM settings;'
         r = self.execute_query_many(query)
-        return [client.get_guild(int(gid)[0]) for gid in r]
+        return [client.get_guild(int(gid[0])) for gid in r]
 
     def guild_leave(self, guild: discord.Guild):
         query = f'DELETE FROM messages WHERE gid={guild.id};'
