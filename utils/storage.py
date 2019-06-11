@@ -1,17 +1,17 @@
 import discord
 from datetime import datetime
-import mysql
+import mysql.connector
+
 
 
 class Storage:
     
     def __init__(self):
         #self.conn = None
-        
         self.conn = mysql.connector.connect(
             host='localhost',
             user='ironjustice',
-            passwd='WhatIsDeadMayNeverDie',
+            password='WhatIsDeadMayNeverDie',
             database='IronJustice'
         )
         self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
