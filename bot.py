@@ -121,44 +121,44 @@ async def version(ctx):
 @commands.is_owner()
 @client.command(hidden=True)
 async def kill(ctx):
-	print("Bot shutting down...")
+	print('Bot shutting down...')
 	await client.close()
 
 
 @commands.is_owner()
 @client.command(hidden=True)
-async def load(ctx, extension_name : str):
+async def load(ctx, extension_name: str):
 	try:
-		extension_name = "cogs.{}".format(extension_name)
+		extension_name = f'cogs.{extension_name}'
 		client.load_extension(extension_name)
 	except (AttributeError, ImportError) as e:
-		print("{}: {}".format(type(e).__name__, str(e)))
+		print(f'{type(e).__name__}: {e}')
 		return
-	print("'{}' loaded.".format(extension_name))
+	print(f'`{extension_name}` loaded.')
 
 @commands.is_owner()
 @client.command(hidden=True)
-async def unload(ctx, extension_name : str):
-	extension_name = "cogs.{}".format(extension_name)
+async def unload(ctx, extension_name: str):
+	extension_name = f'cogs.{extension_name}'
 	client.unload_extension(extension_name)
-	print("'{}' unloaded.".format(extension_name))
+	print(f'`{extension_name}` unloaded.')
 
 @commands.is_owner()
 @client.command(hidden=True)
-async def reload(ctx, extension_name : str):
+async def reload(ctx, extension_name: str):
 	try:
-		extension_name = "cogs.{}".format(extension_name)
+		extension_name = f'cogs.{extension_name}'
 		client.unload_extension(extension_name)
 		client.load_extension(extension_name)
 	except (AttributeError, ImportError) as e:
-		print("{}: {}".format(type(e).__name__, str(e)))
+		print(f'{type(e).__name__}: {e}')
 		return
 	print(f'`{extension_name}` reloaded.')
 
 if __name__ == "__main__":
 	for extension in extensions:
 		try:
-			client.load_extension('cog.' + extension)
+			client.load_extension('cog.s' + extension)
 			print(f'Loaded Extension {extension} on boot-up.')
 		except Exception as e:
 			exc = f'{type(e).__name__}: {e}'
