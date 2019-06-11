@@ -63,7 +63,7 @@ class Activity_Logging(commands.Cog):
     @utils.isAdmin()
     @commands.command(
         brief='Manually invoke the marooning routine.',
-        usage='?maroon [days gone = 14] [role]'
+        usage='?maroon [days gone = 14] [role]',
         hidden=True
     )
     async def maroon(self, ctx, compare_days: typing.Optional[int] = 14, role: str = None):

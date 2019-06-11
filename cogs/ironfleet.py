@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import asyncio
 from utils import utils
 from datetime import datetime
 
@@ -31,7 +30,6 @@ class IronFleet(commands.Cog):
         await ctx.send(f'{member.mention} is now an Ironborn Recruit! *What is dead may never die!*\nHead over to {rr_channel.mention} to get your games assigned.')
 
     @commands.command(
-        aliases=['invite'],
         brief='Get this Guild\'s invitelink.',
         description='This sends you a PM the invite link to this Guild.'
     )

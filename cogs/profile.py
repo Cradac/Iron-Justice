@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from utils.storage import Storage
+from utils import utils
 import asyncio, re, xbox
 
 class Profile(commands.Cog):
@@ -102,7 +103,7 @@ class Profile(commands.Cog):
         return embed
 
 
-    @matchProfileChannel()
+    @utils.matchProfileChannel()
     @commands.command(
         brief='Shows a member\' profile.',
         description='This command shows a member\'s profile.\n\
@@ -120,7 +121,7 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'sot'
 
 
-    @matchProfileChannel()
+    @utils.matchProfileChannel()
     @commands.command(
         brief='Show your own Gamertag',
         description='This command shows the Gamertag page of the profile.\n\
@@ -136,7 +137,7 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'game'
 
 
-    @matchProfileChannel()
+    @utils.matchProfileChannel()
     @gt.command(
         brief='Edit your one of your gamertags.',
         description='Use this to edit your gamertag.\n\
@@ -154,7 +155,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @matchProfileChannel()
+    @utils.matchProfileChannel()
     @gt.command(
         brief='Show another member\'s gamertag profile page.',
         description='This command can show another member\'s gamertag.',
@@ -172,7 +173,7 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'game'
 
 
-    @matchProfileChannel()
+    @utils.matchProfileChannel()
     @commands.command(
         aliases=['lvl'],
         brief='Update your Ingame Levels.',
@@ -207,7 +208,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
     
-    @matchProfileChannel()
+    @utils.matchProfileChannel()
     @commands.command(
         aliases=['set-image'],
         brief='Set a picture for your profile.',
@@ -231,7 +232,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @matchProfileChannel()
+    @utils.matchProfileChannel()
     @commands.command(
         aliases=['piratename'],
         brief='Set an alias for your pirate.',

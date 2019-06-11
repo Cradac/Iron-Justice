@@ -37,7 +37,7 @@ class Misc(commands.Cog):
             except IndexError:
                 break
 
-        embed = utils.createEmbed(title=f'__Users with the role '{role}':__', description=desctext, colour='iron', author=ctx.author)
+        embed = utils.createEmbed(title=f'__Users with the role `{role}`:__', description=desctext, colour='iron', author=ctx.author)
         embed.set_footer(text=f'Page {page}/{sumpages}')
         await ctx.send(embed=embed)
 
