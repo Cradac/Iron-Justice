@@ -118,14 +118,14 @@ async def version(ctx):
 
 ##########################################################################################################################################
 
-@isGod()
+@commands.is_owner()
 @client.command(hidden=True)
 async def kill(ctx):
 	print("Bot shutting down...")
 	await client.close()
 
 
-@isGod()
+@commands.is_owner()
 @client.command(hidden=True)
 async def load(ctx, extension_name : str):
 	try:
@@ -136,14 +136,14 @@ async def load(ctx, extension_name : str):
 		return
 	print("'{}' loaded.".format(extension_name))
 
-@isGod()
+@commands.is_owner()
 @client.command(hidden=True)
 async def unload(ctx, extension_name : str):
 	extension_name = "cogs.{}".format(extension_name)
 	client.unload_extension(extension_name)
 	print("'{}' unloaded.".format(extension_name))
 
-@isGod()
+@commands.is_owner()
 @client.command(hidden=True)
 async def reload(ctx, extension_name : str):
 	try:
