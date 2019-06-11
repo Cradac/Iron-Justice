@@ -18,7 +18,9 @@ class Misc(commands.Cog):
         usage='?whois <role> [page=1]'
     )
     async def whois(self, ctx, *, rolename: str, page: typing.Optional[int]=1 ):
-        role = await roleSearch(ctx, self.client, rolename) or return
+        role = await roleSearch(ctx, self.client, rolename)
+        if not role:
+            return
         users = list()
         for member in ctx.guild.members:
             if role in member.roles:
