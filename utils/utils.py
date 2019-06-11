@@ -2,8 +2,10 @@ import discord
 import asyncio
 from discord.ext import commands
 from datetime import datetime
+from storage import Storage
+
 god = 116222914327478274
-from utils.storage import Storage
+
 
 Storage = Storage()
 
