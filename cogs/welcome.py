@@ -2,9 +2,16 @@ import discord
 from discord.ext import commands
 from utils.utils import createEmbed
 
-class Welcome:
+class Welcome(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+        self.iron = dict()
+        self.rogue = dict()
+        
+
+    @commands.Cog.listener()
+    async def on_ready(self):
         iron_guild = self.client.get_guild(479300072077787160)
         self.iron = {
             'guild': iron_guild,
@@ -23,6 +30,8 @@ class Welcome:
             'info': rogue_guild.get_channel(552115652555440149),
             'jenbot': rogue_guild.get_user(375060041813983242)
         }
+        print('Got all welcome guilds and channels.')
+
 
 
     def iron_welcome(self, user: discord.Member):

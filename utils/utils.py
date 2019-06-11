@@ -1,87 +1,55 @@
 import discord
 import asyncio
-from utils.guilds import Guilds
 from discord.ext import commands
 from datetime import datetime
-import sqlite3
-from sqlite3 import Error 
+from utils.storage import Storage
+
+S = Storage()
+
 god = 116222914327478274
-if_servers=[479300072077787160,421650482176589835] #ironfleet servers
-rogueID = 455901088164478976
-welcome = 479301249351548928 #ironfleet welcome channel
-db_file = "JusticeDB.db"
 
-#connecting to db
-def create_connection(db_file):
-    """ create a database connection to a SQLite database """
-    try:
-        conn = sqlite3.connect(db_file)
-        return conn
-    except Error as e:
-        print(e)
-    return None
 
-def isGod():
-	def godcheck(ctx):
-		if ctx.message.author.id == god:
-			return True
-		return False
-	return commands.check(godcheck)
 
 def isAdmin():
 	def admincheck(ctx):
 		if ctx.author == ctx.message.guild.owner or ctx.author.id == god:
 			return True
-		for role in ctx.message.author.roles:
-			if role.permissions.administrator:
-				return True
+		if ctx.author.guild_permissions.administrator:
+			return True
 		return False
 	return commands.check(admincheck)
 
 def isMod():
 	def moderatorcheck(ctx):
-		for role in ctx.message.author.roles:
-			if role.permissions.kick_members:
-				return True
+		if ctx.author.guild_permissions.manage_messages:
+			return True
 		return False
 	return commands.check(moderatorcheck)
 
-def matchlfcchannel():
-	def does_it_match(ctx):
-		lfc_channels =  ctx.bot.dictGuilds[ctx.message.guild.id].lfc_channels
-		if ctx.message.channel.id in lfc_channels or not lfc_channels:
+def matchLFCChannel():
+	def does_channel_match(ctx):
+		lfc_settings = Storage.get_lfc_settings(ctx.guild)
+		if lfc_settings['status'] and ctx.channel in lfc_settings['channels']:
 			return True
 		return False
-	return commands.check(does_it_match)
+	return commands.check(does_channel_match)
 	
-def matchprofilechannel():
-	def does_it_match(ctx):
-		profile_channels = ctx.bot.dictGuilds[ctx.message.guild.id].profile_channels
-		if ctx.message.channel.id in profile_channels or not profile_channels:
+def matchProfileChannel():
+	def does_channel_match(ctx):
+		profile_settings = Storage.get_profile_settings(ctx.guild)
+		if profile_settings['status'] and ctx.channel in profile_settings['channels']:
 			return True
 		return False
-	return commands.check(does_it_match)
+	return commands.check(does_channel_match)
 
 def isIronFleet():
     def inServer(ctx):
-        if ctx.message.guild.id in if_servers:
+        if ctx.message.guild.id == 479300072077787160:
             return True
         return False
     return commands.check(inServer)
 
-def isRogueLegends():
-    def inServer(ctx):
-        if ctx.guild.id == rogueID or ctx.guild.id == 421650482176589835:
-            return True
-        return False
-    return commands.check(inServer)
 
-def isntRogueLegends():
-    def inServer(ctx):
-        if ctx.guild.id != rogueID:
-            return True
-        return False
-    return commands.check(inServer)
 
 async def memberSearch(ctx, client, name):
 		results = []
@@ -92,7 +60,7 @@ async def memberSearch(ctx, client, name):
 			if name.lower() in member.name.lower() or name.lower() in member.display_name.lower():
 				results.append(member)
 		if len(results) == 0:
-			await ctx.send("No member found by that name.")
+			await ctx.send('No member found by that name.')
 			return None
 		if len(results) == 1:
 			return results[0]
@@ -100,9 +68,9 @@ async def memberSearch(ctx, client, name):
 			def message_check(msg):
 				return msg.author == ctx.author
 			i = 1
-			text = "Which Member?\n"
+			text = 'Which Member?\n'
 			for member in results:
-				text += "`{}`: `{}`\n".format(i, member)
+				text += f'`{i}`: `{member}`\n'
 				resultsdict[i] = member
 				i += 1
 			await ctx.send(text)
@@ -110,7 +78,7 @@ async def memberSearch(ctx, client, name):
 			try:
 				return resultsdict[int(msg.content)]
 			except KeyError:
-				await ctx.send("Cancelled command.")
+				await ctx.send('Cancelled command.')
 				return None
 
 async def roleSearch(ctx, client, name):
@@ -122,7 +90,7 @@ async def roleSearch(ctx, client, name):
 		if name.lower() in role.name.lower():
 			results.append(role)
 	if len(results) == 0:
-		await ctx.send("No role found by that name.")
+		await ctx.send('No role found by that name.')
 		return None
 	if len(results) == 1:
 		return results[0]
@@ -130,9 +98,9 @@ async def roleSearch(ctx, client, name):
 		def message_check(msg):
 			return msg.author == ctx.author
 		i = 1
-		text = "Which role?\n"
+		text = 'Which role?\n'
 		for role in results:
-			text += "`{}`: `{}`\n".format(i, role)
+			text += f'`{i}`: `{role}`\n'
 			resultsdict[i] = role
 			i += 1
 		await ctx.send(text)
@@ -140,7 +108,7 @@ async def roleSearch(ctx, client, name):
 		try:
 			return resultsdict[int(msg.content)]
 		except KeyError:
-			await ctx.send("Cancelled command.")
+			await ctx.send('Cancelled command.')
 			return None
 
 def createEmbed(*, title: str = '', description: str = '', colour = None, author: discord.Member = None, guild: discord.Guild = None):

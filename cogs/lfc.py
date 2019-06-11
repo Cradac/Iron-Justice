@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
-import utils.guilds
-from utils.utils import matchlfcchannel
+from utils import utils
 from utils.storage import Storage
 
 class LFC(commands.Cog):
@@ -21,17 +20,8 @@ class LFC(commands.Cog):
                     await guild.get_member(user.id).remove_roles(role)
                 except discord.Forbidden:
                     continue
-
-    '''async def auto_remove(self, user_id, guildlist, ctx):
-        await asyncio.sleep(7200)
-        for tup in guildlist:
-            try:
-                if ctx.bot.dictGuilds[tup[0].id].enabled['lfc']:
-                    await tup[0].get_member(user_id).remove_roles(tup[1])
-            except:
-                continue'''
     
-    @matchlfcchannel()
+    @utils.matchLFCChannel()
     @commands.command(
         brief='Sets the user into `Looking for Crew` status for 2 hours.',
         description='This command gives the user the set `Looking for Crew` role. \n\
@@ -55,7 +45,7 @@ class LFC(commands.Cog):
             self.client.loop.create_task(self.auto_remove(user))
 
 
-    @matchlfcchannel()
+    @utils.matchLFCChannel()
     @commands.command(
         brief='Removes the `Looking for Crew` status manually.',
         description='This removes the `Looking for Crew` status.\n\

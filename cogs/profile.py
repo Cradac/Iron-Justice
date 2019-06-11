@@ -1,25 +1,37 @@
 import discord
 from discord.ext import commands
-from utils.utils import matchprofilechannel, matchlfcchannel, memberSearch, createEmbed
 from utils.storage import Storage
-import asyncio, datetime, re, xbox
+from utils import utils
+import asyncio, re, xbox
 
 class Profile(commands.Cog):
     def __init__(self, client):
         self.client = client
 
         self.Storage = Storage()
-        self.profile_messages = list(int)
-        self.profile_status = dict(int, str)
+        self.profile_messages = list()
+        self.profile_status = dict()
 
+        self.steam_emoji = None
+        self.xbox_emoji = None
+        self.psn_emoji = None
+        self.nintendo_emoji = None
+        self.sot_emoji = None
+        self.game_emoji = '🎮'
+        self.game_emoji_url = 'https://discordapp.com/assets/7d600babcd1bddfd7a7d35acc1ed4cd3.svg'
+        self.stop_emoji = '⏹'
+        
+        
+        self.emojis = list()
+
+
+    @commands.Cog.listener()
+    async def on_ready(self):
         self.steam_emoji = self.client.get_emoji(586475562772725780)
         self.xbox_emoji = self.client.get_emoji(563799115201249301)
         self.psn_emoji = self.client.get_emoji(563799160021712922)
         self.nintendo_emoji = self.client.get_emoji(534433688025563137)
         self.sot_emoji = self.client.get_emoji(488445174536601600)
-        self.game_emoji = '🎮'
-        self.game_emoji_url = 'https://discordapp.com/assets/7d600babcd1bddfd7a7d35acc1ed4cd3.svg'
-        self.stop_emoji = '⏹'
 
         self.emojis = [self.xbox_emoji, self.sot_emoji, self.game_emoji, self.stop_emoji]
 
@@ -103,7 +115,7 @@ class Profile(commands.Cog):
         return embed
 
 
-    @matchprofilechannel()
+    @utils.matchProfileChannel()
     @commands.command(
         brief='Shows a member\' profile.',
         description='This command shows a member\'s profile.\n\
@@ -121,8 +133,8 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'sot'
 
 
-    @matchprofilechannel()
-    @commands.command(
+    @utils.matchProfileChannel()
+    @commands.group(
         brief='Show your own Gamertag',
         description='This command shows the Gamertag page of the profile.\n\
             There are some subcommands to alter your gamertags or show someone elses gamertags.\n\
@@ -137,7 +149,7 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'game'
 
 
-    @matchprofilechannel()
+    @utils.matchProfileChannel()
     @gt.command(
         brief='Edit your one of your gamertags.',
         description='Use this to edit your gamertag.\n\
@@ -155,7 +167,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @matchprofilechannel()
+    @utils.matchProfileChannel()
     @gt.command(
         brief='Show another member\'s gamertag profile page.',
         description='This command can show another member\'s gamertag.',
@@ -173,17 +185,17 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'game'
 
 
-    @matchprofilechannel()
+    @utils.matchProfileChannel()
     @commands.command(
         aliases=['lvl'],
         brief='Update your Ingame Levels.',
         description='Use this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter\'s Call\nsd: Sea Dogs\naf: Athena\'s Fortune',
         usage='?levels *[<company>=<level>]'
     )
-    async def levels(self, ctx, *, args: str):
+    async def levels(self, ctx, *args):
         comps = dict()
         r = re.compile('^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
-        if not r.match(args + ' '):
+        if not r.match(' '.join(args) + ' '):
             await ctx.send('The Syntax is not correct. Try this instead:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`')
             return
         for arg in args:
@@ -191,7 +203,7 @@ class Profile(commands.Cog):
             try:
                 comps[arg[0].lower()] = int(arg[1])
             except ValueError:
-                await ctx.send("Please only pass integers for levels.")
+                await ctx.send('Please only pass integers for levels.')
                 return
         for comp,lvl in comps.items():
             if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af']:
@@ -208,7 +220,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
     
-    @matchprofilechannel()
+    @utils.matchProfileChannel()
     @commands.command(
         aliases=['set-image'],
         brief='Set a picture for your profile.',
@@ -232,7 +244,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @matchprofilechannel()
+    @utils.matchProfileChannel()
     @commands.command(
         aliases=['piratename'],
         brief='Set an alias for your pirate.',
