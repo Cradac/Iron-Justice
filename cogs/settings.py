@@ -94,7 +94,7 @@ class Settings(commands.Cog):
 
         # Auto-Voice Settings
         auto_voice_settings = self.Storage.get_auto_voice_settings(guild)
-        embed.add_field(name='__Auto-Voice Module__', value=auto_voice_settings['channel'].name or '`disabled`')
+        embed.add_field(name='__Auto-Voice Module__', value=auto_voice_settings['channel'] or '`disabled`')
         if auto_voice_settings['channel']:
             embed.add_field(name='__Auto-Voice Custom Names__', value=' '.join(f'`{n}`' for n in auto_voice_settings['names']))
         
