@@ -161,7 +161,7 @@ class Profile(commands.Cog):
             You can choose of these platforms: `steam`, `xbox`, `psn`, `nintendo`.',
         usage='?gt edit <platform> <gamertag>'
     )
-    async def edit(self, ctx, platform: str , *, gamertag: str):
+    async def edit(self, ctx, platform: str , *, gamertag):
         platforms = ['steam', 'xbox', 'psn', 'nintendo']
         if platform not in platforms:
             await ctx.send(f'You need to select one of these platforms:\n• ' + '\n• '.join(platforms))
