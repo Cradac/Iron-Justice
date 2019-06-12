@@ -249,13 +249,15 @@ class Storage:
         `AUTO-VOICE`-MODULE SETTINGS
     '''
 
-    def get_auto_voice_settings(self, guild:discord.Guild):
+    def get_auto_voice_settings(self, guild: discord.Guild):
         settings = dict()
-        query = f'SELECT auto_voice_channel FROM settings WHERE gid={guild.id};'
-        r = self.execute_query(query)[0]
-        settings['channel'] = guild.get_channel(r)
+        settings['channel'] = self.get_auto_voice_channel(guild)
         settings['names'] = self.get_auto_voice_names(guild)
         return settings
+
+    def get_auto_voice_channel(self, guild: discord.Guild):
+        query = f'SELECT auto_voice_channel FROM settings WHERE gid={guild.id};'
+        return guild.get_channel(self.execute_query(query)[0])
 
     def get_auto_voice_names(self, guild:discord.Guild):
         query = f'SELECT name FROM auto_voice_names WHERE gid={guild.id};'

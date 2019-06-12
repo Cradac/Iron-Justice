@@ -87,7 +87,7 @@ class Settings(commands.Cog):
         # Profile Settings
         profile_settings = self.Storage.get_profile_settings(guild)
         profile_status = '`enabled`' if profile_settings['status'] else '`disabled`'
-        embed.add_field(name='___Profile Module__', value=profile_status, inline=False)
+        embed.add_field(name='__Profile Module__', value=profile_status, inline=False)
         if profile_settings['status']:
             profile_channels = ' '.join(c.mention for c in profile_settings['channels']) if len(profile_settings['channels']) > 0 else 'all channels'
             embed.add_field(name='__Profile Channels__' , value=profile_channels)
@@ -261,8 +261,8 @@ class Settings(commands.Cog):
         self.Storage.update_auto_voice_channel(ctx.guild, channel) #TODO does this work with None?
         if channel:
             await ctx.send(f'\
-                Set the channel `{channel.name}` as Auto-Voice Channel.\n\
-                If you want to add custom names please use the `?auto-voice-names add <names>` command.')
+            Set the channel `{channel.name}` as Auto-Voice Channel.\n\
+            If you want to add custom names please use the `?auto-voice-names add <names>` command.')
         else:
             await ctx.send('Auto-Voice has been disabled.')
         
