@@ -44,7 +44,7 @@ class Profile(commands.Cog):
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
         if user.bot:
             return
-        if reaction.message.id in self.profile_messages.keys() and reaction.emoji in self.emojis and user == self.profile_messages[reaction.message.id]:
+        if reaction.message.id in self.profile_messages.keys() and reaction.emoji in self.emojis:
             await reaction.remove(user)
 
             if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
@@ -139,7 +139,7 @@ class Profile(commands.Cog):
         embed = await self.get_sot_page(ctx, member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages[msg.id] = ctx.author
+        self.profile_messages[msg.id] = member
         self.profile_status[msg.id] = 'sot'
 
 
@@ -193,7 +193,7 @@ class Profile(commands.Cog):
         embed = self.get_game_page(member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages[msg.id] = ctx.author
+        self.profile_messages[msg.id] = member
         self.profile_status[msg.id] = 'game'
 
 
