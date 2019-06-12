@@ -105,13 +105,15 @@ class Welcome(commands.Cog):
     )
     async def welcome(self, ctx, channel: discord.TextChannel):
         if ctx.guild == self.iron['guild']:
-            embed = self.iron_welcome(ctx.author)
+            embeds = self.iron_welcome(ctx.author)
         elif ctx.guild == self.rogue['guild']:
-            embed = self.rogue_welcome(ctx.author)
+            embeds = self.rogue_welcome(ctx.author)
         else:
             app_info = await self.client.application_info()
-            await ctx.send(f'There is no custom welcome message set for your guild. Contact {app_info.owner}')
-        await channel.send(embed=embed)
+            await ctx.send(f'There is no custom welcome message set for your guild. Contact {app_info.owner}.')
+            return
+        for embed in embeds:
+            await channel.send(embed=embed)
 
 
 def setup(client):
