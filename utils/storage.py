@@ -58,7 +58,7 @@ class Storage:
     def get_all_guilds(self, client: discord.Client):
         query = f'SELECT gid FROM settings;'
         r = self.execute_query_many(query)
-        return [client.get_guild(int(gid[0])) for gid in r]
+        return [client.get_guild(gid[0]) for gid in r]
 
     def guild_leave(self, guild: discord.Guild):
         query = f'DELETE FROM messages WHERE gid={guild.id};'
@@ -171,10 +171,10 @@ class Storage:
     def get_lfc_settings(self, guild: discord.Guild):
         settings = dict()
         query = f'SELECT lfc FROM settings WHERE gid={guild.id};'
-        settings['status'] = self.execute_query(query)[0].upper() == 'TRUE'
+        settings['status'] = self.execute_query(query)[0] == True
         query = 'SELECT cid FROM lfc_channels WHERE gid={guild.id};'
         r = self.execute_query_many(query)
-        settings['channels'] = [guild.get_channel(int(c[0])) for c in r]
+        settings['channels'] = [guild.get_channel(c[0]) for c in r]
         settings['role'] = self.get_lfc_role(guild)
         return settings
         
@@ -198,7 +198,7 @@ class Storage:
     def get_lfc_enabled_guilds(self, client: discord.Client):
         query = 'SELECT gid FROM settings WHERE lfc=TRUE;'
         r = self.execute_query_many(query)
-        return [client.get_guild(int(gid[0])) for gid in r]
+        return [client.get_guild(gid[0]) for gid in r]
 
     def update_lfc_role(self, guild: discord.Guild, role: discord.Role):
         query = f'UPDATE settings SET lfc_role={role.id} WHERE gid={guild.id}'
@@ -207,7 +207,7 @@ class Storage:
     def get_lfc_role(self, guild: discord.Guild):
         query = f'SELECT lfc_role FROM settings WHERE gid={guild.id}'
         r = self.execute_query(query)[0]
-        return guild.get_role(int(r))
+        return guild.get_role(r)
     
 
     '''
@@ -217,7 +217,7 @@ class Storage:
     def get_profile_settings(self, guild: discord.Guild):
         settings = dict()
         query = f'SELECT profile FROM settings WHERE gid={guild.id};'
-        settings['status'] = self.execute_query(query)[0].upper() == 'TRUE'
+        settings['status'] = self.execute_query(query)[0] == True
         query = f'SELECT cid FROM profile_channels WHERE gid={guild.id};'
         r = self.execute_query_many(query)
         settings['channels'] = [guild.get_channel(c[0]) for c in r]
@@ -243,7 +243,7 @@ class Storage:
     def get_profile_enabled_guilds(self, client: discord.Client):
         query = 'SELECT gid FROM settings WHERE profile=TRUE;'
         r = self.execute_query_many(query)
-        return [client.get_guild(int(gid[0])) for gid in r]
+        return [client.get_guild(gid[0]) for gid in r]
 
     '''
         `AUTO-VOICE`-MODULE SETTINGS
@@ -253,7 +253,7 @@ class Storage:
         settings = dict()
         query = f'SELECT auto_voice_channel FROM settings WHERE gid={guild.id};'
         r = self.execute_query(query)[0]
-        settings['channel'] = guild.get_channel(int(r))
+        settings['channel'] = guild.get_channel(r)
         settings['names'] = self.get_auto_voice_names(guild)
         return settings
 
@@ -296,7 +296,7 @@ class Storage:
 
     def get_activity_logging_status(self, guild: discord.Guild):
         query = f'SELECT activity_logging FROM settings WHERE gid={guild.id}'
-        r = self.execute_query(query)[0].upper() == 'TRUE'
+        r = self.execute_query(query)[0] == True
         return r        
 
     def update_activity_logging_status(self, guild:discord.Guild, status: bool):
@@ -330,7 +330,7 @@ class Storage:
     def get_user_activity(self, user:discord.Member):
         info = dict()
         query = f'SELECT COUNT(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id};'
-        info['amnt'] = int(self.execute_query(query)[0]) or 0
+        info['amnt'] = self.execute_query(query)[0] or 0
         query = f'SELECT timestamp FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY timestamp DESC LIMIT 1;'
         timestamp = self.execute_query(query)[0] or None
         info['timestamp'] = datetime.strptime(timestamp, self.datetime_scheme)
