@@ -25,7 +25,7 @@ class Storage:
             raise e
 
     def execute_query(self, query: str, commit: bool = False):
-        cur = self.get_cursor(self)
+        cur = self.get_cursor()
         cur.execute(self, query)
         if commit:
             self.conn.commit(self)
@@ -34,7 +34,7 @@ class Storage:
         return r
 
     def execute_query_many(self, query: str, commit: bool = False):
-        cur = self.get_cursor(self)
+        cur = self.get_cursor()
         cur.execute(self, query)
         if commit:
             self.conn.commit(self)
