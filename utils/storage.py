@@ -184,9 +184,9 @@ class Storage:
 
     def add_lfc_channels(self, guild: discord.Guild, channels: list()):
         cur = self.get_cursor()
-        cids = set()
+        cids = list()
         for c in channels:
-            cids.add(c.id)
+            cids.append(c.id)
         cur.executemany(f'INSERT INTO lfc_channels (cid,gid) VALUES (%s,{guild.id});', cids)
         self.conn.commit()
         cur.close()
@@ -229,9 +229,9 @@ class Storage:
 
     def add_profile_channels(self, guild: discord.Guild, channels: list()):
         cur = self.get_cursor()
-        cids = set()
+        cids = list()
         for c in channels:
-            cids.add(c.id)
+            cids.append(c.id)
         cur.executemany(f'INSERT INTO profile_channels (cid,gid) VALUES (%s,{guild.id});', cids)
         self.conn.commit()
         cur.close()
