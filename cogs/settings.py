@@ -241,12 +241,12 @@ class Settings(commands.Cog):
             else:
                 self.Storage.delete_all_profile_channels(ctx.guild)
 
-        # Send Settings Embed
-        s = 'enabled' if status else 'disabled'
-        embed = utils.createEmbed(title='**__`Profile`-Setup__**', description=f'The module is {s}.', colour='iron', guild=ctx.guild)
-        ch = '`all`' if len(channels) == 0 else ' '.join(c.mention for c in channels)
-        embed.add_field(name='__Channels__', value=ch)
-        await ctx.send(embed=embed)
+    # Send Settings Embed
+    s = 'enabled' if status else 'disabled'
+    embed = utils.createEmbed(title='**__`Profile`-Setup__**', description=f'The module is {s}.', colour='iron', guild=ctx.guild)
+    ch = '`all`' if len(channels) == 0 else ' '.join(c.mention for c in channels)
+    embed.add_field(name='__Channels__', value=ch)
+    await ctx.send(embed=embed)
 
     @utils.isAdmin()
     @config.command(
