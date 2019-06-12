@@ -50,7 +50,7 @@ class Profile(commands.Cog):
                     embed = self.get_xbox_page(user)
                     self.profile_status[reaction.message.id] = 'xbox'
                 elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
-                    embed = self.get_sot_page(None, user)
+                    embed = await self.get_sot_page(None, user)
                     self.profile_status[reaction.message.id] = 'sot'
                 elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
                     embed = self.get_game_page(user)
@@ -86,7 +86,7 @@ class Profile(commands.Cog):
 
     async def get_sot_page(self, ctx: commands.Context, member: discord.Member):
         info = await self.Storage.get_sot_profile(ctx, member)
-        embed = utils.createEmbed(colour='iron', author=member, guild=ctx.guild)
+        embed = utils.createEmbed(colour='iron', author=member, guild=member.guild)
         embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
         embed.add_field(name="Gamertag", value=info['gtag'], inline=False)
         if info['alias']:
