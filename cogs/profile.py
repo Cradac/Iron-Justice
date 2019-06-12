@@ -167,7 +167,7 @@ class Profile(commands.Cog):
             await ctx.send(f'You need to select one of these platforms:\n• ' + '\n• '.join(platforms))
             return
         self.Storage.update_gamertag(ctx.author, platform, gamertag)
-        embed = utils.createEmbed(description=f'Your {platform} gamertag has been updated to `{gamertag}`.', author=ctx.author)
+        embed = utils.createEmbed(description=f'Your {platform} gamertag has been updated to `{gamertag}`.', author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Gamertag updated')
         await ctx.send(embed=embed)
 
@@ -220,7 +220,7 @@ class Profile(commands.Cog):
             if not isinstance(lvl, int) or not 0 < lvl <= 50:
                 await ctx.send('Levels can only be between 1 and 50.')
         self.Storage.update_levels(ctx.author, comps)
-        embed = utils.createEmbed(description=f'Your levels have been updated.', author=ctx.author)
+        embed = utils.createEmbed(description=f'Your levels have been updated.', author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Levels updated')
         await ctx.send(embed=embed)
 
@@ -244,7 +244,7 @@ class Profile(commands.Cog):
         else: 
             await ctx.send('The image type as to be either jpg, png or gif.')
             return
-        embed = utils.createEmbed(description=txt, author=ctx.author)
+        embed = utils.createEmbed(description=txt, author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Image updated')
         await ctx.send(embed=embed)
 
@@ -263,7 +263,7 @@ class Profile(commands.Cog):
         else:
             self.Storage.update_alias(ctx.author, alias)
             txt = 'Your alias has been updated.'
-        embed = utils.createEmbed(description=txt, author=ctx.author)
+        embed = utils.createEmbed(description=txt, author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Image updated')
         await ctx.send(embed=embed)
 
