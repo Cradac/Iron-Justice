@@ -132,8 +132,9 @@ class Storage:
         self.execute_query(query, commit=True)
         embed = discord.Embed(title='**__Profile Created__**', colour=0xffd700)
         embed.set_author(name=user, icon_url=user.avatar_url)
-        embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc... Use `?help levels` for more info.", inline=False)
-        embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?set_image <URL>`. You can also upload the image right to discord and type `?set_image` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n- Add a pirate name (for role players) by typing `?alias <piratename>`.", inline=False)
+        embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <platform> <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc... Use `?help levels` for more info.", inline=False)
+        embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?img <URL>`. You can also upload the image right to discord and type `?img` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n\
+            - Add a pirate name (for role players) by typing `?alias <pirate name>`.", inline=False)
         embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
         await ctx.send(embed=embed)
 
