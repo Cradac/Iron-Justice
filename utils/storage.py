@@ -109,7 +109,7 @@ class Storage:
 
     def get_tag_profile(self, user: discord.Member):
         query = f'SELECT steam,xbox,psn,nintendo FROM gamertags WHERE uid={user.id};'
-        r = self.execute_query(query)[0]
+        r = self.execute_query(query)
         profile = {
             'steam': r[0] or 'None',
             'xbox': r[1] or 'None',
