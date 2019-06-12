@@ -21,7 +21,8 @@ class Activity_Logging(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         global active_fleets
-        active_fleets = self.Storage.get_activity_logging_enabled_guilds(self.client)
+        for guild in self.Storage.get_activity_logging_enabled_guilds(self.client):
+            active_fleets.add(guild)
 
     @commands.Cog.listener()
     async def on_message(self, message):
