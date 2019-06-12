@@ -80,7 +80,7 @@ class Settings(commands.Cog):
         lfc_status = '`enabled`' if lfc_settings['status'] else '`disabled`'
         embed.add_field(name='__Looking for Crew Module__', value=lfc_status)
         if lfc_settings['status']:
-            lfc_channels = ' '.join(c.mention for c in lfc_settings['channels']) if lfc_settings['channels'] > 0 else 'all channels'
+            lfc_channels = ' '.join(c.mention for c in lfc_settings['channels']) if len(lfc_settings['channels']) > 0 else 'all channels'
             embed.add_field(name='__Looking for Crew Channels__', value=lfc_channels)
             embed.add_field(name='__Looking for Crew Role__', value=lfc_settings['role'].mention)
         
@@ -89,7 +89,7 @@ class Settings(commands.Cog):
         profile_status = '`enabled`' if profile_settings['status'] else '`disabled`'
         embed.add_field(name='___Profile Module__', value=profile_status)
         if profile_settings['status']:
-            profile_channels = ' '.join(c.mention for c in profile_settings['channels']) if profile_settings['channels'] > 0 else 'all channels'
+            profile_channels = ' '.join(c.mention for c in profile_settings['channels']) if len(profile_settings['channels']) > 0 else 'all channels'
             embed.add_field(name='__Profile Channels__' , value=profile_channels)
 
         # Auto-Voice Settings
