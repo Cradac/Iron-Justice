@@ -81,8 +81,8 @@ class Activity_Logging(commands.Cog):
         for member in list_to_check:
             if not member.bot:
                 m_info = self.Storage.get_user_activity(member)
-                comparedate = m_info['timestamp'] or (member.joined_at if (datetime.utcnow() - member.joined_at).days <=30 else 30)
-                m_info['days_gone'] = (datetime.utcnow() - comparedate).days
+                comparedate = m_info['timestamp'] or member.joined_at
+                m_info['days_gone'] = (datetime.utcnow() - comparedate).days if (datetime.utcnow()-comparedate).days <=30 else 30
                 if m_info['days_gone'] > compare_days:
                     info_list.append(m_info)
         
