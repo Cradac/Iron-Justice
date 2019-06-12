@@ -139,7 +139,7 @@ class Profile(commands.Cog):
         embed = await self.get_sot_page(ctx, member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages[msg.id] = member
+        self.profile_messages[msg.id] = ctx.author
         self.profile_status[msg.id] = 'sot'
 
 
@@ -193,7 +193,7 @@ class Profile(commands.Cog):
         embed = self.get_game_page(member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages[msg.id] = member
+        self.profile_messages[msg.id] = ctx.author
         self.profile_status[msg.id] = 'game'
 
 
