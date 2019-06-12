@@ -107,9 +107,11 @@ class Storage:
         profile['gtag'] = self.get_xbox_tag(user)
         return profile
 
-    def get_tag_profile(self, user: discord.Member):
+    async def get_tag_profile(self, ctx, user: discord.Member):
         query = f'SELECT steam,xbox,psn,nintendo FROM gamertags WHERE uid={user.id};'
         r = self.execute_query(query)
+        if not r:
+            await self.create_profile(ctx, user)
         profile = {
             'steam': r[0] or 'None',
             'xbox': r[1] or 'None',

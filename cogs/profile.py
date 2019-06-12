@@ -54,7 +54,7 @@ class Profile(commands.Cog):
                 embed = await self.get_sot_page(None, self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'sot'
             elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
-                embed = self.get_game_page(self.profile_messages[reaction.message.id])
+                embed = await self.get_game_page(None, self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'game'
             elif reaction.emoji == self.stop_emoji:
                 await self.reaction_menu_timeout(reaction.message, wait=False)
@@ -112,8 +112,8 @@ class Profile(commands.Cog):
             embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
         return embed
 
-    def get_game_page(self, member: discord.Member):
-        info = self.Storage.get_tag_profile(member)
+    async def get_game_page(self, ctx, member: discord.Member):
+        info = await self.Storage.get_tag_profile(ctx, member)
         embed = utils.createEmbed(colour='iron', author=member)
         icon = member.guild.icon_url_as(format='png', size=512)
         embed.set_thumbnail(url=icon)
@@ -154,7 +154,7 @@ class Profile(commands.Cog):
     )
     async def gt(self, ctx):
         if not ctx.invoked_subcommand:
-            embed = self.get_game_page(ctx.author)
+            embed = await self.get_game_page(ctx, ctx.author)
             msg = await ctx.send(embed=embed)
             await self.prepare_reaction_menu(msg)
             self.profile_messages[msg.id] = ctx.author
@@ -190,7 +190,7 @@ class Profile(commands.Cog):
         member = await utils.memberSearch(ctx, self.client, member) if member else ctx.message.author
         if not member:
             return
-        embed = self.get_game_page(member)
+        embed = await self.get_game_page(ctx, member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
         self.profile_messages[msg.id] = member
