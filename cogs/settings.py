@@ -339,7 +339,7 @@ class Settings(commands.Cog):
         usage='?auto-voice-names delete <name1,name2,...>'
     )
     async def delete(self, ctx, *, names):
-        names = [name.trim() for name in names.split(',')]
+        names = [name.strip() for name in names.split(',')]
         self.Storage.delete_auto_voice_names(ctx.guild, names)
         embed = self.get_auto_voice_names(ctx.guild)
         await ctx.send(embed=embed)
