@@ -42,7 +42,6 @@ class Profile(commands.Cog):
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
         if user.bot:
             return
-        print(self.profile_messages)
         if reaction.message.id in self.profile_messages:
             if reaction.emoji in self.emojis:
                 await reaction.remove(user)
