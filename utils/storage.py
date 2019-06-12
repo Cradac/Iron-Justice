@@ -171,9 +171,9 @@ class Storage:
     def get_lfc_settings(self, guild: discord.Guild):
         settings = dict()
         query = f'SELECT lfc FROM settings WHERE gid={guild.id};'
-        settings['status'] = self.execute_query(self, query)[0].upper() == 'TRUE'
+        settings['status'] = self.execute_query(query)[0].upper() == 'TRUE'
         query = 'SELECT cid FROM lfc_channels WHERE gid={guild.id};'
-        r = self.execute_query_many(self, query)
+        r = self.execute_query_many(query)
         settings['channels'] = [guild.get_channel(int(c[0])) for c in r]
         settings['role'] = self.get_lfc_role(guild)
         return settings
