@@ -59,6 +59,8 @@ class Profile(commands.Cog):
             elif reaction.emoji == self.stop_emoji:
                 await self.reaction_menu_timeout(reaction.message, wait=False)
                 return
+            else:
+                return
             await reaction.message.edit(embed=embed)
 
     async def reaction_menu_timeout(self, message: discord.Message, wait: bool = True):
