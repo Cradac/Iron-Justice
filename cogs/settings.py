@@ -20,6 +20,7 @@ class Settings(commands.Cog):
         for guild in self.client.guilds:
             if guild not in guilds:
                 self.Storage.add_guild(guild)
+            
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):

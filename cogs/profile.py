@@ -144,11 +144,12 @@ class Profile(commands.Cog):
         usage='?gt [edit|show] [*args]'
     )
     async def gt(self, ctx):
-        embed = self.get_game_page(ctx.author)
-        msg = await ctx.send(embed=embed)
-        await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg)
-        self.profile_status[msg.id] = 'game'
+        if not ctx.invoked_subcommand:
+            embed = self.get_game_page(ctx.author)
+            msg = await ctx.send(embed=embed)
+            await self.prepare_reaction_menu(msg)
+            self.profile_messages.append(msg)
+            self.profile_status[msg.id] = 'game'
 
 
     @Utils.matchProfileChannel()
