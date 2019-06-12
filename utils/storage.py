@@ -339,8 +339,8 @@ class Storage:
         query = f'SELECT COUNT(*) FROM messages WHERE uid={user.id} AND gid={user.guild.id};'
         info['amnt'] = self.execute_query(query)[0] or 0
         query = f'SELECT timestamp FROM messages WHERE uid={user.id} AND gid={user.guild.id} ORDER BY timestamp DESC LIMIT 1;'
-        timestamp = self.execute_query(query)[0] or None
-        info['timestamp'] = datetime.strptime(timestamp, self.datetime_scheme)
+        info['timestamp'] = self.execute_query(query)[0] or None
+        #info['timestamp'] = datetime.strptime(timestamp, self.datetime_scheme)
         info['member'] = user
         return info
 
