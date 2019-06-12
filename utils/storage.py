@@ -89,7 +89,7 @@ class Storage:
         r = cur.fetchone()
 
         #If Profile doesn't exist yet
-        if cur.rowcount == 0:
+        if cur.rowcount == 0 or not r:
             await self.create_profile(ctx, user)
             return
         cur.close()
