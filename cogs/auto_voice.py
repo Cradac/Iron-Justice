@@ -19,6 +19,7 @@ class AutoVoice(commands.Cog):
             if after.channel == self.Storage.get_auto_voice_channel(user.guild):                #Joined Get Ship Voice
                 category = self.client.get_channel(after.channel.category_id)
                 names = self.Storage.get_auto_voice_names(user.guild)
+                print(names)
                 names = channel_names if len(names) == 0 else names
                 name = choice(names)
                 pos = 1#len(category.channels)-1
