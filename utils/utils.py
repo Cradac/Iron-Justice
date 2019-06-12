@@ -28,7 +28,7 @@ def isMod():
 
 def matchLFCChannel():
 	def does_channel_match(ctx):
-		lfc_settings = Storage.get_lfc_settings(ctx.guild)
+		lfc_settings = Storage.get_lfc_settings(Storage, ctx.guild)
 		if lfc_settings['status'] and ctx.channel in lfc_settings['channels']:
 			return True
 		return False
@@ -36,7 +36,7 @@ def matchLFCChannel():
 	
 def matchProfileChannel():
 	def does_channel_match(ctx):
-		profile_settings = Storage.get_profile_settings(ctx.guild)
+		profile_settings = Storage.get_profile_settings(Storage, ctx.guild)
 		if profile_settings['status'] and ctx.channel in profile_settings['channels']:
 			return True
 		return False

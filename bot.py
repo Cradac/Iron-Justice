@@ -3,7 +3,7 @@
 #Secondary intention: gimicks like the profile System
 #Author Maxe aka. Cradac
 
-#Version: 2.1 rewrite
+#Version: 3.0.0a rewrite
 
 import discord
 from discord.ext import commands

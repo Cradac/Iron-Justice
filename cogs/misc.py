@@ -18,7 +18,7 @@ class Misc(commands.Cog):
         usage='?whois <role> [page=1]'
     )
     async def whois(self, ctx, *, rolename: str, page: typing.Optional[int]=1 ):
-        role = await roleSearch(ctx, self.client, rolename)
+        role = await utils.roleSearch(ctx, self.client, rolename)
         if not role:
             return
         users = list()
@@ -48,7 +48,7 @@ class Misc(commands.Cog):
         usage='?nick <user> <new name>'
     )
     async def nick(self, ctx, member, *, new_name : str):
-        member = await memberSearch(ctx, self.client, member)
+        member = await utils.memberSearch(ctx, self.client, member)
         if not member:
             return
         await member.edit(nick=new_name)

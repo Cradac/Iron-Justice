@@ -167,7 +167,7 @@ class Storage:
     '''
         `LOOKING FOR CREW`-MODULE SETTINGS
     '''
-
+    
     def get_lfc_settings(self, guild: discord.Guild):
         settings = dict()
         query = f'SELECT lfc FROM settings WHERE gid={guild.id};'

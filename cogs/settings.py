@@ -36,7 +36,7 @@ class Settings(commands.Cog):
         self.Storage.guild_leave(guild)
 
     @commands.Cog.listener()
-    async def on_guild_join(guild):
+    async def on_guild_join(self, guild):
         embed = utils.createEmbed(
             title='__**The Iron Justice welcomes you!**__',
             description='Hey! I am the Iron Fleet\'s Iron Justice Bot, specifically for Discord Guilds of *Sea of Thieves* Fleets.\
@@ -50,7 +50,6 @@ class Settings(commands.Cog):
             author=guild.owner
         )
         await guild.owner.send(embed=embed)
-        conn = create_connection(db_file)
         role = await guild.create_role(name='lfc', mentionable=True, colour=discord.Color(0xFFFFFF))
         self.Storage.add_guild(guild, role)
     
@@ -261,8 +260,9 @@ class Settings(commands.Cog):
     async def auto_voice(self, ctx, *, channel:discord.VoiceChannel = None):
         self.Storage.update_auto_voice_channel(ctx.guild, channel) #TODO does this work with None?
         if channel:
-            await ctx.send(f'Set the channel `{channel.name}` as Auto-Voice Channel.')
-            await ctx.send('If you want to add custom names please use the `?auto-voice-names add <names>` command.')
+            await ctx.send(f'\
+                Set the channel `{channel.name}` as Auto-Voice Channel.\n\
+                If you want to add custom names please use the `?auto-voice-names add <names>` command.')
         else:
             await ctx.send('Auto-Voice has been disabled.')
         

@@ -69,7 +69,7 @@ class Profile(commands.Cog):
 
     def get_xbox_page(self, member: discord.Member):
         gtag = self.Storage.get_xbox_tag(member)
-        embed = createEmbed(colour='iron', author=member)
+        embed = utils.createEmbed(colour='iron', author=member)
         icon = member.guild.icon_url_as(format='png', size=512)
         embed.set_thumbnail(url=icon)
         embed.set_footer(icon_url=self.xbox_emoji.url, text='Xbox')
@@ -82,7 +82,7 @@ class Profile(commands.Cog):
 
     async def get_sot_page(self, ctx: commands.Context, member: discord.Member):
         info = await self.Storage.get_sot_profile(ctx, member)
-        embed = createEmbed(colour='iron', author=member, guild=ctx.guild)
+        embed = utils.createEmbed(colour='iron', author=member, guild=ctx.guild)
         embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
         embed.add_field(name="Gamertag", value=info['gtag'], inline=False)
         if info['alias']:
@@ -104,7 +104,7 @@ class Profile(commands.Cog):
 
     def get_game_page(self, member: discord.Member):
         info = self.Storage.get_tag_profile(member)
-        embed = createEmbed(colour='iron', author=member)
+        embed = utils.createEmbed(colour='iron', author=member)
         icon = member.guild.icon_url_as(format='png', size=512)
         embed.set_thumbnail(url=icon)
         embed.set_footer(icon_url=self.game_emoji_url, text='Gamertags')
@@ -123,7 +123,7 @@ class Profile(commands.Cog):
         usage='?profile [member]'
     )
     async def profile(self, ctx, *, member: str = None):
-        member = await memberSearch(ctx, self.client, member) if member else ctx.message.author
+        member = await utils.memberSearch(ctx, self.client, member) if member else ctx.message.author
         if not member:
             return
         embed = self.get_sot_page(ctx, member)
@@ -162,7 +162,7 @@ class Profile(commands.Cog):
             await ctx.send(f'You need to select one of these platforms:\n• ' + '\n• '.join(platforms))
             return
         self.Storage.update_gamertag(ctx.author, platform, gamertag)
-        embed = createEmbed(description=f'Your {platform} gamertag has been updated to `{gamertag}`.', author=ctx.author)
+        embed = utils.createEmbed(description=f'Your {platform} gamertag has been updated to `{gamertag}`.', author=ctx.author)
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Gamertag updated')
         await ctx.send(embed=embed)
 
@@ -175,7 +175,7 @@ class Profile(commands.Cog):
         aliases=['see', 'search']
     )
     async def show(self, ctx, *, member: str):
-        member = await memberSearch(ctx, self.client, member) if member else ctx.message.author
+        member = await utils.memberSearch(ctx, self.client, member) if member else ctx.message.author
         if not member:
             return
         embed = self.get_game_page(member)
@@ -215,7 +215,7 @@ class Profile(commands.Cog):
             if not isinstance(lvl, int) or not 0 < lvl <= 50:
                 await ctx.send('Levels can only be between 1 and 50.')
         self.Storage.update_levels(ctx.author, comps)
-        embed = createEmbed(description=f'Your levels have been updated.', author=ctx.author)
+        embed = utils.createEmbed(description=f'Your levels have been updated.', author=ctx.author)
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Levels updated')
         await ctx.send(embed=embed)
 
@@ -239,7 +239,7 @@ class Profile(commands.Cog):
         else: 
             await ctx.send('The image type as to be either jpg, png or gif.')
             return
-        embed = createEmbed(description=txt, author=ctx.author)
+        embed = utils.createEmbed(description=txt, author=ctx.author)
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Image updated')
         await ctx.send(embed=embed)
 
@@ -258,7 +258,7 @@ class Profile(commands.Cog):
         else:
             self.Storage.update_alias(ctx.author, alias)
             txt = 'Your alias has been updated.'
-        embed = createEmbed(description=txt, author=ctx.author)
+        embed = utils.createEmbed(description=txt, author=ctx.author)
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Image updated')
         await ctx.send(embed=embed)
 
