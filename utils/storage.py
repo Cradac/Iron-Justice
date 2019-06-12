@@ -15,7 +15,6 @@ class Storage:
             database='IronJustice'
         )
         self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
-        self.conn.autocommit(True)
 
     
     def get_cursor(self):
@@ -25,7 +24,7 @@ class Storage:
         except Exception as e:
             raise e
 
-    def execute_query(self, query: str, commit: bool = False):
+    def execute_query(self, query: str, commit: bool = True):
         cur = self.get_cursor()
         cur.execute(query)
         if commit:
