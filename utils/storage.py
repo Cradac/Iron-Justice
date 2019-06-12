@@ -111,17 +111,17 @@ class Storage:
         query = f'SELECT steam,xbox,psn,nintendo FROM gamertags WHERE uid={user.id};'
         r = self.execute_query(query)[0]
         profile = {
-            'steam': r[0],
-            'xbox': r[1],
-            'psn': r[2],
-            'nintendo': r[3],
+            'steam': r[0] or 'None',
+            'xbox': r[1] or 'None',
+            'psn': r[2] or 'None',
+            'nintendo': r[3] or 'None',
         }
         return profile
 
     def get_xbox_tag(self, user: discord.Member):
         query = f'SELECT xbox FROM gamertags WHERE uid={user.id};'
-        r = self.execute_query(query)[0]
-        return r
+        r = self.execute_query(query)
+        return r[0] or 'None'
 
     async def create_profile(self, ctx, user: discord.Member):
         query = f'INSERT INTO sot_profile (uid) VALUES ({user.id});'
