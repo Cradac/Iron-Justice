@@ -84,13 +84,16 @@ class Storage:
 
     async def get_sot_profile(self, ctx, user: discord.Member):
         query = f'SELECT hc,sd,gh,oos,ma,af,img,alias FROM sot_profile WHERE uid={user.id};'
-        r = self.execute_query(query)
+        cur = self.get_cursor()
+        cur.execute(query)
+        r = cur.fetchone()
 
         #If Profile doesn't exist yet
-        if r.rowcount == 0:
+        if cur.rowcount == 0:
             await self.create_profile(ctx, user)
             return
-
+        cur.close()
+        
         profile = {
             'hc': r[0],
             'sd': r[1],
