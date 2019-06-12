@@ -186,7 +186,7 @@ class Storage:
         cur = self.get_cursor()
         cids = list()
         for c in channels:
-            cids.append(c.id)
+            cids.append(str(c.id))
         print (type(cids))
         cur.executemany(f'INSERT INTO lfc_channels (cid,gid) VALUES (%s,{guild.id});', cids)
         self.conn.commit()
