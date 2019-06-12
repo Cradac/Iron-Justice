@@ -72,7 +72,7 @@ class Misc(commands.Cog):
     )
     async def invite(self, ctx):
         try:
-            link = await ctx.guild.invites[0]
+            link = await ctx.guild.invites()[0]
         except:
             print(ctx.guild.channels)
             link = await ctx.guild.channels[0].create_invite(max_age=86400, reason=f'{ctx.author} requested an invite link.')
