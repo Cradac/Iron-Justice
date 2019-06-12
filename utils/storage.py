@@ -274,7 +274,7 @@ class Storage:
         namelist = list()
         for name in names:
             namelist.append((name, guild.id))
-        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES ("%s", %s );', namelist)
+        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES (%s, %s );', namelist)
         self.conn.commit()
         cur.close()
 
@@ -283,7 +283,7 @@ class Storage:
         namelist = list()
         for name in names:
             namelist.append((name, str(guild.id)))
-        cur.executemany(f'DELETE FROM auto_voice_names WHERE name=\'%s\' and gid=%s;', namelist)
+        cur.executemany(f'DELETE FROM auto_voice_names WHERE name=%s and gid=%s;', namelist)
         self.conn.commit()
         cur.close()
 

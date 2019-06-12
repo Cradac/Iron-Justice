@@ -13,7 +13,6 @@ class Settings(commands.Cog):
 
         self.Storage = Storage()
 
-
     @commands.Cog.listener()
     async def on_ready(self):
         guilds = self.Storage.get_all_guilds(self.client)
@@ -294,6 +293,13 @@ class Settings(commands.Cog):
         Command Group to add and remove names to the voice channel list.
         Default removes all added names and uses the default name list.
     '''
+
+    def get_auto_voice_names(self, ctx):
+        l = self.Storage.get_auto_voice_names(ctx.guild)
+        l = l if len(l) > 0 else auto_voice.channel_names
+        return utils.createEmbed(title='__**List of voice channel names**__', description='• ' + '\n• '.join(l), colour='iron', author=ctx.author, guild=ctx.guild)
+
+
     @utils.isAdmin()
     @commands.group(
         name='auto-voice-names',
@@ -311,9 +317,7 @@ class Settings(commands.Cog):
         usage='?auto-voice-names get'
     )
     async def get(self, ctx):
-        l = self.Storage.get_auto_voice_names(ctx.guild)
-        l = l if len(l) > 0 else auto_voice.channel_names
-        embed = utils.createEmbed(title='__**List of voice channel names**__', description='• ' + '\n• '.join(l), colour='iron', author=ctx.author, guild=ctx.guild)
+        embed = self.get_auto_voice_names(ctx)
         await ctx.send(embed=embed)
     
     @utils.isAdmin()
@@ -325,7 +329,8 @@ class Settings(commands.Cog):
     async def add(self, ctx, *, names):
         names = [name.strip() for name in names.split(',')]
         self.Storage.add_auto_voice_names(ctx.guild, names)
-        await ctx.invoke(self.client.get_command('auto_voice_names get'))
+        embed = self.get_auto_voice_names(ctx)
+        await ctx.send(embed=embed)
     
     @utils.isAdmin()   
     @auto_voice_names.command(
@@ -336,7 +341,8 @@ class Settings(commands.Cog):
     async def delete(self, ctx, *, names):
         names = [name.trim() for name in names.split(',')]
         self.Storage.delete_auto_voice_names(ctx.guild, names)
-        await ctx.invoke(self.client.get_command('auto_voice_names get'))
+        embed = self.get_auto_voice_names(ctx.guild)
+        await ctx.send(embed=embed)
     
     @utils.isAdmin()
     @auto_voice_names.command()
