@@ -331,7 +331,7 @@ class Storage:
 
     def add_message(self, m: discord.Message):
         timestamp = m.created_at.strftime(self.datetime_scheme)
-        query = f'INSERT INTO messages (mid,uid,gid,timestamp) VALUES ({m.id}, {m.author.id}, {m.guild.id}, {timestamp});'
+        query = f'INSERT INTO messages (mid,uid,gid,timestamp) VALUES ({m.id}, {m.author.id}, {m.guild.id}, "{timestamp}");'
         self.execute_query(query, commit=True)
 
     def get_user_activity(self, user:discord.Member):
