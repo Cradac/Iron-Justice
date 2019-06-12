@@ -4,9 +4,35 @@ from discord.ext import commands
 from datetime import datetime
 from utils.storage import Storage
 
-S = Storage()
-
 god = 116222914327478274
+
+
+class Utils:
+	def __init__(self):
+		self.Storage = Storage()
+
+	def matchLFCChannel(self):
+		def does_channel_match(ctx):
+			lfc_settings = Storage.get_lfc_settings(Storage, ctx.guild)
+			if lfc_settings['status'] and ctx.channel in lfc_settings['channels']:
+				return True
+			return False
+		return commands.check(does_channel_match)
+		
+	def matchProfileChannel(self):
+		def does_channel_match(ctx):
+			profile_settings = Storage.get_profile_settings(Storage, ctx.guild)
+			if profile_settings['status'] and ctx.channel in profile_settings['channels']:
+				return True
+			return False
+		return commands.check(does_channel_match)
+
+def isIronFleet():
+	def inServer(ctx):
+		if ctx.message.guild.id == 479300072077787160:
+			return True
+		return False
+	return commands.check(inServer)
 
 
 
@@ -25,31 +51,6 @@ def isMod():
 			return True
 		return False
 	return commands.check(moderatorcheck)
-
-def matchLFCChannel():
-	def does_channel_match(ctx):
-		lfc_settings = Storage.get_lfc_settings(Storage, ctx.guild)
-		if lfc_settings['status'] and ctx.channel in lfc_settings['channels']:
-			return True
-		return False
-	return commands.check(does_channel_match)
-	
-def matchProfileChannel():
-	def does_channel_match(ctx):
-		profile_settings = Storage.get_profile_settings(Storage, ctx.guild)
-		if profile_settings['status'] and ctx.channel in profile_settings['channels']:
-			return True
-		return False
-	return commands.check(does_channel_match)
-
-def isIronFleet():
-    def inServer(ctx):
-        if ctx.message.guild.id == 479300072077787160:
-            return True
-        return False
-    return commands.check(inServer)
-
-
 
 async def memberSearch(ctx, client, name):
 		results = []

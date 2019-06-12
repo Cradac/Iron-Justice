@@ -4,6 +4,8 @@ import asyncio
 from utils import utils
 from utils.storage import Storage
 
+Utils = utils.Utils()
+
 class LFC(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -21,7 +23,7 @@ class LFC(commands.Cog):
                 except discord.Forbidden:
                     continue
     
-    @utils.matchLFCChannel()
+    @Utils.matchLFCChannel()
     @commands.command(
         brief='Sets the user into `Looking for Crew` status for 2 hours.',
         description='This command gives the user the set `Looking for Crew` role. \n\
@@ -45,7 +47,7 @@ class LFC(commands.Cog):
             self.client.loop.create_task(self.auto_remove(user))
 
 
-    @utils.matchLFCChannel()
+    @Utils.matchLFCChannel()
     @commands.command(
         brief='Removes the `Looking for Crew` status manually.',
         description='This removes the `Looking for Crew` status.\n\

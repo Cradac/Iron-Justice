@@ -4,6 +4,8 @@ from utils.storage import Storage
 from utils import utils
 import asyncio, re, xbox
 
+Utils = utils.Utils()
+
 class Profile(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -21,8 +23,8 @@ class Profile(commands.Cog):
         self.game_emoji_url = 'https://discordapp.com/assets/7d600babcd1bddfd7a7d35acc1ed4cd3.svg'
         self.stop_emoji = '⏹'
         
-        
         self.emojis = list()
+
 
 
     @commands.Cog.listener()
@@ -115,7 +117,7 @@ class Profile(commands.Cog):
         return embed
 
 
-    @utils.matchProfileChannel()
+    @Utils.matchProfileChannel()
     @commands.command(
         brief='Shows a member\' profile.',
         description='This command shows a member\'s profile.\n\
@@ -133,7 +135,7 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'sot'
 
 
-    @utils.matchProfileChannel()
+    @Utils.matchProfileChannel()
     @commands.group(
         brief='Show your own Gamertag',
         description='This command shows the Gamertag page of the profile.\n\
@@ -149,7 +151,7 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'game'
 
 
-    @utils.matchProfileChannel()
+    @Utils.matchProfileChannel()
     @gt.command(
         brief='Edit your one of your gamertags.',
         description='Use this to edit your gamertag.\n\
@@ -167,7 +169,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @utils.matchProfileChannel()
+    @Utils.matchProfileChannel()
     @gt.command(
         brief='Show another member\'s gamertag profile page.',
         description='This command can show another member\'s gamertag.',
@@ -185,7 +187,7 @@ class Profile(commands.Cog):
         self.profile_status[msg.id] = 'game'
 
 
-    @utils.matchProfileChannel()
+    @Utils.matchProfileChannel()
     @commands.command(
         aliases=['lvl'],
         brief='Update your Ingame Levels.',
@@ -220,7 +222,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
     
-    @utils.matchProfileChannel()
+    @Utils.matchProfileChannel()
     @commands.command(
         aliases=['set-image'],
         brief='Set a picture for your profile.',
@@ -244,7 +246,7 @@ class Profile(commands.Cog):
         await ctx.send(embed=embed)
 
 
-    @utils.matchProfileChannel()
+    @Utils.matchProfileChannel()
     @commands.command(
         aliases=['piratename'],
         brief='Set an alias for your pirate.',
