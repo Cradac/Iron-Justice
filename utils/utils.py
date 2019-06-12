@@ -13,7 +13,7 @@ class Utils:
 
 	def matchLFCChannel(self):
 		def does_channel_match(ctx):
-			lfc_settings = Storage.get_lfc_settings(Storage, ctx.guild)
+			lfc_settings = self.Storage.get_lfc_settings(ctx.guild)
 			if lfc_settings['status'] and ctx.channel in lfc_settings['channels']:
 				return True
 			return False
@@ -21,7 +21,7 @@ class Utils:
 		
 	def matchProfileChannel(self):
 		def does_channel_match(ctx):
-			profile_settings = Storage.get_profile_settings(Storage, ctx.guild)
+			profile_settings = self.Storage.get_profile_settings(ctx.guild)
 			if profile_settings['status'] and ctx.channel in profile_settings['channels']:
 				return True
 			return False
