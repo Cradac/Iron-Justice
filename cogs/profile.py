@@ -43,7 +43,7 @@ class Profile(commands.Cog):
         if user.bot:
             return
         print(self.profile_messages)
-        if reaction.message in self.profile_messages:
+        if reaction.message.id in self.profile_messages:
             print('1')
             if reaction.emoji in self.emojis:
                 print('2')
@@ -68,7 +68,7 @@ class Profile(commands.Cog):
         if wait:
             await asyncio.sleep(300)
         await message.clear_reactions()
-        self.profile_messages.remove(message)
+        self.profile_messages.remove(message.id)
         del self.profile_status[message.id]
 
     async def prepare_reaction_menu(self, message: discord.Message):
@@ -137,7 +137,7 @@ class Profile(commands.Cog):
         embed = await self.get_sot_page(ctx, member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg)
+        self.profile_messages.append(msg.id)
         self.profile_status[msg.id] = 'sot'
 
 
@@ -154,7 +154,7 @@ class Profile(commands.Cog):
             embed = self.get_game_page(ctx.author)
             msg = await ctx.send(embed=embed)
             await self.prepare_reaction_menu(msg)
-            self.profile_messages.append(msg)
+            self.profile_messages.append(msg.id)
             self.profile_status[msg.id] = 'game'
 
 
@@ -190,7 +190,7 @@ class Profile(commands.Cog):
         embed = self.get_game_page(member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg)
+        self.profile_messages.append(msg.id)
         self.profile_status[msg.id] = 'game'
 
 
