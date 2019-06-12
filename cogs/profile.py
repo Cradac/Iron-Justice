@@ -6,6 +6,8 @@ import asyncio, re, xbox
 
 Utils = utils.Utils()
 
+xbox.client.authenticate('max.dettmann@web.de', 'RexAnton#2017')
+
 class Profile(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -77,7 +79,10 @@ class Profile(commands.Cog):
         embed.set_thumbnail(url=icon)
         embed.set_footer(icon_url=self.xbox_emoji.url, text='Xbox')
         if gtag:
-            embed.description = 'Yes you are on Xbox.'
+            xbox_profile = xbox.GamerProfile.from_gamertag(gtag)
+            embed.add_field(text='__Gamertag__', value=xbox_profile.raw_json['gamertag'])
+            embed.add_field(text='__Gamerscore__', value=xbox_profile.raw_json['gamerscore'])
+            embed.set_image(url=xbox_profile.raw_json['gamerpic'])
         else:
             embed.description = 'There is no Xbox Gamertag set for this profile.\n\
                 If this is your profile you can add it with `?gt edit <gamertag>`.'
