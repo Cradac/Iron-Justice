@@ -137,11 +137,11 @@ class Storage:
 
     def update_levels(self, user: discord.Member, comps: dict()):
         cur = self.get_cursor()
-        list = list()
+        comps_new = list()
         for pair in comps.items():
             pair.add(user.id)
-            list.append(pair)
-        cur.executemany(f'UPDATE sot_profile SET %s=%s WHERE uid=%s;', list)
+            comps_new.append(pair)
+        cur.executemany(f'UPDATE sot_profile SET %s=%s WHERE uid=%s;', comps_new)
         self.conn.commit()
         cur.close()
 
