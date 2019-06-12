@@ -186,9 +186,8 @@ class Storage:
         cur = self.get_cursor()
         cids = list()
         for c in channels:
-            cids.append(str(c.id))
-        print (type(cids))
-        cur.executemany(f'INSERT INTO lfc_channels (cid,gid) VALUES (%s,{guild.id});', cids)
+            cids.append((str(c.id), str(guild.id)))
+        cur.executemany(f'INSERT INTO lfc_channels (cid,gid) VALUES (%s,%s);', cids)
         self.conn.commit()
         cur.close()
 
@@ -232,8 +231,8 @@ class Storage:
         cur = self.get_cursor()
         cids = list()
         for c in channels:
-            cids.append(c.id)
-        cur.executemany(f'INSERT INTO profile_channels (cid,gid) VALUES (%s,{guild.id});', cids)
+            cids.append((str(c.id), str(guild.id)))
+        cur.executemany(f'INSERT INTO profile_channels (cid,gid) VALUES (%s,%s);', cids)
         self.conn.commit()
         cur.close()
 
@@ -270,13 +269,19 @@ class Storage:
     
     def add_auto_voice_names(self, guild:discord.Guild, names: list()):
         cur = self.get_cursor()
-        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES (\'%s\',{guild.id});', names)
+        namelist = list()
+        for name in names:
+            namelist.append((name, str(guild.id)))
+        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES (\'%s\',%s);', namelist)
         self.conn.commit()
         cur.close()
 
     def delete_auto_voice_names(self, guild:discord.Guild, names: list()):
         cur = self.get_cursor()
-        cur.executemany(f'DELETE FROM auto_voice_names WHERE name=\'%s\' and gid={guild.id};', names)
+        namelist = list()
+        for name in names:
+            namelist.append((name, str(guild.id)))
+        cur.executemany(f'DELETE FROM auto_voice_names WHERE name=\'%s\' and gid=%s;', namelist)
         self.conn.commit()
         cur.close()
 
