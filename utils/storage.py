@@ -33,7 +33,7 @@ class Storage:
         cur.close()
         return r
 
-    def execute_query_many(self, query: str, commit: bool = False):
+    def execute_query_many(self, query: str, commit: bool = True):
         cur = self.get_cursor()
         cur.execute(query)
         if commit:
