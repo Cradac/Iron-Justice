@@ -40,7 +40,7 @@ class Profile(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
-        if reaction.message.id in self.profile_messages:
+        if reaction.message in self.profile_messages:
             if reaction.emoji in self.emojis:
                 await reaction.remove(user)
                 if user == reaction.message.author:
@@ -62,7 +62,7 @@ class Profile(commands.Cog):
         if wait:
             await asyncio.sleep(300)
         await message.clear_reactions()
-        self.profile_messages.remove(message.id)
+        self.profile_messages.remove(message)
         del self.profile_status[message.id]
 
     async def prepare_reaction_menu(self, message: discord.Message):
@@ -76,7 +76,7 @@ class Profile(commands.Cog):
         embed.set_thumbnail(url=icon)
         embed.set_footer(icon_url=self.xbox_emoji.url, text='Xbox')
         if gtag:
-            pass
+            embed.description = 'Yes you are on Xbox.'
         else:
             embed.description = 'There is no Xbox Gamertag set for this profile.\n\
                 If this is your profile you can add it with `?gt edit <gamertag>`.'
@@ -128,10 +128,10 @@ class Profile(commands.Cog):
         member = await utils.memberSearch(ctx, self.client, member) if member else ctx.message.author
         if not member:
             return
-        embed = self.get_sot_page(ctx, member)
+        embed = await self.get_sot_page(ctx, member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg.id)
+        self.profile_messages.append(msg)
         self.profile_status[msg.id] = 'sot'
 
 
@@ -147,7 +147,7 @@ class Profile(commands.Cog):
         embed = self.get_game_page(ctx.author)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg.id)
+        self.profile_messages.append(msg)
         self.profile_status[msg.id] = 'game'
 
 
@@ -183,7 +183,7 @@ class Profile(commands.Cog):
         embed = self.get_game_page(member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg.id)
+        self.profile_messages.append(msg)
         self.profile_status[msg.id] = 'game'
 
 

@@ -74,7 +74,7 @@ class Misc(commands.Cog):
         try:
             link = ctx.guild.invites[0]
         except:
-            link = ctx.guild.channels[0].create_invite(max_age=86400, reason=f'{ctx.author} requested an invite link.')
+            link = await ctx.guild.channels[0].create_invite(max_age=86400, reason=f'{ctx.author} requested an invite link.')
         await ctx.author.send(f'Use this link to invite people to {ctx.guild.name}\'s Discord Server: {link.url}')
 
 

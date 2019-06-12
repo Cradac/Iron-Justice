@@ -139,11 +139,11 @@ class Storage:
         cur.close()
 
     def update_gamertag(self, user: discord.Member, platform: str, gamertag: str):
-        query = f'UPDATE gamertags SET {platform}=\'{gamertag}\' WHERE uid={user.id};'
+        query = f'UPDATE gamertags SET {platform}={gamertag} WHERE uid={user.id};'
         self.execute_query(query, commit=True)
 
     def update_img(self, user: discord.Member, url: str):
-        query = f'UPDATE sot_profile SET img=\'{url}\' WHERE uid={user.id};'
+        query = f'UPDATE sot_profile SET img={url} WHERE uid={user.id};'
         self.execute_query(query, commit=True)
     
     def remove_img(self, user:discord.Member):
@@ -151,7 +151,7 @@ class Storage:
         self.execute_query(query, commit=True)
         
     def update_alias(self, user: discord.Member, alias: str):
-        query = f'UPDATE sot_profile SET alias=\'{alias}\' WHERE uid={user.id};'
+        query = f'UPDATE sot_profile SET alias={alias} WHERE uid={user.id};'
         self.execute_query(query, commit=True)
 
     def remove_alias(self, user: discord.Member):
