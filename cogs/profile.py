@@ -48,7 +48,7 @@ class Profile(commands.Cog):
             if reaction.emoji in self.emojis:
                 print('2')
                 await reaction.remove(user)
-                if user == reaction.message.author:
+                if user.id == reaction.message.author.id:
                     print('3')
                     if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
                         embed = self.get_xbox_page(user)
