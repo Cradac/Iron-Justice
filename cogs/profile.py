@@ -80,6 +80,7 @@ class Profile(commands.Cog):
         embed.set_footer(icon_url=self.xbox_emoji.url, text='Xbox')
         if gtag:
             xbox_profile = xbox.GamerProfile.from_gamertag(gtag)
+            print(xbox_profile.gamerscore)
             print(xbox_profile)
             print(xbox_profile.raw_json)
             #embed.add_field(text='__Gamertag__', value=xbox_profile.raw_json['gamertag'])
