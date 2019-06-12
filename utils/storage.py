@@ -15,6 +15,7 @@ class Storage:
             database='IronJustice'
         )
         self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
+        self.conn.autocommit(True)
 
     
     def get_cursor(self):
@@ -284,7 +285,7 @@ class Storage:
         namelist = list()
         for name in names:
             namelist.append((name, guild.id))
-        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES (%s, %s );', namelist)
+        cur.executemany(f'INSERT INTO auto_voice_names (name,gid) VALUES (%s, %s);', namelist)
         self.conn.commit()
         cur.close()
 
