@@ -139,7 +139,7 @@ class Storage:
         cur = self.get_cursor()
         comps_new = list()
         for pair in comps.items():
-            pair.add(user.id)
+            pair += (user.id, )
             comps_new.append(pair)
         cur.executemany(f'UPDATE sot_profile SET %s=%s WHERE uid=%s;', comps_new)
         self.conn.commit()
