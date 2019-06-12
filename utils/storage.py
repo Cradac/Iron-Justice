@@ -19,27 +19,27 @@ class Storage:
     
     def get_cursor(self):
         try:
-            cursor = self.conn.cursor()
+            cursor = self.conn.cursor(self)
             return cursor
         except Exception as e:
             raise e
 
     def execute_query(self, query: str, commit: bool = False):
-        cur = self.get_cursor()
-        cur.execute(query)
+        cur = self.get_cursor(self)
+        cur.execute(self, query)
         if commit:
-            self.conn.commit()
-        r = cur.fetchone()
-        cur.close()
+            self.conn.commit(self)
+        r = cur.fetchone(self)
+        cur.close(self)
         return r
 
     def execute_query_many(self, query: str, commit: bool = False):
-        cur = self.get_cursor()
-        cur.execute(query)
+        cur = self.get_cursor(self)
+        cur.execute(self, query)
         if commit:
-            self.conn.commit()
-        r = cur.fetchall()
-        cur.close()
+            self.conn.commit(self)
+        r = cur.fetchall(self)
+        cur.close(self)
         return r
 
 
