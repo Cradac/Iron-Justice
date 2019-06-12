@@ -323,7 +323,7 @@ class Settings(commands.Cog):
         usage='?auto-voice-names add <name1,name2,...>'
     )
     async def add(self, ctx, *, names):
-        names = [name.trim() for name in names.split(',')]
+        names = [name.strip() for name in names.split(',')]
         self.Storage.add_auto_voice_names(ctx.guild, names)
         await ctx.invoke(self.client.get_command('auto_voice_names get'))
     
