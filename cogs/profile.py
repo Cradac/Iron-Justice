@@ -11,7 +11,7 @@ class Profile(commands.Cog):
         self.client = client
 
         self.Storage = Storage()
-        self.profile_messages = list()
+        self.profile_messages = dict()
         self.profile_status = dict()
 
         self.steam_emoji = None
@@ -42,28 +42,28 @@ class Profile(commands.Cog):
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
         if user.bot:
             return
-        if reaction.message.id in self.profile_messages:
-            if reaction.emoji in self.emojis:
-                await reaction.remove(user)
-                if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
-                    embed = self.get_xbox_page(user)
-                    self.profile_status[reaction.message.id] = 'xbox'
-                elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
-                    embed = await self.get_sot_page(None, user)
-                    self.profile_status[reaction.message.id] = 'sot'
-                elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
-                    embed = self.get_game_page(user)
-                    self.profile_status[reaction.message.id] = 'game'
-                elif reaction.emoji == self.stop_emoji:
-                    await self.reaction_menu_timeout(reaction.message, wait=False)
-                    return
-                await reaction.message.edit(embed=embed)
+        if reaction.message.id in self.profile_messages.keys() and reaction.emoji in self.emojis and user == self.profile_messages[reaction.message.id]:
+            await reaction.remove(user)
+
+            if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
+                embed = self.get_xbox_page(user)
+                self.profile_status[reaction.message.id] = 'xbox'
+            elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
+                embed = await self.get_sot_page(None, user)
+                self.profile_status[reaction.message.id] = 'sot'
+            elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
+                embed = self.get_game_page(user)
+                self.profile_status[reaction.message.id] = 'game'
+            elif reaction.emoji == self.stop_emoji:
+                await self.reaction_menu_timeout(reaction.message, wait=False)
+                return
+            await reaction.message.edit(embed=embed)
 
     async def reaction_menu_timeout(self, message: discord.Message, wait: bool = True):
         if wait:
             await asyncio.sleep(300)
         await message.clear_reactions()
-        self.profile_messages.remove(message.id)
+        del self.profile_messages[message.id]
         del self.profile_status[message.id]
 
     async def prepare_reaction_menu(self, message: discord.Message):
@@ -132,8 +132,9 @@ class Profile(commands.Cog):
         embed = await self.get_sot_page(ctx, member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg.id)
+        self.profile_messages[msg.id] = member
         self.profile_status[msg.id] = 'sot'
+
 
 
     @Utils.matchProfileChannel()
@@ -149,7 +150,7 @@ class Profile(commands.Cog):
             embed = self.get_game_page(ctx.author)
             msg = await ctx.send(embed=embed)
             await self.prepare_reaction_menu(msg)
-            self.profile_messages.append(msg.id)
+            self.profile_messages[msg.id] = ctx.author
             self.profile_status[msg.id] = 'game'
 
 
@@ -185,7 +186,7 @@ class Profile(commands.Cog):
         embed = self.get_game_page(member)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.profile_messages.append(msg.id)
+        self.profile_messages[msg.id] = member
         self.profile_status[msg.id] = 'game'
 
 
