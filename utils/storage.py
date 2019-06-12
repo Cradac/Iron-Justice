@@ -319,7 +319,6 @@ class Storage:
     def cleanup_messages(self, guilds:list()):
         cur = self.get_cursor()
         query = f'DELETE FROM messages WHERE timestamp < DATE_SUB(NOW(), INTERVAL 30 DAY) OR gid NOT IN ({",".join(str(g.id) for g in guilds)});'
-        print(query)
         cur.execute(query)
         self.conn.commit()
         count = cur.rowcount
