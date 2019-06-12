@@ -12,7 +12,8 @@ class Welcome(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        iron_guild = self.client.get_guild(479300072077787160)
+        #iron_guild = self.client.get_guild(479300072077787160)
+        iron_guild = self.client.get_guild(421650482176589835)
         self.iron = {
             'guild': iron_guild,
             'welcome': iron_guild.get_channel(479301249351548928),
