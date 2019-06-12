@@ -48,6 +48,7 @@ class Profile(commands.Cog):
             if reaction.emoji in self.emojis:
                 print('2')
                 await reaction.remove(user)
+                print (user.id, reaction.message.author.id)
                 if user.id == reaction.message.author.id:
                     print('3')
                     if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
@@ -57,7 +58,7 @@ class Profile(commands.Cog):
                         embed = self.get_sot_page(None, user)
                         self.profile_status[reaction.message.id] = 'sot'
                     elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
-                        embed = self.get_game_page
+                        embed = self.get_game_page(user)
                         self.profile_status[reaction.message.id] = 'game'
                     elif reaction.emoji == self.stop_emoji:
                         await self.reaction_menu_timeout(reaction.message, wait=False)
