@@ -49,21 +49,19 @@ class Profile(commands.Cog):
                 print('2')
                 await reaction.remove(user)
                 print (user.id, reaction.message.author.id)
-                if user.id == reaction.message.author.id:
-                    print('3')
-                    if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
-                        embed = self.get_xbox_page(user)
-                        self.profile_status[reaction.message.id] = 'xbox'
-                    elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
-                        embed = self.get_sot_page(None, user)
-                        self.profile_status[reaction.message.id] = 'sot'
-                    elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
-                        embed = self.get_game_page(user)
-                        self.profile_status[reaction.message.id] = 'game'
-                    elif reaction.emoji == self.stop_emoji:
-                        await self.reaction_menu_timeout(reaction.message, wait=False)
-                        return
-                    await reaction.message.edit(embed=embed)
+                if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
+                    embed = self.get_xbox_page(user)
+                    self.profile_status[reaction.message.id] = 'xbox'
+                elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
+                    embed = self.get_sot_page(None, user)
+                    self.profile_status[reaction.message.id] = 'sot'
+                elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
+                    embed = self.get_game_page(user)
+                    self.profile_status[reaction.message.id] = 'game'
+                elif reaction.emoji == self.stop_emoji:
+                    await self.reaction_menu_timeout(reaction.message, wait=False)
+                    return
+                await reaction.message.edit(embed=embed)
 
     async def reaction_menu_timeout(self, message: discord.Message, wait: bool = True):
         if wait:
