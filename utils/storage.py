@@ -172,7 +172,7 @@ class Storage:
         settings = dict()
         query = f'SELECT lfc FROM settings WHERE gid={guild.id};'
         settings['status'] = self.execute_query(query)[0] == True
-        query = 'SELECT cid FROM lfc_channels WHERE gid={guild.id};'
+        query = f'SELECT cid FROM lfc_channels WHERE gid={guild.id};'
         r = self.execute_query_many(query)
         settings['channels'] = [guild.get_channel(c[0]) for c in r]
         settings['role'] = self.get_lfc_role(guild)
