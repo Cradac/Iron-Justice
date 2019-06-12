@@ -5,6 +5,7 @@ from  cogs import auto_voice
 from utils.storage import Storage
 from utils import utils
 from cogs.activity_logging import active_fleets
+from auto_voice import channel_names
 
 
 class Settings(commands.Cog):
@@ -95,7 +96,9 @@ class Settings(commands.Cog):
         auto_voice_settings = self.Storage.get_auto_voice_settings(guild)
         embed.add_field(name='__Auto-Voice Module__', value=auto_voice_settings['channel'] or '`disabled`', inline=False)
         if auto_voice_settings['channel']:
-            embed.add_field(name='__Auto-Voice Custom Names__', value=' '.join(f'`{n}`' for n in auto_voice_settings['names']))
+            names = auto_voice_settings['names']
+            names = 'Default Names' if len(names) == 0 else ' '.join(f'`{n}`' for n in names)
+            embed.add_field(name='__Auto-Voice Custom Names__', value=names)
         
         # Activity-Logging Settings
         activity_logging_settings = self.Storage.get_activity_logging_status(guild)
