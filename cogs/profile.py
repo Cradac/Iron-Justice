@@ -94,7 +94,7 @@ class Profile(commands.Cog):
         info = await self.Storage.get_sot_profile(ctx, member)
         embed = utils.createEmbed(colour='iron', author=member, guild=member.guild)
         embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
-        embed.add_field(name="Gamertag", value=info['gtag'], inline=False)
+        embed.add_field(name="<:xbox:563799115201249301> Gamertag", value=info['gtag'], inline=False)
         if info['alias']:
             embed.add_field(name="<:jollyroger:486619773875126293> Pirate Alias", value=info['alias'], inline=False)
         embed.add_field(name="<:rank:486619774445551626> Rank", value=member.top_role.name, inline=False)
@@ -118,10 +118,14 @@ class Profile(commands.Cog):
         icon = member.guild.icon_url_as(format='png', size=512)
         embed.set_thumbnail(url=icon)
         embed.set_footer(icon_url=self.game_emoji_url, text='Gamertags')
-        embed.add_field(name=str(self.steam_emoji) + 'Steam', value=info['steam'], inline=True)
-        embed.add_field(name=str(self.xbox_emoji) + 'Xbox Live', value=info['xbox'], inline=True)
-        embed.add_field(name=str(self.psn_emoji) + 'Playstation Network', value=info['psn'], inline=True)
-        embed.add_field(name=str(self.nintendo_emoji) + 'Nintendo Friend Code', value=info['nintendo'], inline=True)
+        if info['steam'] and info['steam'].lower() !='none':
+            embed.add_field(name=str(self.steam_emoji) + 'Steam', value=info['steam'], inline=True)
+        if info['xbox'] and info['xbox'].lower() !='none':
+            embed.add_field(name=str(self.xbox_emoji) + 'Xbox Live', value=info['xbox'], inline=True)
+        if info['psn'] and info['psn'].lower() !='none':
+            embed.add_field(name=str(self.psn_emoji) + 'Playstation Network', value=info['psn'], inline=True)
+        if info['nintendo'] and info['nintendo'].lower() !='none' :
+            embed.add_field(name=str(self.nintendo_emoji) + 'Nintendo Friend Code', value=info['nintendo'], inline=True)
         return embed
 
 
