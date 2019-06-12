@@ -80,12 +80,9 @@ class Profile(commands.Cog):
         embed.set_footer(icon_url=self.xbox_emoji.url, text='Xbox')
         if gtag:
             xbox_profile = xbox.GamerProfile.from_gamertag(gtag)
-            print(xbox_profile.gamerscore)
-            print(xbox_profile)
-            print(xbox_profile.raw_json)
-            #embed.add_field(text='__Gamertag__', value=xbox_profile.raw_json['gamertag'])
-            #embed.add_field(text='__Gamerscore__', value=xbox_profile.raw_json['gamerscore'])
-            #embed.set_image(url=xbox_profile.raw_json['gamerpic'])
+            embed.add_field(text='__Gamertag__', value=xbox_profile.gamertag)
+            embed.add_field(text='__Gamerscore__', value=xbox_profile.gamerscore)
+            embed.set_image(url=xbox_profile.gamerpic)
         else:
             embed.description = 'There is no Xbox Gamertag set for this profile.\n\
                 If this is your profile you can add it with `?gt edit <gamertag>`.'
