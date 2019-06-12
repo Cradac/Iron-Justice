@@ -168,7 +168,7 @@ class Profile(commands.Cog):
             return
         self.Storage.update_gamertag(ctx.author, platform, gamertag)
         embed = utils.createEmbed(description=f'Your {platform} gamertag has been updated to `{gamertag}`.', author=ctx.author)
-        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Gamertag updated')
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Gamertag updated')
         await ctx.send(embed=embed)
 
 
@@ -221,7 +221,7 @@ class Profile(commands.Cog):
                 await ctx.send('Levels can only be between 1 and 50.')
         self.Storage.update_levels(ctx.author, comps)
         embed = utils.createEmbed(description=f'Your levels have been updated.', author=ctx.author)
-        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Levels updated')
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Levels updated')
         await ctx.send(embed=embed)
 
     
@@ -245,7 +245,7 @@ class Profile(commands.Cog):
             await ctx.send('The image type as to be either jpg, png or gif.')
             return
         embed = utils.createEmbed(description=txt, author=ctx.author)
-        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Image updated')
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Image updated')
         await ctx.send(embed=embed)
 
 
@@ -264,7 +264,7 @@ class Profile(commands.Cog):
             self.Storage.update_alias(ctx.author, alias)
             txt = 'Your alias has been updated.'
         embed = utils.createEmbed(description=txt, author=ctx.author)
-        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size='128'), text='Image updated')
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Image updated')
         await ctx.send(embed=embed)
 
 
