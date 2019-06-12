@@ -326,21 +326,21 @@ class Storage:
         return count
 
     def user_leave_guild(self, user:discord.Member):
-        query = f'DELETE FROM messages WHERE aid={user.id} and gid={user.guild.id};'
+        query = f'DELETE FROM messages WHERE uid={user.id} and gid={user.guild.id};'
         self.execute_query(query, commit=True)
 
     def add_message(self, m: discord.Message):
         timestamp = m.created_at.strftime(self.datetime_scheme)
-        query = f'INSERT INTO messages (mid,aid,gid,timestamp) \
+        query = f'INSERT INTO messages (mid,uid,gid,timestamp) \
             SELECT {m.id},{m.author.id},{m.guild.id},{timestamp} FROM dual WHERE\
             (SELECT activity_logging FROM settings WHERE gid={m.guild.id})=TRUE;'
         self.execute_query(query, commit=True)
 
     def get_user_activity(self, user:discord.Member):
         info = dict()
-        query = f'SELECT COUNT(*) FROM messages WHERE aid={user.id} AND gid={user.guild.id};'
+        query = f'SELECT COUNT(*) FROM messages WHERE uid={user.id} AND gid={user.guild.id};'
         info['amnt'] = self.execute_query(query)[0] or 0
-        query = f'SELECT timestamp FROM messages WHERE aid={user.id} AND gid={user.guild.id} ORDER BY timestamp DESC LIMIT 1;'
+        query = f'SELECT timestamp FROM messages WHERE uid={user.id} AND gid={user.guild.id} ORDER BY timestamp DESC LIMIT 1;'
         timestamp = self.execute_query(query)[0] or None
         info['timestamp'] = datetime.strptime(timestamp, self.datetime_scheme)
         info['member'] = user

@@ -22,7 +22,7 @@ class Profile(commands.Cog):
         self.nintendo_emoji = None
         self.sot_emoji = None
         self.game_emoji = '🎮'
-        self.game_emoji_url = 'https://discordapp.com/assets/7d600babcd1bddfd7a7d35acc1ed4cd3.svg'
+        self.game_emoji_url = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/146/video-game_1f3ae.png'
         self.stop_emoji = '⏹'
         
         self.emojis = list()
