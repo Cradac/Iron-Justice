@@ -5,7 +5,7 @@ from  cogs import auto_voice
 from utils.storage import Storage
 from utils import utils
 from cogs.activity_logging import active_fleets
-from auto_voice import channel_names
+from utils.utils import auto_voice_channel_names as channel_names
 
 
 class Settings(commands.Cog):

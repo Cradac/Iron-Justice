@@ -1,11 +1,8 @@
 import discord, asyncio, utils
 from discord.ext import commands
 from random import choice
-from utils.utils import isAdmin, createEmbed
+from utils.utils import auto_voice_channel_names as channel_names
 from utils.storage import Storage
-
-
-channel_names = ['Silence', 'Iron Victory', 'Leviathan', 'Kraken\'s Kiss', 'Reaper\'s Wind', 'Black Wind', ' Sea Bitch', 'Silence', 'Noble Lady', 'Red God\'s Wrath', 'Shrike', 'Shade', 'Ghost', 'Slaver\'s Scream', 'Sea Song', 'Thunderer', 'Nighflyer', 'Silverfin', 'Black Wind', 'Great Kraken']
 
 
 class AutoVoice(commands.Cog):
