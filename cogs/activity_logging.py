@@ -108,7 +108,7 @@ class Activity_Logging(commands.Cog):
         hidden=True
     )
     async def clean_db(self, ctx):
-        await ctx.send('**Cleaning the Database of old entries now... This might take a bit.__**')
+        await ctx.send('**__Cleaning the Database of old entries now... This might take a bit.__**')
         self.Storage.cleanup_messages(self.client.guilds)
         await ctx.send('**__Finished purging__**')
 
