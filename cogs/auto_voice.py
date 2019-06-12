@@ -22,7 +22,7 @@ class AutoVoice(commands.Cog):
             if after.channel == self.Storage.get_auto_voice_channel(user.guild):                #Joined Get Ship Voice
                 category = self.client.get_channel(after.channel.category_id)
                 name = choice(self.Storage.get_auto_voice_names(user.guild))
-                pos = len(category.channels)-1
+                pos = 1#len(category.channels)-1
                 voice_channel = await category.create_voice_channel(name, reason='Created ship channel.')
                 await voice_channel.edit(position=pos, reason='Moved Ship Channel.')
                 self.created_channels.append(voice_channel)
