@@ -341,7 +341,7 @@ class Settings(commands.Cog):
     async def delete(self, ctx, *, names):
         names = [name.strip() for name in names.split(',')]
         self.Storage.delete_auto_voice_names(ctx.guild, names)
-        embed = self.get_auto_voice_names(ctx.guild)
+        embed = self.get_auto_voice_names(ctx)
         await ctx.send(embed=embed)
     
     @utils.isAdmin()
