@@ -78,7 +78,7 @@ class Settings(commands.Cog):
         # Looking for Crew Settings
         lfc_settings = self.Storage.get_lfc_settings(guild)
         lfc_status = '`enabled`' if lfc_settings['status'] else '`disabled`'
-        embed.add_field(name='__Looking for Crew Module__', value=lfc_status)
+        embed.add_field(name='__Looking for Crew Module__', value=lfc_status, inline=False)
         if lfc_settings['status']:
             lfc_channels = ' '.join(c.mention for c in lfc_settings['channels']) if len(lfc_settings['channels']) > 0 else 'all channels'
             embed.add_field(name='__Looking for Crew Channels__', value=lfc_channels)
@@ -87,21 +87,21 @@ class Settings(commands.Cog):
         # Profile Settings
         profile_settings = self.Storage.get_profile_settings(guild)
         profile_status = '`enabled`' if profile_settings['status'] else '`disabled`'
-        embed.add_field(name='___Profile Module__', value=profile_status)
+        embed.add_field(name='___Profile Module__', value=profile_status, inline=False)
         if profile_settings['status']:
             profile_channels = ' '.join(c.mention for c in profile_settings['channels']) if len(profile_settings['channels']) > 0 else 'all channels'
             embed.add_field(name='__Profile Channels__' , value=profile_channels)
 
         # Auto-Voice Settings
         auto_voice_settings = self.Storage.get_auto_voice_settings(guild)
-        embed.add_field(name='__Auto-Voice Module__', value=auto_voice_settings['channel'] or '`disabled`')
+        embed.add_field(name='__Auto-Voice Module__', value=auto_voice_settings['channel'] or '`disabled`', inline=False)
         if auto_voice_settings['channel']:
             embed.add_field(name='__Auto-Voice Custom Names__', value=' '.join(f'`{n}`' for n in auto_voice_settings['names']))
         
         # Activity-Logging Settings
         activity_logging_settings = self.Storage.get_activity_logging_status(guild)
         activity_logging_status = '`enabled`' if activity_logging_settings else '`disabled`'
-        embed.add_field(name='__Activity-Logging Module__', value=activity_logging_status)
+        embed.add_field(name='__Activity-Logging Module__', value=activity_logging_status, inline=False)
 
 
         await ctx.send(embed=embed)
