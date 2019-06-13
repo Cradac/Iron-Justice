@@ -132,6 +132,8 @@ async def help(ctx, *, name: str = None):
 		elif command:
 			embed.title = f'__Command: {client.command_prefix[0]}{command.qualified_name}__'
 			embed.add_field(name='Description', value=command.description, inline=False)
+			if isinstance(command, discord.ext.commands.Group):
+				embed.add_field(name='Subcommands', value='\n'.join(f'`{c}`' for c in command.commands), inline=False)
 			embed.add_field(name='Usage', value=command.usage, inline=False)
 			if len(command.aliases) > 0:
 				embed.add_field(name='Aliases', value=', '.join(f'`{a}`' for a in command.aliases), inline=False)
