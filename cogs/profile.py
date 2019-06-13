@@ -69,16 +69,20 @@ class Profile(commands.Cog):
             return
         if reaction.message.id in self.profile_messages.keys() and reaction.emoji in self.emojis:
             await reaction.remove(user)
-
+            print(reaction.emoji)
+            print(self.social_emoji)
             if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
                 embed = self.get_xbox_page(self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'xbox'
+
             elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
                 embed = await self.get_sot_page(None, self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'sot'
+
             elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
                 embed = await self.get_game_page(None, self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'game'
+
             elif reaction.emoji == self.social_emoji and self.profile_status[reaction.message.id] != 'social':
                 embed = await self.get_social_page(None, self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'social'
