@@ -176,15 +176,15 @@ class Profile(commands.Cog):
         if info['twitch']:
             embed.add_field(name=str(self.twitch_emoji) + 'Twitch', value=f'[{info["twitch"]}](https://www.twitch.tv/{info["twitch"]})', inline=True)
         if info['youtube']:
-            embed.add_field(name=str(self.youtube_emoji) + 'Youtube', value=info['youtube'], inline=True)
+            embed.add_field(name=str(self.youtube_emoji) + 'Youtube', value=info["youtube"], inline=True)
         if info['mixer']:
-            embed.add_field(name=str(self.mixer_emoji) + 'Mixer', value=info['mixer'], inline=True)
+            embed.add_field(name=str(self.mixer_emoji) + 'Mixer', value=f'[{info["mixer"]}]()', inline=True)
         if info['twitter']:
-            embed.add_field(name=str(self.twitter_emoji) + 'Twitter', value=info['twitter'], inline=True)
+            embed.add_field(name=str(self.twitter_emoji) + 'Twitter', value=f'[{info["twitter"]}](https://twitter.com/{info["twitter"].replace("@")})', inline=True)
         if info['reddit']:
-            embed.add_field(name=str(self.reddit_emoji) + 'Reddit', value=info['reddit'], inline=True)
+            embed.add_field(name=str(self.reddit_emoji) + 'Reddit', value=f'[{info["reddit"]}](https://www.reddit.com/user/{info["reddit"]})', inline=True)
         if info['itchio']:
-            embed.add_field(name=str(self.itchio_emoji) + 'Itch.io', value=info['itchio'], inline=True)
+            embed.add_field(name=str(self.itchio_emoji) + 'Itch.io', value=f'[{info["itchio"]}(https://{info["itchio"]}.itch.io/)', inline=True)
         if len(embed.fields) == 0:
             embed.description = f'{member} has not set any social media names.'
 
