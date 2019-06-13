@@ -174,7 +174,7 @@ class Profile(commands.Cog):
         embed.set_thumbnail(url=member.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.social_emoji.url, text='Social Media')
         if info['twitch']:
-            embed.add_field(name=str(self.twitch_emoji) + 'Twitch', value=info['twitch'], inline=True)
+            embed.add_field(name=str(self.twitch_emoji) + 'Twitch', value=f'[{info["twitch"]}](https://www.twitch.tv/{info["twitch"]})', inline=True)
         if info['youtube']:
             embed.add_field(name=str(self.youtube_emoji) + 'Youtube', value=info['youtube'], inline=True)
         if info['mixer']:
