@@ -147,7 +147,7 @@ class Profile(commands.Cog):
     async def get_game_page(self, ctx, member: discord.Member):
         info = await self.Storage.get_tag_profile(ctx, member)
         embed = utils.createEmbed(colour='iron', author=member)
-        embed.set_thumbnail(url=ctx.guild.icon_url_as(format='png', size=512))
+        embed.set_thumbnail(url=member.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.game_emoji_url, text='Gamertags')
         if info['steam']:
             embed.add_field(name=str(self.steam_emoji) + 'Steam', value=info['steam'], inline=True)
@@ -173,7 +173,7 @@ class Profile(commands.Cog):
     async def get_social_page(self, ctx, member: discord.Member):
         info = await self.Storage.get_social_profile(ctx, member)
         embed = utils.createEmbed(colour='iron', author=member)
-        embed.set_thumbnail(url=ctx.guild.icon_url_as(format='png', size=512))
+        embed.set_thumbnail(url=member.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.social_emoji.url, text='Social Media')
         if info['twitch']:
             embed.add_field(name=str(self.twitch_emoji) + 'Twitch', value=info['twitch'], inline=True)
