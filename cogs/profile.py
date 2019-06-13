@@ -122,6 +122,8 @@ class Profile(commands.Cog):
 
     async def get_sot_page(self, ctx: commands.Context, member: discord.Member):
         info = await self.Storage.get_sot_profile(ctx, member)
+        if not info:
+            return None
         embed = utils.createEmbed(colour='iron', author=member, guild=member.guild)
         embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
         embed.add_field(name="<:xbox:563799115201249301> Gamertag", value=info['gtag'], inline=False)
@@ -144,6 +146,8 @@ class Profile(commands.Cog):
 
     async def get_game_page(self, ctx, member: discord.Member):
         info = await self.Storage.get_tag_profile(ctx, member)
+        if not info:
+            return None
         embed = utils.createEmbed(colour='iron', author=member)
         embed.set_thumbnail(url=member.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.game_emoji_url, text='Gamertags')
@@ -170,6 +174,8 @@ class Profile(commands.Cog):
 
     async def get_social_page(self, ctx, member: discord.Member):
         info = await self.Storage.get_social_profile(ctx, member)
+        if not info:
+            return None
         embed = utils.createEmbed(colour='iron', author=member)
         embed.set_thumbnail(url=member.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.social_emoji.url, text='Social Media')
@@ -203,6 +209,8 @@ class Profile(commands.Cog):
         if not member:
             return
         embed = await self.get_sot_page(ctx, member)
+        if not embed:
+            return
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
         self.profile_messages[msg.id] = member
@@ -221,6 +229,8 @@ class Profile(commands.Cog):
     async def gt(self, ctx):
         if not ctx.invoked_subcommand:
             embed = await self.get_game_page(ctx, ctx.author)
+            if not embed:
+                return
             msg = await ctx.send(embed=embed)
             await self.prepare_reaction_menu(msg)
             self.profile_messages[msg.id] = ctx.author
@@ -257,6 +267,8 @@ class Profile(commands.Cog):
         if not member:
             return
         embed = await self.get_game_page(ctx, member)
+        if not embed:
+            return
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
         self.profile_messages[msg.id] = member
@@ -292,6 +304,7 @@ class Profile(commands.Cog):
                 return
             if not isinstance(lvl, int) or not 0 < lvl <= 50:
                 await ctx.send('Levels can only be between 1 and 50.')
+        print(comps)
         self.Storage.update_levels(ctx.author, comps)
         embed = utils.createEmbed(description=f'Your levels have been updated.', author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Levels updated')
@@ -350,6 +363,8 @@ class Profile(commands.Cog):
     async def social(self, ctx):
         if not ctx.invoked_subcommand:
             embed = await self.get_social_page(ctx, ctx.author)
+            if not embed:
+                return
             msg = await ctx.send(embed=embed)
             await self.prepare_reaction_menu(msg)
             self.profile_messages[msg.id] = ctx.author
@@ -388,6 +403,8 @@ class Profile(commands.Cog):
         if not member:
             return
         embed = await self.get_social_page(ctx, member)
+        if not embed:
+            return
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
         self.profile_messages[msg.id] = member

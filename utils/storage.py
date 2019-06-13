@@ -123,7 +123,7 @@ class Storage:
         #If Profile doesn't exist yet
         if cur.rowcount == 0 or not r:
             await self.create_profile(ctx, user)
-            return
+            return None
         cur.close()
         
         profile = {
@@ -144,6 +144,7 @@ class Storage:
         r = self.execute_query(query)
         if not r or len(r) == 0:
             await self.create_profile(ctx, user)
+            return None
         profile = {
             'steam': r[0],
             'xbox': r[1],
@@ -161,6 +162,7 @@ class Storage:
         r = self.execute_query(query)
         if not r or len(r) == 0:
             await self.create_profile(ctx, user)
+            return None
         profile = {
             'twitch': r[0],
             'mixer': r[1],
