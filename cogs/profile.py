@@ -55,7 +55,7 @@ class Profile(commands.Cog):
         self.bethesda_emoji = self.client.get_emoji(588661017287065600)
 
         self.sot_emoji = self.client.get_emoji(488445174536601600)
-        self.social_emoji = self.client.get_emoji(588748681365422110)
+        self.social_emoji = self.client.get_emoji(588826943760236583)
 
         self.twitch_emoji = self.client.get_emoji(588661018557808641)
         self.mixer_emoji = self.client.get_emoji(588661020591915021)
