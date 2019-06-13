@@ -149,7 +149,8 @@ async def help(ctx, *, name: str = None):
 					if command.hidden:
 						continue
 					txt += f'{client.command_prefix[0]}{command.name} - {command.brief}\n'
-				embed.add_field(name=name, value=txt, inline=False)
+				if txt != '':
+					embed.add_field(name=name, value=txt, inline=False)
 			else:
 				continue
 	await ctx.send(embed=embed)
