@@ -95,8 +95,11 @@ class Profile(commands.Cog):
         if wait:
             await asyncio.sleep(300)
         await message.clear_reactions()
-        del self.profile_messages[message.id]
-        del self.profile_status[message.id]
+        try:
+            del self.profile_messages[message.id]
+            del self.profile_status[message.id]
+        except KeyError:
+            pass
 
     async def prepare_reaction_menu(self, message: discord.Message):
         for emoji in self.emojis:
@@ -178,7 +181,7 @@ class Profile(commands.Cog):
         if info['youtube']:
             embed.add_field(name=str(self.youtube_emoji) + 'Youtube', value=info["youtube"], inline=True)
         if info['mixer']:
-            embed.add_field(name=str(self.mixer_emoji) + 'Mixer', value=f'[{info["mixer"]}]()', inline=True)
+            embed.add_field(name=str(self.mixer_emoji) + 'Mixer', value=f'[{info["mixer"]}](https://mixer.com/{info["mixer"]})', inline=True)
         if info['twitter']:
             embed.add_field(name=str(self.twitter_emoji) + 'Twitter', value=f'[{info["twitter"]}](https://twitter.com/{info["twitter"].replace("@", "")})', inline=True)
         if info['reddit']:
