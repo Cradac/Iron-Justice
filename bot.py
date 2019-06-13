@@ -139,9 +139,13 @@ async def help(ctx, *, name: str = None):
 	else:
 		embed = utils.createEmbed(title='Commands', description='For a documentation of all commands go [here](link-to-commands.md).', colour='iron')
 		for name, cog in client.cogs.items():
-			txt = ''
-			for command in cog.get_commands():
-				txt += f'{client.command_prefix}{command.name} - {command.brief}\n'
+			commands = cog.get_commands()
+			if len(commands) > 0:
+				txt = ''
+				for command in :
+					txt += f'{client.command_prefix}{command.name} - {command.brief}\n'
+			else:
+				txt = 'No commands in Cog.'
 			embed.add_field(name=name, value=txt, inline=False)
 	await ctx.send(embed=embed)
 
