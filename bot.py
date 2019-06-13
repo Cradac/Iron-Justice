@@ -142,7 +142,7 @@ async def help(ctx, *, name: str = None):
 			commands = cog.get_commands()
 			if len(commands) > 0:
 				txt = ''
-				for command in :
+				for command in commands:
 					txt += f'{client.command_prefix}{command.name} - {command.brief}\n'
 			else:
 				txt = 'No commands in Cog.'
