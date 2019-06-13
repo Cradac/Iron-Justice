@@ -138,7 +138,7 @@ async def help(ctx, *, name: str = None):
 
 	else:
 		embed = utils.createEmbed(title='Commands', description='For a documentation of all commands go [here](link-to-commands.md).', colour='iron')
-		for name, cog in client.cogs().items():
+		for name, cog in client.cogs.items():
 			txt = ''
 			for command in cog.get_commands():
 				txt += f'{client.command_prefix}{command.name} - {command.brief}\n'
