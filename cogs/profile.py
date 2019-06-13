@@ -163,7 +163,7 @@ class Profile(commands.Cog):
             embed.add_field(name=str(self.blizzard_emoji) + 'Blizzard Net', value=info['blizzard'], inline=True)
         if info['bethesda']:
             embed.add_field(name=str(self.bethesda_emoji) + 'Bethesda', value=info['bethesda'], inline=True)
-        if embed.fields is discord.Embed.Empty:
+        if len(embed.fields) == 0:
             embed.description = f'{member} has not set any gamertags.'
             
         return embed
@@ -185,9 +185,7 @@ class Profile(commands.Cog):
             embed.add_field(name=str(self.reddit_emoji) + 'Reddit', value=info['reddit'], inline=True)
         if info['itchio']:
             embed.add_field(name=str(self.itchio_emoji) + 'Itch.io', value=info['itchio'], inline=True)
-        print(embed.fields)
-        print(type(embed.fields))
-        if embed.fields is discord.Embed.Empty:
+        if len(embed.fields) == 0:
             embed.description = f'{member} has not set any social media names.'
 
         return embed
