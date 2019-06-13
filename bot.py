@@ -143,7 +143,7 @@ async def help(ctx, *, name: str = None):
 			for command in cog.get_commands():
 				txt += f'{client.command_prefix}{command.name} - {command.brief}\n'
 			embed.add_field(name=name, value=txt, inline=False)
-	ctx.send(embed=embed)
+	await ctx.send(embed=embed)
 
 
 
