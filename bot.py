@@ -130,7 +130,7 @@ async def help(ctx, *, name: str = None):
 				txt += f'{client.command_prefix[0]}{command.name} - {command.brief}\n'
 			embed.add_field(name='Commands', value=txt, inline=False)
 		elif command:
-			embed.title = f'__Command: {client.command_prefix[0]}{command.name}__'
+			embed.title = f'__Command: {client.command_prefix[0]}{command.qualified_name}__'
 			embed.add_field(name='Description', value=command.description, inline=False)
 			embed.add_field(name='Usage', value=command.usage, inline=False)
 			if len(command.aliases) > 0:
