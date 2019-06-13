@@ -99,6 +99,8 @@ class Profile(commands.Cog):
     async def prepare_reaction_menu(self, message: discord.Message):
         for emoji in self.emojis:
             await message.add_reaction(emoji)
+        self.client.loop.create_task(self.reaction_menu_timeout(message))
+        
 
     def get_xbox_page(self, member: discord.Member):
         gtag = self.Storage.get_xbox_tag(member)
