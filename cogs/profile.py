@@ -185,6 +185,8 @@ class Profile(commands.Cog):
             embed.add_field(name=str(self.reddit_emoji) + 'Reddit', value=info['reddit'], inline=True)
         if info['itchio']:
             embed.add_field(name=str(self.itchio_emoji) + 'Itch.io', value=info['itchio'], inline=True)
+        print(embed.fields)
+        print(type(embed.fields))
         if embed.fields is discord.Embed.Empty:
             embed.description = f'{member} has not set any social media names.'
 
