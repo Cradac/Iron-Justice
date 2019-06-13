@@ -52,7 +52,7 @@ class Profile(commands.Cog):
         self.bethesda_emoji = self.client.get_emoji(588661017287065600)
 
         self.sot_emoji = self.client.get_emoji(488445174536601600)
-        self.social_emoji = self.client.get_emoji()
+        self.social_emoji = self.client.get_emoji(588748681365422110)
 
         self.twitch_emoji = self.client.get_emoji(588661018557808641)
         self.mixer_emoji = self.client.get_emoji(588661020591915021)
@@ -61,7 +61,7 @@ class Profile(commands.Cog):
         self.reddit_emoji = self.client.get_emoji(588661023079399424)
         self.itchio_emoji = self.client.get_emoji(588661018394099722)
 
-        self.emojis = [self.xbox_emoji, self.sot_emoji, self.game_emoji, self.stop_emoji]
+        self.emojis = [self.xbox_emoji, self.sot_emoji, self.game_emoji, self.social_emoji, self.stop_emoji]
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
@@ -79,6 +79,9 @@ class Profile(commands.Cog):
             elif reaction.emoji == self.game_emoji and self.profile_status[reaction.message.id] != 'game':
                 embed = await self.get_game_page(None, self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'game'
+            elif reaction.emoji == self.social_emoji and self.profile_status[reaction.message.id] != 'social':
+                embed = await self.get_social_page(None, self.profile_messages[reaction.message.id])
+                self.profile_status[reaction.message.id] = 'social'
             elif reaction.emoji == self.stop_emoji:
                 await self.reaction_menu_timeout(reaction.message, wait=False)
                 return
@@ -165,7 +168,7 @@ class Profile(commands.Cog):
         info = await self.Storage.get_social_profile(ctx, member)
         embed = utils.createEmbed(colour='iron', author=member)
         embed.set_thumbnail(url=ctx.guild.icon_url_as(format='png', size=512))
-        #embed.set_footer(icon_url=self.social_emoji.url, text='Social Media')
+        embed.set_footer(icon_url=self.social_emoji.url, text='Social Media')
         if info['twitch']:
             embed.add_field(name=str(self.twitch_emoji) + 'Twitch', value=info['twitch'], inline=True)
         if info['youtube']:
