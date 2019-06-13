@@ -304,7 +304,6 @@ class Profile(commands.Cog):
                 return
             if not isinstance(lvl, int) or not 0 < lvl <= 50:
                 await ctx.send('Levels can only be between 1 and 50.')
-        print(comps)
         self.Storage.update_levels(ctx.author, comps)
         embed = utils.createEmbed(description=f'Your levels have been updated.', author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Levels updated')
