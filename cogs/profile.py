@@ -180,7 +180,7 @@ class Profile(commands.Cog):
         if info['mixer']:
             embed.add_field(name=str(self.mixer_emoji) + 'Mixer', value=f'[{info["mixer"]}]()', inline=True)
         if info['twitter']:
-            embed.add_field(name=str(self.twitter_emoji) + 'Twitter', value=f'[{info["twitter"]}](https://twitter.com/{info["twitter"].replace("@")})', inline=True)
+            embed.add_field(name=str(self.twitter_emoji) + 'Twitter', value=f'[{info["twitter"]}](https://twitter.com/{info["twitter"].replace("@", "")})', inline=True)
         if info['reddit']:
             embed.add_field(name=str(self.reddit_emoji) + 'Reddit', value=f'[{info["reddit"]}](https://www.reddit.com/user/{info["reddit"]})', inline=True)
         if info['itchio']:
