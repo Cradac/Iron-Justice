@@ -240,7 +240,7 @@ class Profile(commands.Cog):
             self.profile_status[msg.id] = 'game'
 
     @Utils.matchProfileChannel()
-    @social.command(
+    @gt.command(
         brief='List all possible usable gaming platforms.',
         description='Use this to show all names of possible gaming platforms to set.',
         usage='?gt list'
