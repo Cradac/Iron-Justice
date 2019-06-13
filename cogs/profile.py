@@ -20,6 +20,19 @@ class Profile(commands.Cog):
         self.xbox_emoji = None
         self.psn_emoji = None
         self.nintendo_emoji = None
+        self.minecraft_emoji = None
+        self.origin_emoji = None
+        self.blizzard_emoji = None
+        self.bethesda_emoji = None
+
+        self.twitch_emoji = None
+        self.mixer_emoji = None
+        self.youtube_emoji = None
+        self.twitter_emoji = None
+        self.reddit_emoji = None
+        self.itchio_emoji = None
+
+        self.social_emoji = None
         self.sot_emoji = None
         self.game_emoji = '🎮'
         self.game_emoji_url = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/146/video-game_1f3ae.png'
@@ -27,18 +40,28 @@ class Profile(commands.Cog):
         
         self.emojis = list()
 
-
-
     @commands.Cog.listener()
     async def on_ready(self):
         self.steam_emoji = self.client.get_emoji(586475562772725780)
         self.xbox_emoji = self.client.get_emoji(563799115201249301)
         self.psn_emoji = self.client.get_emoji(563799160021712922)
         self.nintendo_emoji = self.client.get_emoji(534433688025563137)
+        self.minecraft_emoji = self.client.get_emoji(588661530661355520)
+        self.origin_emoji = self.client.get_emoji(588661018784301066)
+        self.blizzard_emoji = self.client.get_emoji(588661019258126357)
+        self.bethesda_emoji = self.client.get_emoji(588661017287065600)
+
         self.sot_emoji = self.client.get_emoji(488445174536601600)
+        self.social_emoji = self.client.get_emoji()
+
+        self.twitch_emoji = self.client.get_emoji(588661018557808641)
+        self.mixer_emoji = self.client.get_emoji(588661020591915021)
+        self.youtube_emoji = self.client.get_emoji(588661163152375808)
+        self.twitter_emoji = self.client.get_emoji(588661019270709248)
+        self.reddit_emoji = self.client.get_emoji(588661023079399424)
+        self.itchio_emoji = self.client.get_emoji(588661018394099722)
 
         self.emojis = [self.xbox_emoji, self.sot_emoji, self.game_emoji, self.stop_emoji]
-
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
@@ -115,17 +138,49 @@ class Profile(commands.Cog):
     async def get_game_page(self, ctx, member: discord.Member):
         info = await self.Storage.get_tag_profile(ctx, member)
         embed = utils.createEmbed(colour='iron', author=member)
-        icon = member.guild.icon_url_as(format='png', size=512)
-        embed.set_thumbnail(url=icon)
+        embed.set_thumbnail(url=ctx.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.game_emoji_url, text='Gamertags')
-        if info['steam'] and info['steam'].lower() !='none':
+        if info['steam']:
             embed.add_field(name=str(self.steam_emoji) + 'Steam', value=info['steam'], inline=True)
-        if info['xbox'] and info['xbox'].lower() !='none':
+        if info['xbox']:
             embed.add_field(name=str(self.xbox_emoji) + 'Xbox Live', value=info['xbox'], inline=True)
-        if info['psn'] and info['psn'].lower() !='none':
+        if info['psn']:
             embed.add_field(name=str(self.psn_emoji) + 'Playstation Network', value=info['psn'], inline=True)
-        if info['nintendo'] and info['nintendo'].lower() !='none' :
+        if info['nintendo']:
             embed.add_field(name=str(self.nintendo_emoji) + 'Nintendo Friend Code', value=info['nintendo'], inline=True)
+        if info['minecraft']:
+            embed.add_field(name=str(self.minecraft_emoji) + 'Minecraft', value=info['minecraft'], inline=True)
+        if info['origin']:
+            embed.add_field(name=str(self.origin_emoji) + 'Origin', value=info['origin'], inline=True)
+        if info['blizzard']:
+            embed.add_field(name=str(self.blizzard_emoji) + 'Blizzard Net', value=info['blizzard'], inline=True)
+        if info['bethesda']:
+            embed.add_field(name=str(self.bethesda_emoji) + 'Bethesda', value=info['bethesda'], inline=True)
+        if embed.fields is discord.Embed.Empty:
+            embed.description = f'{member} has not set any gamertags.'
+            
+        return embed
+
+    async def get_social_page(self, ctx, member: discord.Member):
+        info = await self.Storage.get_social_profile(ctx, member)
+        embed = utils.createEmbed(colour='iron', author=member)
+        embed.set_thumbnail(url=ctx.guild.icon_url_as(format='png', size=512))
+        #embed.set_footer(icon_url=self.social_emoji.url, text='Social Media')
+        if info['twitch']:
+            embed.add_field(name=str(self.twitch_emoji) + 'Twitch', value=info['twitch'], inline=True)
+        if info['youtube']:
+            embed.add_field(name=str(self.youtube_emoji) + 'Youtube', value=info['youtube'], inline=True)
+        if info['mixer']:
+            embed.add_field(name=str(self.mixer_emoji) + 'Mixer', value=info['mixer'], inline=True)
+        if info['twitter']:
+            embed.add_field(name=str(self.twitter_emoji) + 'Twitter', value=info['twitter'], inline=True)
+        if info['reddit']:
+            embed.add_field(name=str(self.reddit_emoji) + 'Reddit', value=info['reddit'], inline=True)
+        if info['itchio']:
+            embed.add_field(name=str(self.itchio_emoji) + 'Itch.io', value=info['itchio'], inline=True)
+        if embed.fields is discord.Embed.Empty:
+            embed.description = f'{member} has not set any social media names.'
+
         return embed
 
 
@@ -164,18 +219,18 @@ class Profile(commands.Cog):
             self.profile_messages[msg.id] = ctx.author
             self.profile_status[msg.id] = 'game'
 
-
     @Utils.matchProfileChannel()
     @gt.command(
         brief='Edit your one of your gamertags.',
         description='Use this to edit your gamertag.\n\
-            You can choose of these platforms: `steam`, `xbox`, `psn`, `nintendo`.',
+            You can choose of these platforms: `steam`, `xbox`, `psn`, `nintendo`, `minecraft`, `origin`, `blizzard`, `bethesda`.',
         usage='?gt edit <platform> <gamertag>'
     )
     async def edit(self, ctx, platform: str , *, gamertag):
-        platforms = ['steam', 'xbox', 'psn', 'nintendo']
+        platforms = ['steam', 'xbox', 'psn', 'nintendo', 'minecraft', 'origin', 'blizzard', 'bethesda']
         if platform not in platforms:
-            await ctx.send(f'You need to select one of these platforms:\n• ' + '\n• '.join(platforms))
+            embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(platforms) + '`')
+            await ctx.send(embed=embed)
             return
         self.Storage.update_gamertag(ctx.author, platform, gamertag)
         embed = utils.createEmbed(description=f'Your {platform} gamertag has been updated to `{gamertag}`.', author=ctx.author, colour='iron')
@@ -210,7 +265,7 @@ class Profile(commands.Cog):
     )
     async def levels(self, ctx, *args):
         comps = dict()
-        r = re.compile('^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
+        r = re.compile(r'^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
         if not r.match(' '.join(args) + ' '):
             await ctx.send('The Syntax is not correct. Try this instead:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`')
             return
@@ -247,14 +302,13 @@ class Profile(commands.Cog):
         if not url and len(ctx.message.attachments) > 0:
             url = ctx.message.attachments[0].url
         if not url:
-            self.Storage.remove_img(ctx.author)
             txt = 'Your profile image has been removed.'
         elif url[-4:] in ['.jpg', '.png', '.gif']:
-            self.Storage.update_img(ctx.author, url)
             txt = 'Your profile image has been updated.'
-        else: 
+        else:
             await ctx.send('The image type as to be either jpg, png or gif.')
             return
+        self.Storage.update_img(ctx.author, url)
         embed = utils.createEmbed(description=txt, author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Image updated')
         await ctx.send(embed=embed)
@@ -269,15 +323,68 @@ class Profile(commands.Cog):
         )
     async def alias(self, ctx, *, alias: str = None):
         if not alias:
-            self.Storage.remove_alias(ctx.author)
             txt = 'Your alias has been removed.'
         else:
-            self.Storage.update_alias(ctx.author, alias)
             txt = 'Your alias has been updated.'
+        self.Storage.update_alias(ctx.author, alias)
         embed = utils.createEmbed(description=txt, author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Image updated')
         await ctx.send(embed=embed)
 
+
+    @Utils.matchProfileChannel()
+    @commands.group(
+        brief='Show your own Social Tab.',
+        description='This command shows the Social page of the profile.\n\
+            There are some subcommands to alter your Social Media names or show someone elses Social Page.\n\
+            You can navigate the pages with the reaction menu for 5 minutes. If you are done please click the `STOP` emoji.',
+        usage='?social [edit|show] [*args]'
+    )
+    async def social(self, ctx):
+        if not ctx.invoked_subcommand:
+            embed = await self.get_social_page(ctx, ctx.author)
+            msg = await ctx.send(embed=embed)
+            await self.prepare_reaction_menu(msg)
+            self.profile_messages[msg.id] = ctx.author
+            self.profile_status[msg.id] = 'social'
+
+    @Utils.matchProfileChannel()
+    @social.command(
+        name='edit',
+        brief='Edit your one of your Social Media Platforms.',
+        description='Use this to edit one of your Social Media names.\n\
+            You can choose of these platforms: `twitch`, `mixer`, `youtube`, `twitter`, `reddit`, `itchio`.',
+        usage='?social edit <platform> <username>'
+    )
+    async def _s_edit(self, ctx, platform: str , *, username):
+        platforms = ['twitch', 'mixer', 'youtube', 'twitter', 'reddit', 'itchio']
+        if platform not in platforms:
+            embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(platforms) + '`')
+            await ctx.send(embed=embed)
+            return
+        self.Storage.update_social_media(ctx.author, platform, username)
+        embed = utils.createEmbed(description=f'Your {platform} gamertag has been updated to `{username}`.', author=ctx.author, colour='iron')
+        embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Username updated')
+        await ctx.send(embed=embed) 
+
+
+    @Utils.matchProfileChannel()
+    @social.command(
+        name='show',
+        brief='Show another member\'s Social Media page.',
+        description='This command can show another member\'s social media names.',
+        usage='?social show <member>',
+        aliases=['see', 'search']
+    )
+    async def _s_show(self, ctx, *, member: str):
+        member = await utils.memberSearch(ctx, self.client, member) if member else ctx.message.author
+        if not member:
+            return
+        embed = await self.get_social_page(ctx, member)
+        msg = await ctx.send(embed=embed)
+        await self.prepare_reaction_menu(msg)
+        self.profile_messages[msg.id] = member
+        self.profile_status[msg.id] = 'social'
 
 def setup(client):
     client.add_cog(Profile(client))

@@ -31,6 +31,10 @@ class Settings(commands.Cog):
                 can_remove = False
         if can_remove:
             self.Storage.user_leave(user)
+    
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        self.Storage.user_join(member)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):

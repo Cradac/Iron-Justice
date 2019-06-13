@@ -75,13 +75,13 @@ async def on_command_error(ctx, error):
 	elif isinstance(error, commands.BadArgument):
 		embed = utils.createEmbed(
 			description=f'Error: There was an error with the command arguments.\n\nUsage:\n`{ctx.command.usage}`',
-			colour=0xff0000,
+			colour='error',
 			author=ctx.author)
 		await ctx.send(embed=embed)
 	elif isinstance(error, commands.MissingRequiredArgument):
 		embed = utils.createEmbed(
 			description=f'Error: Your are missing an argument.\n\nUsage:\n`{ctx.command.usage}`',
-			colour=0xff0000,
+			colour='error',
 			author=ctx.author)
 		await ctx.send(embed=embed)
 	else:
@@ -93,7 +93,7 @@ async def on_command_error(ctx, error):
 				```{error}```\n\n\
 				[Jump](https://discordapp.com/channels/{ctx.guild.id}/{ctx.channel.id}/{ctx.message.id})',
 				author=ctx.author,
-				colour=0xff0000
+				colour='error'
 			)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url_as(format='png', size=128))
 			app = await client.application_info()
@@ -106,16 +106,45 @@ async def on_command_error(ctx, error):
 
 ##########################################################################################################################################
 
-@client.command(hidden=True, brief="Pong!")
+@client.command(hidden=True, brief='Pong!')
 async def ping(ctx):
 	await ctx.send('Pong! `({} ms)`'.format(round(client.latency, 2)))
 
-@client.command(hidden=True, brief="Version Info")
+@client.command(hidden=True, brief='Version Info')
 async def version(ctx):
 	await ctx.send(f'\
 		bot version: `{_version}`\n\
 		discord.py version: `{discord.__version__}`\n\
 		system info: `{sys.version}`')
+
+@client.command(brief='Help Command.')
+async def help(ctx, *, name: str = None):
+	if name:
+		embed = utils.createEmbed(colour='iron')
+		command = client.get_command(name=name)
+		if command:
+			embed.title = f'{client.command_prefix}{command.name}'
+			embed.add_field(name='Description', value=command.description)
+			embed.add_field(name='Usage', value=command.usage)
+			if len(command.aliases) > 0:
+				embed.add_field(name='Aliases', value=', '.join(f'`{a}`' for a in command.aliases))
+		cog = client.get_cog(name=name)
+		if cog:
+			embed.title = cog.qualified_name
+			txt = ''
+			for command in cog.get_commands():
+				txt += f'{client.command_prefix}{command.name} - {command.brief}\n'
+			embed.add_field(name='Commands', value=txt)
+
+	else:
+		embed = utils.createEmbed(title='Commands', description='For a documentation of all commands go [here](link-to-commands.md).', colour='iron')
+		for name, cog in client.cogs().items():
+			txt = ''
+			for command in cog.get_commands():
+				txt += f'{client.command_prefix}{command.name} - {command.brief}\n'
+			embed.add_field(name=name, value=txt, inline=False)
+	ctx.send(embed=embed)
+
 
 
 ##########################################################################################################################################

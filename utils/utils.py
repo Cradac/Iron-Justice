@@ -119,6 +119,8 @@ def createEmbed(*, title: str = '', description: str = '', colour = None, author
 		colour = 0xffd700
 	elif colour == 'rogue':
 		colour = 0x7d0a00
+	elif colour == 'error':
+		colour = 0xff0000
 	embed = discord.Embed(
 			title = title,
 			description=description,

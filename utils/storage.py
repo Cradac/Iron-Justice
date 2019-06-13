@@ -47,7 +47,6 @@ class Storage:
         CLEAN UP AND GENERAL FUNCTIONS
     '''
 
-
     def add_guild(self, guild: discord.Guild, role: discord.Role = None):
         if role:
             query = f'INSERT INTO settings (gid, lfc_role) VALUES ({guild.id}, {role.id});'
@@ -72,11 +71,44 @@ class Storage:
         query = f'DELETE from auto_voice_names WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
 
+    def user_join(self, user: discord.Member):
+        query = f'INSERT INTO sot_profile (uid) \
+            SELECT {user.id} \
+            FROM dual \
+            WHERE NOT EXISTS (\
+                SELECT uid \
+                FROM sot_profile \
+                WHERE uid={user.id}\
+            ) LIMIT 1;'
+        self.execute_query(query)
+        query = f'INSERT INTO gamertags (uid) \
+            SELECT {user.id} \
+            FROM dual \
+            WHERE NOT EXISTS (\
+                SELECT uid \
+                FROM gamertags \
+                WHERE uid={user.id}\
+            ) LIMIT 1;'
+        self.execute_query(query)
+        query = f'INSERT INTO social (uid) \
+            SELECT {user.id} \
+            FROM dual \
+            WHERE NOT EXISTS (\
+                SELECT uid \
+                FROM social \
+                WHERE uid={user.id}\
+            ) LIMIT 1;'
+        self.execute_query(query)
+
     def user_leave(self, user: discord.User):
         query = f'DELETE FROM sot_profile WHERE uid={user.id};'
-        self.execute_query(query)
+        self.execute_query(query, commit=False)
         query = f'DELETE FROM gamertags WHERE uid={user.id};'
-        self.execute_query(query, commit=True)
+        self.execute_query(query, commit=False)
+        query = f'DELETE FROM social WHERE uid={user.id};'
+        self.execute_query(query)
+
+
 
     '''
         `PROFILE` FUNCTIONS
@@ -108,15 +140,34 @@ class Storage:
         return profile
 
     async def get_tag_profile(self, ctx, user: discord.Member):
-        query = f'SELECT steam,xbox,psn,nintendo FROM gamertags WHERE uid={user.id};'
+        query = f'SELECT steam,xbox,psn,nintendo,minecraft,origin,blizzard,bethesda FROM gamertags WHERE uid={user.id};'
         r = self.execute_query(query)
-        if not r:
+        if not r or len(r) == 0:
             await self.create_profile(ctx, user)
         profile = {
-            'steam': r[0] or 'None',
-            'xbox': r[1] or 'None',
-            'psn': r[2] or 'None',
-            'nintendo': r[3] or 'None',
+            'steam': r[0],
+            'xbox': r[1],
+            'psn': r[2],
+            'nintendo': r[3],
+            'minecraft': r[4],
+            'origin': r[5],
+            'blizzard': r[6],
+            'bethesda': r[7]
+        }
+        return profile
+
+    async def get_social_profile(self, ctx, user: discord.Member):
+        query = f'SELECT twitch,mixer,youtube,twitter,reddit,itchio FROM social WHERE uid={user.id}'
+        r = self.execute_query(query)
+        if not r or len(r) == 0:
+            await self.create_profile(ctx, user)
+        profile = {
+            'twitch': r[0],
+            'mixer': r[1],
+            'youtube': r[2],
+            'twitter': r[3],
+            'reddit': r[4],
+            'itchio': r[5]
         }
         return profile
 
@@ -126,10 +177,7 @@ class Storage:
         return r[0] or 'None'
 
     async def create_profile(self, ctx, user: discord.Member):
-        query = f'INSERT INTO sot_profile (uid) VALUES ({user.id});'
-        self.execute_query(query)                                                #CAN I ONLY COMMIT ONCE?
-        query = f'INSERT INTO gamertags (uid) VALUES ({user.id});'
-        self.execute_query(query, commit=True)
+        self.user_join(user)
         embed = discord.Embed(title='**__Profile Created__**', colour=0xffd700)
         embed.set_author(name=user, icon_url=user.avatar_url)
         embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <platform> <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc... Use `?help levels` for more info.", inline=False)
@@ -140,33 +188,39 @@ class Storage:
 
     def update_levels(self, user: discord.Member, comps: dict()):
         cur = self.get_cursor()
-        comps_new = list()
-        for pair in comps.items():
-            pair = pair + (user.id, )
-            comps_new.append(pair)
-        cur.executemany(f'UPDATE sot_profile SET %s=%s WHERE uid=%s;', comps_new)
+        for comp in comps:
+            cur.execute(f'UPDATE sot_profile SET {comp[0]}={comp[1]} WHERE uid={user.id};')
         self.conn.commit()
         cur.close()
 
     def update_gamertag(self, user: discord.Member, platform: str, gamertag: str):
-        query = f'UPDATE gamertags SET {platform}="{gamertag}" WHERE uid={user.id};'
+        if gamertag.lower() == 'null':
+            query = f'UPDATE gamertags SET {platform}=NULL WHERE uid={user.id};'
+        else:
+            query = f'UPDATE gamertags SET {platform}="{gamertag}" WHERE uid={user.id};'
         self.execute_query(query, commit=True)
 
     def update_img(self, user: discord.Member, url: str):
-        query = f'UPDATE sot_profile SET img="{url}" WHERE uid={user.id};'
-        self.execute_query(query, commit=True)
-    
-    def remove_img(self, user:discord.Member):
-        query = f'UPDATE sot_profile SET img=NULL WHERE uid={user.id};'
+        if not url:
+            query = f'UPDATE sot_profile SET img=NULL WHERE uid={user.id};'
+        else:
+            query = f'UPDATE sot_profile SET img="{url}" WHERE uid={user.id};'
         self.execute_query(query, commit=True)
         
     def update_alias(self, user: discord.Member, alias: str):
-        query = f'UPDATE sot_profile SET alias="{alias}" WHERE uid={user.id};'
+        if not alias:
+            query = f'UPDATE sot_profile SET alias=NULL WHERE uid={user.id};'
+        else:
+            query = f'UPDATE sot_profile SET alias="{alias}" WHERE uid={user.id};'
         self.execute_query(query, commit=True)
 
-    def remove_alias(self, user: discord.Member):
-        query = f'UPDATE sot_profile SET alias=NULL WHERE uid={user.id};'
+    def update_social_media(self, user: discord.Member, platform: str, username: str):
+        if username.lower() == 'null':
+            query = f'UPDATE social SET {platform}=NULL WHERE uid={user.id};'
+        else:
+            query = f'UPDATE social SET {platform}="{username}" WHERE uid={user.id};'
         self.execute_query(query, commit=True)
+
 
     '''
         `LOOKING FOR CREW` FUNCTIONS
