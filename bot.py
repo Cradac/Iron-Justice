@@ -122,12 +122,6 @@ async def help(ctx, *, name: str = None):
 	if name:
 		embed = utils.createEmbed(colour='iron')
 		command = client.get_command(name=name)
-		if command:
-			embed.title = f'__Command: {client.command_prefix[0]}{command.name}__'
-			embed.add_field(name='Description', value=command.description, inline=False)
-			embed.add_field(name='Usage', value=command.usage, inline=False)
-			if len(command.aliases) > 0:
-				embed.add_field(name='Aliases', value=', '.join(f'`{a}`' for a in command.aliases), inline=False)
 		cog = client.get_cog(name=name)
 		if cog:
 			embed.title = f'__Module: {cog.qualified_name}__'
@@ -135,6 +129,12 @@ async def help(ctx, *, name: str = None):
 			for command in cog.get_commands():
 				txt += f'{client.command_prefix[0]}{command.name} - {command.brief}\n'
 			embed.add_field(name='Commands', value=txt, inline=False)
+		elif command:
+			embed.title = f'__Command: {client.command_prefix[0]}{command.name}__'
+			embed.add_field(name='Description', value=command.description, inline=False)
+			embed.add_field(name='Usage', value=command.usage, inline=False)
+			if len(command.aliases) > 0:
+				embed.add_field(name='Aliases', value=', '.join(f'`{a}`' for a in command.aliases), inline=False)
 
 	else:
 		embed = utils.createEmbed(title='__Commands__', description='For a documentation of all commands go [here](link-to-commands.md).', colour='iron')
@@ -146,9 +146,9 @@ async def help(ctx, *, name: str = None):
 					if command.hidden:
 						continue
 					txt += f'{client.command_prefix[0]}{command.name} - {command.brief}\n'
+				embed.add_field(name=name, value=txt, inline=False)
 			else:
 				continue
-			embed.add_field(name=name, value=txt, inline=False)
 	await ctx.send(embed=embed)
 
 
