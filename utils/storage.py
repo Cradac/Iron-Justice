@@ -398,7 +398,6 @@ class Storage:
         query = f'SELECT timestamp FROM messages WHERE uid={user.id} AND gid={user.guild.id} ORDER BY timestamp DESC LIMIT 1;'
         ts = self.execute_query(query)
         info['timestamp'] = ts[0] if ts else None
-        info['member'] = user
         return info
 
     def get_activity_logging_enabled_guilds(self, client: discord.Client):
