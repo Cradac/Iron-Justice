@@ -135,6 +135,9 @@ async def help(ctx, *, name: str = None):
 			embed.add_field(name='Usage', value=command.usage, inline=False)
 			if len(command.aliases) > 0:
 				embed.add_field(name='Aliases', value=', '.join(f'`{a}`' for a in command.aliases), inline=False)
+			embed.set_footer(text=f'Module: {command.cog_name}')
+		else:
+			embed = utils.createEmbed(colour='error', description='Error: Command or Cog not found.', author=ctx.author)
 
 	else:
 		embed = utils.createEmbed(title='__Commands__', description='For a documentation of all commands go [here](link-to-commands.md).', colour='iron')
