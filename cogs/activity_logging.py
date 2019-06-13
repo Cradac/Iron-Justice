@@ -10,7 +10,7 @@ import math, typing
 
 active_fleets = set()
 
-class Activity_Logging(commands.Cog):
+class Activity_Logging(commands.Cog, name='Activity-Logging'):
     def __init__(self, client):
         self.client = client
 

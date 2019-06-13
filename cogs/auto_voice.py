@@ -5,7 +5,7 @@ from utils.utils import auto_voice_channel_names as channel_names
 from utils.storage import Storage
 
 
-class AutoVoice(commands.Cog):
+class AutoVoice(commands.Cog, name='Auto-Voice'):
     def __init__(self, client):
         self.client = client
 
