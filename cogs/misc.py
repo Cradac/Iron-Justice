@@ -44,7 +44,8 @@ class Misc(commands.Cog):
 
     @utils.isMod()
     @commands.command(
-        hidden=True,
+        brief='Assign a member a new discord name.',
+        description='Use this to assign a new discord name to one member.',
         usage='?nick <user> <new name>'
     )
     async def nick(self, ctx, member, *, new_name : str):
@@ -58,6 +59,7 @@ class Misc(commands.Cog):
     @commands.is_owner()
     @commands.command(
         hidden=True,
+        description='SQL commands. Die.',
         usage='?sql <query>'
     )
     async def sql(self, ctx, *, query: str):
@@ -68,7 +70,8 @@ class Misc(commands.Cog):
 
     @commands.command(
         brief='Get this Guild\'s invitelink.',
-        description='This sends you a PM the invite link to this Guild.'
+        description='This sends you a PM the invite link to this Guild.',
+        usage='?invite'
     )
     async def invite(self, ctx):
         try:
@@ -81,10 +84,11 @@ class Misc(commands.Cog):
 
     @commands.command(
         brief='Get the GitHub link of this bot.',
-        description='This command shows you the Github link of the Iron Justice.'
+        description='This command shows you the Github link of the Iron Justice.',
+        usage='?commands'
     )
-    async def github(self, ctx):
-        embed = utils.createEmbed(author=ctx.author, description='You can view the source code of the Iron Justice right [here](https://github.com/Cradac/Iron-Justice)', colour='iron')
+    async def commands(self, ctx):
+        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://github.com/Cradac/Iron-Justice)', colour='iron')
         await ctx.send(embed=embed)
 
 

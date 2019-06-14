@@ -330,7 +330,10 @@ class Storage:
 
 
     def update_auto_voice_channel(self, guild:discord.Guild, channel: discord.abc.GuildChannel):
-        query = f'UPDATE settings SET auto_voice_channel={channel.id} WHERE gid={guild.id};'
+        if channel:
+            query = f'UPDATE settings SET auto_voice_channel={channel.id} WHERE gid={guild.id};'
+        else: 
+            query = f'UPDATE settings SET auto_voice_channel=NULL WHERE gid={guild.id};'
         self.execute_query(query, commit=True)
     
     def add_auto_voice_names(self, guild:discord.Guild, names: list()):

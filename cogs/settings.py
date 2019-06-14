@@ -120,7 +120,9 @@ class Settings(commands.Cog):
     @utils.isAdmin()
     @commands.group(
         aliases=['settings', 'set'],
-        brief='Configure the Iron Justice bot for your guild.'
+        brief='Configure the Iron Justice bot for your guild.',
+        description='This is the base command to configure the Justice for your guild.',
+        usage='?config <subcommand> *[args]'
     )
     async def config(self, ctx):
         if not ctx.invoked_subcommand:
@@ -267,11 +269,14 @@ class Settings(commands.Cog):
     async def auto_voice(self, ctx, *, channel:discord.VoiceChannel = None):
         self.Storage.update_auto_voice_channel(ctx.guild, channel) #TODO does this work with None?
         if channel:
-            await ctx.send(f'\
+            txt = f'\
             Set the channel `{channel.name}` as Auto-Voice Channel.\n\
-            If you want to add custom names please use the `?auto-voice-names add <names>` command.')
+            If you want to add custom names please use the `?auto-voice-names add <names>` command.'
         else:
-            await ctx.send('Auto-Voice has been disabled.')
+            txt = 'The module is disabled.'
+
+        embed = utils.createEmbed(title='**__`Auto-Voice`-Setup__**', description=txt, colour='iron', guild=ctx.guild)
+        await ctx.send(embed=embed)
         
 
     @auto_voice.error
@@ -312,6 +317,7 @@ class Settings(commands.Cog):
     @commands.group(
         name='auto-voice-names',
         brief='Add, remove or view custom names for the `Auto-Voice`-Module.',
+        description='Add, remove or view custom names for the `Auto-Voice`-Module.',
         usage='?auto-voice-names [get|add|delete|default] *[args]'
     )
     async def auto_voice_names(self, ctx):

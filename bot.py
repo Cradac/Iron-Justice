@@ -3,7 +3,7 @@
 #Secondary intention: gimicks like the profile System
 #Author Maxe aka. Cradac
 
-#Version: 3.0.0a rewrite
+#Version: 3.0.0b rewrite
 
 import discord
 from discord.ext import commands
@@ -12,7 +12,7 @@ from datetime import datetime
 import traceback
 from utils import utils
 
-_version = '3.0.0a'
+_version = '3.0.0b'
 
 print(sys.version)
 print(discord.__version__)
@@ -140,7 +140,7 @@ async def help(ctx, *, name: str = None):
 			embed = utils.createEmbed(colour='error', description='Error: Command or Cog not found.', author=ctx.author)
 
 	else:
-		embed = utils.createEmbed(title='__Commands__', description='For a documentation of all commands go [here](link-to-commands.md).', colour='iron')
+		embed = utils.createEmbed(title='__Commands__', description='For a documentation of all commands go [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78).', colour='iron')
 		for name, cog in client.cogs.items():
 			commands = cog.get_commands()
 			if len(commands) > 0:
