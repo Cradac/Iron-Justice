@@ -6,7 +6,7 @@ from utils.storage import Storage
 
 Utils = utils.Utils()
 
-class LFC(commands.Cog):
+class LFC(commands.Cog, name='Looking for Crew'):
     def __init__(self, client):
         self.client = client
 

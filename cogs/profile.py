@@ -40,6 +40,9 @@ class Profile(commands.Cog):
         
         self.emojis = list()
 
+        self.social_platforms = ['twitch', 'mixer', 'youtube', 'twitter', 'reddit', 'itchio']
+        self.gt_platforms = ['steam', 'xbox', 'psn', 'nintendo', 'minecraft', 'origin', 'blizzard', 'bethesda']
+
     @commands.Cog.listener()
     async def on_ready(self):
         self.steam_emoji = self.client.get_emoji(586475562772725780)
@@ -52,7 +55,7 @@ class Profile(commands.Cog):
         self.bethesda_emoji = self.client.get_emoji(588661017287065600)
 
         self.sot_emoji = self.client.get_emoji(488445174536601600)
-        self.social_emoji = self.client.get_emoji(588748681365422110)
+        self.social_emoji = self.client.get_emoji(588826943760236583)
 
         self.twitch_emoji = self.client.get_emoji(588661018557808641)
         self.mixer_emoji = self.client.get_emoji(588661020591915021)
@@ -125,6 +128,8 @@ class Profile(commands.Cog):
 
     async def get_sot_page(self, ctx: commands.Context, member: discord.Member):
         info = await self.Storage.get_sot_profile(ctx, member)
+        if not info:
+            return None
         embed = utils.createEmbed(colour='iron', author=member, guild=member.guild)
         embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
         embed.add_field(name="<:xbox:563799115201249301> Gamertag", value=info['gtag'], inline=False)
@@ -147,6 +152,8 @@ class Profile(commands.Cog):
 
     async def get_game_page(self, ctx, member: discord.Member):
         info = await self.Storage.get_tag_profile(ctx, member)
+        if not info:
+            return None
         embed = utils.createEmbed(colour='iron', author=member)
         embed.set_thumbnail(url=member.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.game_emoji_url, text='Gamertags')
@@ -173,6 +180,8 @@ class Profile(commands.Cog):
 
     async def get_social_page(self, ctx, member: discord.Member):
         info = await self.Storage.get_social_profile(ctx, member)
+        if not info:
+            return None
         embed = utils.createEmbed(colour='iron', author=member)
         embed.set_thumbnail(url=member.guild.icon_url_as(format='png', size=512))
         embed.set_footer(icon_url=self.social_emoji.url, text='Social Media')
@@ -206,6 +215,8 @@ class Profile(commands.Cog):
         if not member:
             return
         embed = await self.get_sot_page(ctx, member)
+        if not embed:
+            return
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
         self.profile_messages[msg.id] = member
@@ -224,10 +235,22 @@ class Profile(commands.Cog):
     async def gt(self, ctx):
         if not ctx.invoked_subcommand:
             embed = await self.get_game_page(ctx, ctx.author)
+            if not embed:
+                return
             msg = await ctx.send(embed=embed)
             await self.prepare_reaction_menu(msg)
             self.profile_messages[msg.id] = ctx.author
             self.profile_status[msg.id] = 'game'
+
+    @Utils.matchProfileChannel()
+    @gt.command(
+        brief='List all possible usable gaming platforms.',
+        description='Use this to show all names of possible gaming platforms to set.',
+        usage='?gt list'
+    )
+    async def list(self, ctx):
+        embed = utils.createEmbed(author=ctx.author, colour='iron', description=f'You can select of these platforms:\n• `' + '`\n• `'.join(self.gt_platforms) + '`')
+        await ctx.send(embed=embed)
 
     @Utils.matchProfileChannel()
     @gt.command(
@@ -237,9 +260,9 @@ class Profile(commands.Cog):
         usage='?gt edit <platform> <gamertag>'
     )
     async def edit(self, ctx, platform: str , *, gamertag):
-        platforms = ['steam', 'xbox', 'psn', 'nintendo', 'minecraft', 'origin', 'blizzard', 'bethesda']
-        if platform not in platforms:
-            embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(platforms) + '`')
+        
+        if platform not in self.gt_platforms:
+            embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(self.gt_platforms) + '`')
             await ctx.send(embed=embed)
             return
         self.Storage.update_gamertag(ctx.author, platform, gamertag)
@@ -260,6 +283,8 @@ class Profile(commands.Cog):
         if not member:
             return
         embed = await self.get_game_page(ctx, member)
+        if not embed:
+            return
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
         self.profile_messages[msg.id] = member
@@ -353,10 +378,24 @@ class Profile(commands.Cog):
     async def social(self, ctx):
         if not ctx.invoked_subcommand:
             embed = await self.get_social_page(ctx, ctx.author)
+            if not embed:
+                return
             msg = await ctx.send(embed=embed)
             await self.prepare_reaction_menu(msg)
             self.profile_messages[msg.id] = ctx.author
             self.profile_status[msg.id] = 'social'
+
+    @Utils.matchProfileChannel()
+    @social.command(
+        name='list',
+        brief='List all possible usable Social Media Platforms.',
+        description='Use this to show all Social Media names.',
+        usage='?social list'
+    )
+    async def _s_list(self, ctx):
+        embed = utils.createEmbed(author=ctx.author, colour='iron', description=f'You can select of these platforms:\n• `' + '`\n• `'.join(self.social_platforms) + '`')
+        await ctx.send(embed=embed)
+
 
     @Utils.matchProfileChannel()
     @social.command(
@@ -367,9 +406,8 @@ class Profile(commands.Cog):
         usage='?social edit <platform> <username>'
     )
     async def _s_edit(self, ctx, platform: str , *, username):
-        platforms = ['twitch', 'mixer', 'youtube', 'twitter', 'reddit', 'itchio']
-        if platform not in platforms:
-            embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(platforms) + '`')
+        if platform not in self.social_platforms:
+            embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(self.social_platforms) + '`')
             await ctx.send(embed=embed)
             return
         self.Storage.update_social_media(ctx.author, platform, username)
@@ -391,6 +429,8 @@ class Profile(commands.Cog):
         if not member:
             return
         embed = await self.get_social_page(ctx, member)
+        if not embed:
+            return
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
         self.profile_messages[msg.id] = member
