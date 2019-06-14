@@ -88,7 +88,7 @@ class Misc(commands.Cog):
         usage='?commands'
     )
     async def commands(self, ctx):
-        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://github.com/Cradac/Iron-Justice)', colour='iron')
+        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78)', colour='iron')
         await ctx.send(embed=embed)
 
 
