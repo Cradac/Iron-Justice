@@ -69,7 +69,7 @@ class Welcome(commands.Cog):
         embed.add_field(name='__Rules and Server Access__', value=rules_txt)
         embed.add_field(name='__Game Channel Access__', value=game_txt)
         embed.add_field(name='__Once you have Server Access__', value=joined_txt)
-        return embed
+        return tuple(embed)
         
 
     @commands.Cog.listener()
