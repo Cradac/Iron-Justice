@@ -7,9 +7,8 @@
 
 import discord
 from discord.ext import commands
-import sys
+import sys, traceback, json
 from datetime import datetime
-import traceback
 from utils import utils
 
 _version = '3.0.0b'
@@ -22,7 +21,9 @@ print('bot version: {}'.format(_version))
 Client = discord.Client()
 client = commands.Bot(command_prefix = ['?'], case_insensitive=True, description=f'This is the Iron Fleet\'s own bot THE IRON JUSTICE V{_version} rewrite. For questions please contact Cradac | Max#2614.\n#beMoreIron', help_command=None)
 if len(sys.argv) == 1:
-	bot_token = 'NDIxMjY4MjA4MzM1NTg1Mjkw.DYK4Mw.aBwGz447sS0NNB5V8yD6Yfi3-Ko'
+	with open('config.json') as f:
+		c = json.load(f)
+	bot_token =  c.get('token')
 else:
 	bot_token = sys.argv[1]
 	sys.stdout = open(datetime.now().strftime('logs/discord_log_%Y_%m_%d_%H_%M_%S.log'), 'w+')

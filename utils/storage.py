@@ -1,20 +1,56 @@
 import discord
 from datetime import datetime
-import mysql.connector
+import mysql.connector, json, sys
 
 
 
 class Storage:
     
     def __init__(self):
-        #self.conn = None
+        self.DBUsername = None
+        self.DBPassword = None
+        self.DBName = None
+        
         self.conn = mysql.connector.connect(
             host='localhost',
-            user='ironjustice',
-            password='WhatIsDeadMayNeverDie',
-            database='IronJustice'
+            user=self.DBUsername,
+            password=self.DBPassword,
+            database=self.DBName
         )
         self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
+
+
+        try:
+            with open('config.json') as f:
+                c = json.load(f)
+
+            self.DBUsername = c.get('db_username')
+            self.DBPassword = c.get('db_password')
+            self.DBName = c.get('db_name')
+
+            if not all((
+                self.DBUsername,
+                self.DBPassword,
+                self.DBName,
+            )):
+                raise KeyError('Missing field.')
+
+        except FileNotFoundError:
+            self.save()
+            print('Please edit config.json')
+            sys.exit(1)
+        except KeyError as f:
+            self.save()
+            print(f'Missing value: {f}')
+            sys.exit(1)
+
+    def save(self):
+        with open('config.json', 'w') as f:
+            json.dump({
+                'db_username': self.DBUsername,
+                'db_password': self.DBPassword,
+                'db_name': self.DBName,
+            }, f)
 
     
     def get_cursor(self):
