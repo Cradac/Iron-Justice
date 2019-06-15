@@ -48,7 +48,7 @@ class Settings(commands.Cog):
             ou can use ?help at any time to get a list of commands and/or more info on specific commands.\n\
             To get started use ?config <option> and go through the installation wizard.\
             Additionally, you can set up a message log by simply creating a channel named `#message-log` (note: the bot must have read and write permissions for this channel.)\n\
-            For additional support contact the developer Cradac | Max#2614 on discord.\n\
+            For additional support contact the developer Cradac | Max#2614 on discord. You can also join the [Support Server](https://discord.gg/Pn3vXNd)\n\
             Enjoy!',
             colour='iron',
             guild=guild,

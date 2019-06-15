@@ -96,12 +96,13 @@ class Misc(commands.Cog):
             
 
     @commands.command(
+        name='commands',
         brief='Get the GitHub link of this bot.',
         description='This command shows you the Github link of the Iron Justice.',
         usage='?commands'
     )
-    async def commands(self, ctx):
-        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78)', colour='iron')
+    async def cmnds(self, ctx):
+        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78).', colour='iron')
         await ctx.send(embed=embed)
 
 def setup(client):

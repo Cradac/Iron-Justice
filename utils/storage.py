@@ -1,5 +1,6 @@
 import discord
 from datetime import datetime
+from utils import utils
 import mysql.connector, json, sys
 
 
@@ -215,12 +216,7 @@ class Storage:
 
     async def create_profile(self, ctx, user: discord.Member):
         self.user_join(user)
-        embed = discord.Embed(title='**__Profile Created__**', colour=0xffd700)
-        embed.set_author(name=user, icon_url=user.avatar_url)
-        embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <platform> <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc... Use `?help levels` for more info.", inline=False)
-        embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?img <URL>`. You can also upload the image right to discord and type `?img` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n\
-            - Add a pirate name (for role players) by typing `?alias <pirate name>`.", inline=False)
-        embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
+        embed = utils.createEmbed(title='Profile Created', colour='iron', author=user, description='For a full documentation of what you can change please type `?help Profile`.')
         await ctx.send(embed=embed)
 
     def update_levels(self, user: discord.Member, comps: dict()):
