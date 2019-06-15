@@ -92,5 +92,16 @@ class Misc(commands.Cog):
         await ctx.send(embed=embed)
 
 
+    @commands.is_owner()
+    @commands.command(
+        brief='Message all guild owners.',
+        description='Cradac can use this to message all guild owners.',
+        usage='?announce <message>'
+    )
+    async def announce(self, ctx, *, message):
+        for guild in self.client.guilds:
+            await guild.owner.send(message)
+
+
 def setup(client):
     client.add_cog(Misc(client))
