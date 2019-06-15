@@ -70,16 +70,7 @@ class Misc(commands.Cog):
             link = await ctx.guild.channels[0].create_invite(max_age=86400, reason=f'{ctx.author} requested an invite link.')
         await ctx.author.send(f'Use this link to invite people to {ctx.guild.name}\'s Discord Server: {link.url}')
 
-    @commands.command(
-        brief='Get the GitHub link of this bot.',
-        description='This command shows you the Github link of the Iron Justice.',
-        usage='?commands'
-    )
-    async def commands(self, ctx):
-        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78)', colour='iron')
-        await ctx.send(embed=embed)
 
-    '''
     @commands.is_owner()
     @commands.command(
         hidden=True,
@@ -101,8 +92,17 @@ class Misc(commands.Cog):
     )
     async def announce(self, ctx, *, message):
         for guild in self.client.guilds:
-            await guild.owner.send(message)'''
+            await guild.owner.send(message)
+            
 
+    @commands.command(
+        brief='Get the GitHub link of this bot.',
+        description='This command shows you the Github link of the Iron Justice.',
+        usage='?commands'
+    )
+    async def commands(self, ctx):
+        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78)', colour='iron')
+        await ctx.send(embed=embed)
 
 def setup(client):
     client.add_cog(Misc(client))
