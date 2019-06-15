@@ -26,7 +26,7 @@ if len(sys.argv) == 1:
 	bot_token =  c.get('token')
 else:
 	bot_token = sys.argv[1]
-	sys.stdout = open(datetime.now().strftime('logs/discord_log_%Y_%m_%d_%H_%M_%S.log'), 'w+')
+	#sys.stdout = open(datetime.now().strftime('logs/discord_log_%Y_%m_%d_%H_%M_%S.log'), 'w+')
 
 
 extensions = ['activity_logging', 'auto_voice', 'ironfleet', 'lfc', 'misc', 'profile', 'settings', 'welcome']
