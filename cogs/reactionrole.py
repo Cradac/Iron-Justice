@@ -1,18 +1,21 @@
 import discord
 from discord.ext import commands
-import asyncio
 import sqlite3
 from sqlite3 import Error
 from datetime import datetime
-import cogs.guilds
-from cogs.helper import isAdmin,roleSearch,create_connection,db_file
+from utils import utils
+
+db_file = None
+
+def create_connection(db):
+	return None
 
 class ReactionRole(commands.Cog):
 	def __init__(self, client):
 		self.client = client
 	
 
-	@isAdmin()
+	@utils.isAdmin()
 	@commands.group(brief="Module for Reactionroles", aliases=["rr"])
 	async def reactionrole(self, ctx):
 		if ctx.invoked_subcommand is None:
@@ -53,7 +56,7 @@ class ReactionRole(commands.Cog):
 					await ctx.send("Some deprecated reactionroles were deleted.")
 			await ctx.send(embed=embed)
 
-	@isAdmin()
+	@utils.isAdmin()
 	@reactionrole.command(brief="Add a reactionrole")
 	async def add(self, ctx, channel:discord.TextChannel=None, messageID:int=None, emoji:str=None, role:str=None):
 		if channel is None and messageID is None and emoji is None and role is None:
@@ -63,7 +66,7 @@ class ReactionRole(commands.Cog):
 			await ctx.send("Wrong positional argument. Please use the command like this:\n```?reactionrole add <#channel> <messageID> <emoji> <role>```")
 			return
 		else:
-			role = await roleSearch(ctx, self.client, role)
+			role = await utils.roleSearch(ctx, self.client, role)
 			if role is None:
 				return
 			msg = await channel.get_message(messageID)
@@ -98,7 +101,7 @@ class ReactionRole(commands.Cog):
 				embed.add_field(name="Role", value=role.mention)
 			await ctx.send(embed=embed)
 
-	@isAdmin()
+	@utils.isAdmin()
 	@reactionrole.command(brief="Remove a reactionrole", aliases=["delete"])
 	async def remove(self, ctx, id:int=None):
 		if id is None:

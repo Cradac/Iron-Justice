@@ -1,84 +1,71 @@
 import discord
 from discord.ext import commands
 import asyncio
-import cogs.guilds
-from cogs.helper import matchlfcchannel
+from utils import utils
+from utils.storage import Storage
 
-class LFC(commands.Cog):
+Utils = utils.Utils()
+
+class LFC(commands.Cog, name='Looking for Crew'):
     def __init__(self, client):
         self.client = client
 
-    async def auto_remove(self, user_id, guildlist, ctx):
+        self.Storage = Storage()
+
+
+    async def auto_remove(self, user: discord.User):
         await asyncio.sleep(7200)
-        for tup in guildlist:
-            try:
-                if ctx.bot.dictGuilds[tup[0].id].enabled['lfc']:
-                    await tup[0].get_member(user_id).remove_roles(tup[1])
-            except:
-                continue
+        for guild in self.Storage.get_lfc_enabled_guilds(self.client):
+            if user in guild.members:
+                role = self.Storage.get_lfc_role(guild)
+                try:
+                    await guild.get_member(user.id).remove_roles(role)
+                except discord.Forbidden:
+                    continue
     
-    @matchlfcchannel()
-    @commands.command(aliases=["lfg"],brief="Sets LFC status.", description=">>>'Looking for Crew':\nThis gives you the 'Looking for Crew' role. You can be tagged with it and tag others.\nYou can only use this in the LFC Channel.\nType ?nlfc once you're in a crew to avoid getting LFC notifications.\n\nAliases:")
+    @Utils.matchLFCChannel()
+    @commands.command(
+        brief='Sets the user into `Looking for Crew` status for 2 hours.',
+        description='This command gives the user the set `Looking for Crew` role. \n\
+            You can only use this command in the set channels.\n\
+            Type ?nlfc once you\'re in a crew to avoid getting further notifications.\n\
+            The role will be automatically removed after 2 hours.',
+        usage='?lfc'
+    )
     async def lfc(self, ctx):
-        author=ctx.message.author
-        role = None
-        guildlist = []
-        for it_role in ctx.guild.roles:
-            if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
-                role = it_role
-                break
-        #break if already LFC
-        if role in author.roles:
-            await ctx.send("You are already *looking for a crew*.")
-            return
-        await ctx.send("{}: {} is now *looking for a crew*.".format(role.mention, author.mention))
-
-        #iterate through all guilds and try to add LFC
-        for guild in self.client.guilds:
-            if not ctx.bot.dictGuilds[guild.id].enabled['lfc']:
-                continue
-            for it_role in guild.roles:
-                if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
-                    role = it_role
-                    break
-            member = guild.get_member(author.id)
-            if member is None:
-                continue
-            try:
-                await member.add_roles(role)
-            except discord.errors.Forbidden:
-                continue
-            guildlist.append((guild, role))
-        self.client.loop.create_task(self.auto_remove(author.id,guildlist, ctx))
+        local_role = self.Storage.get_lfc_role(ctx.guild)
+        if local_role not in ctx.author.roles:
+            user = self.client.get_user(ctx.author.id)
+            for guild in self.Storage.get_lfc_enabled_guilds(self.client):
+                if user in guild.members:
+                    role = self.Storage.get_lfc_role(guild)
+                    try:
+                        await guild.get_member(user.id).add_roles(role)
+                    except discord.Forbidden:
+                        continue
+            await ctx.send(f'{local_role.mention}, {ctx.author.mention} is now looking for crew.')
+            self.client.loop.create_task(self.auto_remove(user))
 
 
-    @matchlfcchannel()
-    @commands.command(aliases=["nlfg"], brief="Removes LFC status.", description=">>>No longer 'Looking for Crew':\nThis removes the 'Looking for Crew' role.\nIf you are looking for a crew again use '?lfc'.\n\nAliases:")
+    @Utils.matchLFCChannel()
+    @commands.command(
+        brief='Removes the `Looking for Crew` status manually.',
+        description='This removes the `Looking for Crew` status.\n\
+            If you are looking for a crew again use `?lfc`.',
+        usage='?nlfc'
+    )
     async def nlfc(self, ctx):
-        author=ctx.message.author
-        for it_role in ctx.guild.roles:
-            if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
-                role = it_role
-                break
-        #break if not LFC
-        if role not in author.roles:
-            return
-        await ctx.send("You are no longer *looking for a crew*.")
-
-        for guild in self.client.guilds:
-            if not ctx.bot.dictGuilds[guild.id].enabled['lfc']:
-                continue
-            for it_role in guild.roles:
-                if it_role.name.lower() == 'lfc' or it_role.name.lower() == 'looking for crew':
-                    role = it_role
-                    break
-            member = guild.get_member(author.id)
-            if member is None:
-                continue
-            try:
-                await member.remove_roles(role)
-            except discord.errors.Forbidden:
-                continue
+        local_role = self.Storage.get_lfc_role(ctx.guild)
+        if local_role in ctx.author.roles:
+            user = self.client.get_user(ctx.author.id)
+            for guild in self.Storage.get_lfc_enabled_guilds(self.client):
+                if user in guild.members:
+                    role = self.Storage.get_lfc_role(guild)
+                    try:
+                        await guild.get_member(user.id).remove_roles(role)
+                    except discord.Forbidden:
+                        continue
+            await ctx.send(f'{ctx.author.mention}, you are no longer looking for a crew.')
 
 def setup(client):
     client.add_cog(LFC(client))
