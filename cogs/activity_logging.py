@@ -105,7 +105,7 @@ class Activity_Logging(commands.Cog, name='Activity-Logging'):
             await ctx.send(text)
 
         await ctx.send("**__Finished checking.__**")
-
+    '''
     @commands.is_owner()
     @commands.command(
         name='clean-db',
@@ -115,7 +115,7 @@ class Activity_Logging(commands.Cog, name='Activity-Logging'):
     async def clean_db(self, ctx):
         await ctx.send('**__Cleaning the Database of old entries now... This might take a bit.__**')
         self.Storage.cleanup_messages(self.client.guilds)
-        await ctx.send('**__Finished purging__**')
+        await ctx.send('**__Finished purging__**')'''
 
 
 def setup(client):
