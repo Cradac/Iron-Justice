@@ -94,6 +94,7 @@ class Misc(commands.Cog):
 
     @commands.is_owner()
     @commands.command(
+        hidden=True,
         brief='Message all guild owners.',
         description='Cradac can use this to message all guild owners.',
         usage='?announce <message>'

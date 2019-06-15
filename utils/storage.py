@@ -10,16 +10,6 @@ class Storage:
         self.DBUsername = None
         self.DBPassword = None
         self.DBName = None
-        
-        self.conn = mysql.connector.connect(
-            host='localhost',
-            user=self.DBUsername,
-            password=self.DBPassword,
-            database=self.DBName
-        )
-        self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
-
-
         try:
             with open('config.json') as f:
                 c = json.load(f)
@@ -43,6 +33,15 @@ class Storage:
             self.save()
             print(f'Missing value: {f}')
             sys.exit(1)
+
+        
+        self.conn = mysql.connector.connect(
+            host='localhost',
+            user=self.DBUsername,
+            password=self.DBPassword,
+            database=self.DBName
+        )
+        self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
 
     def save(self):
         with open('config.json', 'w') as f:
