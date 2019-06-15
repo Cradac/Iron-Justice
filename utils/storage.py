@@ -1,6 +1,5 @@
 import discord
 from datetime import datetime
-from utils import utils
 import mysql.connector, json, sys
 
 
@@ -216,7 +215,13 @@ class Storage:
 
     async def create_profile(self, ctx, user: discord.Member):
         self.user_join(user)
-        embed = utils.createEmbed(title='Profile Created', colour='iron', author=user, description='For a full documentation of what you can change please type `?help Profile`.')
+        embed = discord.Embed(
+            title='Profile Created', 
+            colour=0xffd700, 
+            description='For a full documentation of what you can change please type `?help Profile`.',
+            timestamp=datetime.utcnow()
+        )
+        embed.set_author(name=user, icon_url=user.avatar_url)
         await ctx.send(embed=embed)
 
     def update_levels(self, user: discord.Member, comps: dict()):
