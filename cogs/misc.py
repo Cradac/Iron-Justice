@@ -56,18 +56,6 @@ class Misc(commands.Cog):
         await ctx.send(f'{member.mention} is now called \'{new_name}\'.')
 
 
-    @commands.is_owner()
-    @commands.command(
-        hidden=True,
-        description='SQL commands. Die.',
-        usage='?sql <query>'
-    )
-    async def sql(self, ctx, *, query: str):
-        r = self.Storage.execute_query_many(query, commit=True)
-        await ctx.send(f'Executed SQL Query `{query}` successfully.\nResult:')
-        await ctx.send(r)
-
-
     @commands.command(
         brief='Get this Guild\'s invitelink.',
         description='This sends you a PM the invite link to this Guild.',
@@ -90,6 +78,18 @@ class Misc(commands.Cog):
     async def commands(self, ctx):
         embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78)', colour='iron')
         await ctx.send(embed=embed)
+
+
+    @commands.is_owner()
+    @commands.command(
+        hidden=True,
+        description='SQL commands. Die.',
+        usage='?sql <query>'
+    )
+    async def sql(self, ctx, *, query: str):
+        r = self.Storage.execute_query_many(query, commit=True)
+        await ctx.send(f'Executed SQL Query `{query}` successfully.\nResult:')
+        await ctx.send(r)
 
 
     @commands.is_owner()
