@@ -29,7 +29,7 @@ class Welcome(commands.Cog):
             'rollcall': rogue_guild.get_channel(460149841050206218),
             'announcements': rogue_guild.get_channel(469822387567853568),
             'info': rogue_guild.get_channel(552115652555440149),
-            'jenbot': rogue_guild.get_user(375060041813983242)
+            'jenbot': rogue_guild.get_member(375060041813983242)
         }
         print('Got all welcome guilds and channels.')
 
