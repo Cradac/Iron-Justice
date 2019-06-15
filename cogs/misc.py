@@ -79,7 +79,7 @@ class Misc(commands.Cog):
         embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78)', colour='iron')
         await ctx.send(embed=embed)
 
-
+    '''
     @commands.is_owner()
     @commands.command(
         hidden=True,
@@ -101,7 +101,7 @@ class Misc(commands.Cog):
     )
     async def announce(self, ctx, *, message):
         for guild in self.client.guilds:
-            await guild.owner.send(message)
+            await guild.owner.send(message)'''
 
 
 def setup(client):
