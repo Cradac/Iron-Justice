@@ -411,7 +411,7 @@ class Profile(commands.Cog):
             await ctx.send(embed=embed)
             return
         self.Storage.update_social_media(ctx.author, platform, username)
-        embed = utils.createEmbed(description=f'Your {platform} gamertag has been updated to `{username}`.', author=ctx.author, colour='iron')
+        embed = utils.createEmbed(description=f'Your {platform} username has been updated to `{username}`.', author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Username updated')
         await ctx.send(embed=embed) 
 
