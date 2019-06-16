@@ -42,16 +42,14 @@ def isIronFleet():
 
 def isAdmin():
 	def admincheck(ctx):
-		if ctx.author == ctx.message.guild.owner or ctx.author.id == god:
-			return True
-		if ctx.author.guild_permissions.administrator:
+		if ctx.author == ctx.message.guild.owner or ctx.author.id == god or ctx.author.guild_permissions.administrator:
 			return True
 		return False
 	return commands.check(admincheck)
 
 def isMod():
 	def moderatorcheck(ctx):
-		if ctx.author.guild_permissions.manage_messages:
+		if ctx.author.guild_permissions.manage_messages or ctx.author.id == god:
 			return True
 		return False
 	return commands.check(moderatorcheck)

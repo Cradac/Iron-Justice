@@ -1,20 +1,55 @@
 import discord
 from datetime import datetime
-import mysql.connector
+import mysql.connector, json, sys
 
 
 
 class Storage:
     
     def __init__(self):
-        #self.conn = None
+        self.DBUsername = None
+        self.DBPassword = None
+        self.DBName = None
+        try:
+            with open('config.json') as f:
+                c = json.load(f)
+
+            self.DBUsername = c.get('db_username')
+            self.DBPassword = c.get('db_password')
+            self.DBName = c.get('db_name')
+
+            if not all((
+                self.DBUsername,
+                self.DBPassword,
+                self.DBName,
+            )):
+                raise KeyError('Missing field.')
+
+        except FileNotFoundError:
+            self.save()
+            print('Please edit config.json')
+            sys.exit(1)
+        except KeyError as f:
+            self.save()
+            print(f'Missing value: {f}')
+            sys.exit(1)
+
+        
         self.conn = mysql.connector.connect(
             host='localhost',
-            user='ironjustice',
-            password='WhatIsDeadMayNeverDie',
-            database='IronJustice'
+            user=self.DBUsername,
+            password=self.DBPassword,
+            database=self.DBName
         )
         self.datetime_scheme = '%Y-%m-%d %H:%M:%S'
+
+    def save(self):
+        with open('config.json', 'w') as f:
+            json.dump({
+                'db_username': self.DBUsername,
+                'db_password': self.DBPassword,
+                'db_name': self.DBName,
+            }, f)
 
     
     def get_cursor(self):
@@ -180,12 +215,13 @@ class Storage:
 
     async def create_profile(self, ctx, user: discord.Member):
         self.user_join(user)
-        embed = discord.Embed(title='**__Profile Created__**', colour=0xffd700)
+        embed = discord.Embed(
+            title='Profile Created', 
+            colour=0xffd700, 
+            description='For a full documentation of what you can change please type `?help Profile`.',
+            timestamp=datetime.utcnow()
+        )
         embed.set_author(name=user, icon_url=user.avatar_url)
-        embed.add_field(name="__add your information__", value="1. Add your XBox gamertag with `?gt edit <platform> <gamertag>`.\n2. Add your levels with `?levels gh=<gh> oos=<oos>` etc... Use `?help levels` for more info.", inline=False)
-        embed.add_field(name="__optional features__", value="- Add an image of your pirate with `?img <URL>`. You can also upload the image right to discord and type `?img` without any paramters.\nThis URL **NEEDS** to be a direct link to the image ending with `.jpg`, `.png` or `.gif`.\n\
-            - Add a pirate name (for role players) by typing `?alias <pirate name>`.", inline=False)
-        embed.add_field(name="__additional notes__", value="Please note that you **DO NOT** need to add the brackets (`<>`, `[]`). They are merely Syntax to show which arguments are mandatory (`<>`) and which can be left out and will use the previous value (`[]`). This is programming standard.", inline=False)
         await ctx.send(embed=embed)
 
     def update_levels(self, user: discord.Member, comps: dict()):

@@ -56,18 +56,6 @@ class Misc(commands.Cog):
         await ctx.send(f'{member.mention} is now called \'{new_name}\'.')
 
 
-    @commands.is_owner()
-    @commands.command(
-        hidden=True,
-        description='SQL commands. Die.',
-        usage='?sql <query>'
-    )
-    async def sql(self, ctx, *, query: str):
-        r = self.Storage.execute_query_many(query, commit=True)
-        await ctx.send(f'Executed SQL Query `{query}` successfully.\nResult:')
-        await ctx.send(r)
-
-
     @commands.command(
         brief='Get this Guild\'s invitelink.',
         description='This sends you a PM the invite link to this Guild.',
@@ -82,15 +70,40 @@ class Misc(commands.Cog):
             link = await ctx.guild.channels[0].create_invite(max_age=86400, reason=f'{ctx.author} requested an invite link.')
         await ctx.author.send(f'Use this link to invite people to {ctx.guild.name}\'s Discord Server: {link.url}')
 
+
+    @commands.is_owner()
     @commands.command(
+        hidden=True,
+        description='SQL commands. Die.',
+        usage='?sql <query>'
+    )
+    async def sql(self, ctx, *, query: str):
+        r = self.Storage.execute_query_many(query, commit=True)
+        await ctx.send(f'Executed SQL Query `{query}` successfully.\nResult:')
+        await ctx.send(r)
+
+
+    @commands.is_owner()
+    @commands.command(
+        hidden=True,
+        brief='Message all guild owners.',
+        description='Cradac can use this to message all guild owners.',
+        usage='?announce <message>'
+    )
+    async def announce(self, ctx, *, message):
+        for guild in self.client.guilds:
+            await guild.owner.send(message)
+            
+
+    @commands.command(
+        name='commands',
         brief='Get the GitHub link of this bot.',
         description='This command shows you the Github link of the Iron Justice.',
         usage='?commands'
     )
-    async def commands(self, ctx):
-        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://github.com/Cradac/Iron-Justice)', colour='iron')
+    async def cmnds(self, ctx):
+        embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78).', colour='iron')
         await ctx.send(embed=embed)
-
 
 def setup(client):
     client.add_cog(Misc(client))

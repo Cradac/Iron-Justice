@@ -41,14 +41,14 @@ class Settings(commands.Cog):
         self.Storage.guild_leave(guild)
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild):
+    async def on_guild_join(self, guild):#Pn3vXNd
         embed = utils.createEmbed(
             title='__**The Iron Justice welcomes you!**__',
-            description='Hey! I am the Iron Fleet\'s Iron Justice Bot, specifically for Discord Guilds of *Sea of Thieves* Fleets.\
-            If you have any questions write a message `Cradac | Max#2614` or type `?help [command|module]`.\n\
-            To set up the bot for your server use the `?config <subcommand>` commands (best in an admin-exclusive room) and go through the installation wizard.\n\
-            **Please ensure the bot has sufficient rights, at least for the setup!**\n\
-            You can set up a message logger by creating a channel called `#message-log`. The bot must be able to see and write in it. This channels should be at least Moderator exclusive!\n\
+            description='Ahoy! This is The Iron Justice bot, brought to you by The Iron Fleet.\n\
+            ou can use ?help at any time to get a list of commands and/or more info on specific commands.\n\
+            To get started use ?config <option> and go through the installation wizard.\
+            Additionally, you can set up a message log by simply creating a channel named `#message-log` (note: the bot must have read and write permissions for this channel.)\n\
+            For additional support contact the developer Cradac | Max#2614 on discord. You can also join the [Support Server](https://discord.gg/Pn3vXNd)\n\
             Enjoy!',
             colour='iron',
             guild=guild,

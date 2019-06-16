@@ -105,7 +105,7 @@ class Activity_Logging(commands.Cog, name='Activity-Logging'):
             await ctx.send(text)
 
         await ctx.send("**__Finished checking.__**")
-
+    
     @commands.is_owner()
     @commands.command(
         name='clean-db',
