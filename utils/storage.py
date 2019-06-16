@@ -19,7 +19,7 @@ class Storage:
     
     def get_cursor(self):
         try:
-            cursor = self.conn.cursor(buffered=True)
+            cursor = self.conn.cursor()
             return cursor
         except Exception as e:
             raise e
