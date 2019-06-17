@@ -25,12 +25,12 @@ class Misc(commands.Cog):
         for member in ctx.guild.members:
             if role in member.roles:
                 users.append(member)
-        users.sort()
+        users.sort(key=lambda x: x.name)
         sumpages = math.ceil(len(users)/20)
         page = sumpages if page > sumpages else page          
         pagestart = (page * 20)-20
         pageend = pagestart + 19
-        desctext = "({} in total)\n".format(str(len(users)))
+        desctext = f'({str(len(users))} in total)\n'
         for i in range(pagestart, pageend):
             try:
                 desctext += users[i].mention + '\n'
