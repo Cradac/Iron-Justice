@@ -54,7 +54,7 @@ class Storage:
     
     def get_cursor(self, retry: bool = True):
         try:
-            cursor = self.conn.cursor()
+            cursor = self.conn.cursor(buffered=True)
             return cursor
         except Exception as e:
             if retry:
