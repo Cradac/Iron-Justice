@@ -52,12 +52,21 @@ class Storage:
             }, f)
 
     
-    def get_cursor(self):
+    def get_cursor(self, retry: bool = True):
         try:
             cursor = self.conn.cursor()
             return cursor
         except Exception as e:
-            raise e
+            if retry:
+                self.conn = mysql.connector.connect(
+                    host='localhost',
+                    user=self.DBUsername,
+                    passwd=self.DBPassword,
+                    database=self.DBName
+                )
+                return self.get_cursor(retry=False)
+            else:
+                raise e
 
     def execute_query(self, query: str, commit: bool = True):
         cur = self.get_cursor()
