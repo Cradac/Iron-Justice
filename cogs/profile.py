@@ -6,7 +6,7 @@ import asyncio, re, xbox
 
 Utils = utils.Utils()
 
-xbox.client.authenticate('max.dettmann@web.de', 'RexAnton#2017')
+xbox.client.authenticate('theironfleetsot@gmail.com', 'maxisgay!123')
 
 class Profile(commands.Cog):
     def __init__(self, client):

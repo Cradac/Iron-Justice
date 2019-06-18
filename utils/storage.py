@@ -294,6 +294,7 @@ class Storage:
         self.execute_query(query, commit=True)
 
     def add_lfc_channels(self, guild: discord.Guild, channels: list()):
+        self.delete_all_lfc_channels(guild)
         cur = self.get_cursor()
         cids = list()
         for c in channels:
@@ -339,6 +340,7 @@ class Storage:
         self.execute_query(query, commit=True)
 
     def add_profile_channels(self, guild: discord.Guild, channels: list()):
+        self.delete_all_profile_channels(guild)
         cur = self.get_cursor()
         cids = list()
         for c in channels:
