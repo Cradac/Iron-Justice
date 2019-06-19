@@ -77,7 +77,7 @@ class Activity_Logging(commands.Cog, name='Activity-Logging'):
     )
     async def maroon(self, ctx, compare_days: typing.Optional[int] = 14, role: str = None):
         await ctx.send("**__Checking for inactivity now... This might take a while.__**")
-        list_to_check = (await utils.roleSearch(ctx, self.client, role).members if role else ctx.guild.members)
+        list_to_check = await utils.roleSearch(ctx, self.client, role).members if role else ctx.guild.members
         if not list_to_check:
             return
 
