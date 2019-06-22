@@ -211,6 +211,8 @@ class Storage:
     def get_xbox_tag(self, user: discord.Member):
         query = f'SELECT xbox FROM gamertags WHERE uid={user.id};'
         r = self.execute_query(query)
+        if not r:
+            return 'None'
         return r[0] or 'None'
 
     async def create_profile(self, ctx, user: discord.Member):
