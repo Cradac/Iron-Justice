@@ -52,12 +52,21 @@ class Storage:
             }, f)
 
     
-    def get_cursor(self):
+    def get_cursor(self, retry: bool = True):
         try:
-            cursor = self.conn.cursor()
+            cursor = self.conn.cursor(buffered=True)
             return cursor
         except Exception as e:
-            raise e
+            if retry:
+                self.conn = mysql.connector.connect(
+                    host='localhost',
+                    user=self.DBUsername,
+                    passwd=self.DBPassword,
+                    database=self.DBName
+                )
+                return self.get_cursor(retry=False)
+            else:
+                raise e
 
     def execute_query(self, query: str, commit: bool = True):
         cur = self.get_cursor()
@@ -287,6 +296,7 @@ class Storage:
         self.execute_query(query, commit=True)
 
     def add_lfc_channels(self, guild: discord.Guild, channels: list()):
+        self.delete_all_lfc_channels(guild)
         cur = self.get_cursor()
         cids = list()
         for c in channels:
@@ -332,6 +342,7 @@ class Storage:
         self.execute_query(query, commit=True)
 
     def add_profile_channels(self, guild: discord.Guild, channels: list()):
+        self.delete_all_profile_channels(guild)
         cur = self.get_cursor()
         cids = list()
         for c in channels:

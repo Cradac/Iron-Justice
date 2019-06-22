@@ -194,7 +194,7 @@ class Settings(commands.Cog):
         # Send Settings Embed
         s = 'enabled' if status else 'disabled'
         embed = utils.createEmbed(title='**__`Looking for Crew`-Setup__**', description=f'The module is {s}.', colour='iron', guild=ctx.guild)
-        ch = '`all`' if len(channels) == 0 else ' '.join(c.mention for c in channels)
+        ch = '`all`' if not channels or len(channels) == 0 else ' '.join(c.mention for c in channels)
         embed.add_field(name='__Role__', value=role.mention)
         embed.add_field(name='__Channels__', value=ch)
         await ctx.send(embed=embed)
@@ -253,7 +253,7 @@ class Settings(commands.Cog):
         # Send Settings Embed
         s = 'enabled' if status else 'disabled'
         embed = utils.createEmbed(title='**__`Profile`-Setup__**', description=f'The module is {s}.', colour='iron', guild=ctx.guild)
-        ch = '`all`' if len(channels) == 0 else ' '.join(c.mention for c in channels)
+        ch = '`all`' if not channels or len(channels) == 0 else ' '.join(c.mention for c in channels)
         embed.add_field(name='__Channels__', value=ch)
         await ctx.send(embed=embed)
 

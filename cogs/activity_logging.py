@@ -10,6 +10,8 @@ import math, typing
 
 active_fleets = set()
 
+Utils = utils.Utils()
+
 class Activity_Logging(commands.Cog, name='Activity-Logging'):
     def __init__(self, client):
         self.client = client
@@ -66,11 +68,12 @@ class Activity_Logging(commands.Cog, name='Activity-Logging'):
         embed.add_field(name='__amount of messages (last 30 days)__', value=info['amnt'], inline=False)
         await ctx.send(embed=embed)
 
+    @Utils.activtyLoggingEnabled()
     @utils.isAdmin()
     @commands.command(
-        brief='Manually invoke the marooning routine.',
+        brief='Invoke the marooning routine.',
+        description='Check your guild for inactive members.',
         usage='?maroon [days gone = 14] [role]',
-        hidden=True
     )
     async def maroon(self, ctx, compare_days: typing.Optional[int] = 14, role: str = None):
         await ctx.send("**__Checking for inactivity now... This might take a while.__**")

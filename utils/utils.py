@@ -31,6 +31,11 @@ class Utils:
 			return False
 		return commands.check(does_channel_match)
 
+	def activtyLoggingEnabled(self):
+		def has_guild_enabled(ctx):
+			return self.Storage.get_activity_logging_status(ctx.guild)
+		return commands.check(has_guild_enabled)
+
 def isIronFleet():
 	def inServer(ctx):
 		if ctx.message.guild.id == 479300072077787160:
