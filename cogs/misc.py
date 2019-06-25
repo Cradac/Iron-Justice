@@ -120,6 +120,7 @@ class Misc(commands.Cog):
             return
         if not arg:
             result = random.randint(1,6)
+            results = list(result)
         else:
             if not 'd' in arg:
                 await error()
@@ -127,9 +128,9 @@ class Misc(commands.Cog):
             rslt = arg.split('d', 1)
             if rslt[0] == '':
                 amnt = 1
-                rest = rslt[0]
+                rest = rslt[1]
             else:
-                amnt = rslt[0]
+                amnt = int(rslt[0])
                 rest = rslt[1]
 
             if '+' in rest:
