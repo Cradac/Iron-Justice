@@ -136,8 +136,8 @@ class Misc(commands.Cog):
             else:
                 sides = rest
                 modifier = 0
-            results = list()
-            sides, modifier = int(sides), int(modifier)
+        results = list()
+        sides, modifier = int(sides), int(modifier)
         for _ in range(amnt):
             results.append(random.randint(1, sides))
         result = sum(results) + modifier
