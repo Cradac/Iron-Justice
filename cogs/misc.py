@@ -114,7 +114,7 @@ class Misc(commands.Cog):
         usage='?roll XdN+Y'
     )
     async def roll(self, ctx, arg:str = None):
-        def error():
+        async def error():
             embed = utils.createEmbed(title='Wrong Syntax', description='The Syntax is wrong. Try something similar to this: `1d6+1`, `2d10`, `d20`', colour='error', author=ctx.author)
             await ctx.send(embed=embed)
             return
@@ -122,7 +122,7 @@ class Misc(commands.Cog):
             result = random.randint(1,6)
         else:
             if not 'd' in arg:
-                error()
+                await error()
                 return
             rslt = arg.split('d', 1)
             if len(rslt) == 1:
@@ -132,7 +132,7 @@ class Misc(commands.Cog):
                 amnt = rslt[0]
                 rest = rslt[1]
             else:
-                error()
+                await error()
                 return
 
             if '+' in rest:
