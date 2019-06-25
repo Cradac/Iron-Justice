@@ -115,9 +115,7 @@ class Misc(commands.Cog):
     )
     async def roll(self, ctx, arg:str = None):
         if not arg:
-            result = random.randint(1,6)
-            results = [result]
-            amnt = 1
+            amnt, sides, modifier = 1, 6, 0
         else:
             if not 'd' in arg:
                 embed = utils.createEmbed(title='Wrong Syntax', description='The Syntax is wrong. Try something similar to this: `1d6+1`, `2d10`, `d20`', colour='error', author=ctx.author)
@@ -140,9 +138,9 @@ class Misc(commands.Cog):
                 modifier = 0
             results = list()
             sides, modifier = int(sides), int(modifier)
-            for _ in range(amnt):
-                results.append(random.randint(1, sides))
-            result = sum(results) + modifier
+        for _ in range(amnt):
+            results.append(random.randint(1, sides))
+        result = sum(results) + modifier
         embed = utils.createEmbed(title=f'You rolled {amnt} d{sides}.', description=f'Result: {result}\nIndividual rolls:\n{", ".join(f"`{r}`" for r in results)}', author=ctx.author, colour='iron')
         await ctx.send(embed=embed)
             
