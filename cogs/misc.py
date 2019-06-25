@@ -125,15 +125,12 @@ class Misc(commands.Cog):
                 await error()
                 return
             rslt = arg.split('d', 1)
-            if len(rslt) == 1:
+            if rslt[0] == '':
                 amnt = 1
                 rest = rslt[0]
-            elif len(rslt) == 2:
+            else:
                 amnt = rslt[0]
                 rest = rslt[1]
-            else:
-                await error()
-                return
 
             if '+' in rest:
                 sides, modifier = rest.split('+', 1)
@@ -143,8 +140,8 @@ class Misc(commands.Cog):
             else:
                 sides = rest[0]
                 modifier = 0
-            amnt, sides, modifier = int(amnt), int(sides), int(modifier)
             results = list()
+            sides, modifier = int(sides), int(modifier)
             for _ in range(amnt):
                 results.append(random.randint(1, sides))
             result = sum(results) + modifier
