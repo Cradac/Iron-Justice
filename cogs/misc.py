@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from utils import utils
 from utils.storage import Storage
-import datetime, math, typing
+import datetime, math, typing, re, random
 
 class Misc(commands.Cog):
     def __init__(self, client):
@@ -104,6 +104,56 @@ class Misc(commands.Cog):
     async def cmnds(self, ctx):
         embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78).', colour='iron')
         await ctx.send(embed=embed)
+
+    @commands.command(
+        brief='Roll dice.',
+        description='Use this command to roll one or more N sided dice.\n\
+            X: amount of dice, default 1\n\
+            N: number of sides on die, default 6\n\
+            Y: modifier to add/substract',
+        usage='?roll XdN+Y'
+    )
+    async def roll(self, ctx, arg:str = None):
+        def error():
+            embed = utils.createEmbed(title='Wrong Syntax', description='The Syntax is wrong. Try something similar to this: `1d6+1`, `2d10`, `d20`', colour='error', author=ctx.author)
+            await ctx.send(embed=embed)
+            return
+        if not arg:
+            result = random.randint(1,6)
+        else:
+            if not 'd' in arg:
+                error()
+                return
+            rslt = arg.split('d', 1)
+            if len(rslt) == 1:
+                amnt = 1
+                rest = rslt[0]
+            elif len(rslt) == 2:
+                amnt = rslt[0]
+                rest = rslt[1]
+            else:
+                error()
+                return
+
+            if '+' in rest:
+                sides, modifier = rest.split('+', 1)
+            elif '-' in rest:
+                sides, modifier = rest.split('-', 1)
+                modifier *= -1
+            else:
+                sides = rest[0]
+                modifier = 0
+            amnt, sides, modifier = int(amnt), int(sides), int(modifier)
+            results = list()
+            for _ in range(amnt):
+                results.append(random.randint(1, sides))
+            result = sum(results) + modifier
+        embed = utils.createEmbed(title=f'You rolled {result}.', description=f'Individual rolls:\n{", ".join(f"`{r}`" for r in results)}', author=ctx.author, colour='iron')
+        await ctx.send(embed=embed)
+            
+
+
+
 
 def setup(client):
     client.add_cog(Misc(client))
