@@ -120,7 +120,7 @@ class Misc(commands.Cog):
             return
         if not arg:
             result = random.randint(1,6)
-            results = list(result)
+            results = [result]
         else:
             if not 'd' in arg:
                 await error()
@@ -139,14 +139,14 @@ class Misc(commands.Cog):
                 sides, modifier = rest.split('-', 1)
                 modifier *= -1
             else:
-                sides = rest[0]
+                sides = rest
                 modifier = 0
             results = list()
             sides, modifier = int(sides), int(modifier)
             for _ in range(amnt):
                 results.append(random.randint(1, sides))
             result = sum(results) + modifier
-        embed = utils.createEmbed(title=f'You rolled {result}.', description=f'Individual rolls:\n{", ".join(f"`{r}`" for r in results)}', author=ctx.author, colour='iron')
+        embed = utils.createEmbed(title=f'You rolled {amnt} d{sides}.', description=f'Result: {result}\nIndividual rolls:\n{", ".join(f"`{r}`" for r in results)}', author=ctx.author, colour='iron')
         await ctx.send(embed=embed)
             
 
