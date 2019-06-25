@@ -132,6 +132,7 @@ class Misc(commands.Cog):
                 sides, modifier = rest.split('+', 1)
             elif '-' in rest:
                 sides, modifier = rest.split('-', 1)
+                modifier = int(modifier)
                 modifier *= -1
             else:
                 sides = rest
