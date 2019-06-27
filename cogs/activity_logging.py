@@ -93,6 +93,7 @@ class Activity_Logging(commands.Cog, name='Activity-Logging'):
                 m_info = self.Storage.get_user_activity(member)
                 comparedate = m_info['timestamp'] or member.joined_at
                 m_info['days_gone'] = (datetime.utcnow() - comparedate).days if (datetime.utcnow()-comparedate).days <=30 else 30
+                m_info['member'] = member
                 if m_info['days_gone'] > compare_days:
                     info_list.append(m_info)
         
