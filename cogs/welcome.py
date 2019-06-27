@@ -24,12 +24,12 @@ class Welcome(commands.Cog):
         rogue_guild = self.client.get_guild(455901088164478976)
         self.rogue = {
             'guild': rogue_guild,
-            'welcome': rogue_guild.get_channel(459692275522338837),
+            'welcome': rogue_guild.get_channel(593923592249540622),
             'rules': rogue_guild.get_channel(455903378375966730),
             'rollcall': rogue_guild.get_channel(460149841050206218),
             'announcements': rogue_guild.get_channel(469822387567853568),
             'info': rogue_guild.get_channel(552115652555440149),
-            'jenbot': rogue_guild.get_member(375060041813983242)
+            'jenbot': rogue_guild.get_member(565661828474994698)
         }
         print('Got all welcome guilds and channels.')
 
