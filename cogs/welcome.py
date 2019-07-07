@@ -21,16 +21,20 @@ class Welcome(commands.Cog):
             'info': iron_guild.get_channel(563479453091495945),
             'intro': iron_guild.get_channel(481455365192548363)
         }
+        if any(self.iron.values()) is None:
+            print('Didn\'t get a channel in the Iron Fleet.')
         rogue_guild = self.client.get_guild(455901088164478976)
         self.rogue = {
             'guild': rogue_guild,
-            'welcome': rogue_guild.get_channel(593923592249540622),
+            'welcome': rogue_guild.get_channel(459692275522338837),
             'rules': rogue_guild.get_channel(455903378375966730),
             'rollcall': rogue_guild.get_channel(460149841050206218),
             'announcements': rogue_guild.get_channel(469822387567853568),
             'info': rogue_guild.get_channel(552115652555440149),
             'jenbot': rogue_guild.get_member(565661828474994698)
         }
+        if any(self.rogue.values()) is None:
+            print('Didn\'t get a channel in the Iron Fleet.')
         print('Got all welcome guilds and channels.')
 
 
