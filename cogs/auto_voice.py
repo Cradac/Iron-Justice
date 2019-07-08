@@ -16,13 +16,14 @@ class AutoVoice(commands.Cog, name='Auto-Voice'):
     @commands.Cog.listener()
     async def on_voice_state_update(self, user: discord.Member, before, after):
         if after.channel:
-            if after.channel == self.Storage.get_auto_voice_channel(user.guild):                #Joined Get Ship Voice
+            auto_voice_channel = self.Storage.get_auto_voice_channel(user.guild)
+            if after.channel == auto_voice_channel:                                 #Joined Get Ship Voice
                 category = self.client.get_channel(after.channel.category_id)
                 names = self.Storage.get_auto_voice_names(user.guild)
                 names = channel_names if len(names) == 0 else names
                 name = choice(names)
-                pos = 1
-                voice_channel = await category.create_voice_channel(name, reason='Created ship channel.')
+                pos = auto_voice_channel.position + 1
+                voice_channel = await category.create_voice_channel(name, reason='Created ship channel.', position=pos)
                 await voice_channel.edit(position=pos, reason='Moved Ship Channel.')
                 self.created_channels.append(voice_channel)
                 await user.move_to(voice_channel, reason='Moved to created channel.')
