@@ -1,6 +1,6 @@
 # Iron Justice Discord Bot
 
-![GitHub release](https://img.shields.io/github/release/cradac/iron-justice.svg) ![DUB](https://img.shields.io/dub/l/vibe-d.svg)
+![GitHub release](https://img.shields.io/github/release/Cradac/Iron-Justice.svg) ![DUB](https://img.shields.io/dub/l/vibe-d.svg)
 
 ## General Info
 
