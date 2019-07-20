@@ -1,5 +1,7 @@
 # Iron Justice Discord Bot
 
+![GitHub release](https://img.shields.io/github/release/cradac/iron-justice.svg) ![DUB](https://img.shields.io/dub/l/vibe-d.svg)
+
 ## General Info
 
 This custom discord bot aims to bring value to Sea of Thieves communities by providing a number of features.
@@ -56,8 +58,6 @@ If you have an interesting idea for the Justice, feel free to contact me and may
 ## License
 
 The project runs under the MIT License. Feel free to fork the repo and do whatever with it.
-
-![DUB](https://img.shields.io/dub/l/vibe-d.svg)
 
 ## Acknowledgment
 
