@@ -144,6 +144,17 @@ class Misc(commands.Cog):
         result = sum(results) + modifier
         embed = utils.createEmbed(title=f'You rolled {amnt} d{sides}.', description=f'Result: {result}\nIndividual rolls:\n{", ".join(f"`{r}`" for r in results)}', author=ctx.author, colour='iron')
         await ctx.send(embed=embed)
+
+    @commands.is_owner()
+    @commands.command(
+        hidden=True
+        brief='List all guilds featuring the Iron Justice',
+        description='',
+        usage='?guildlist'
+    )
+    async def guildlist(self, ctx):
+        embed = utils.createEmbed(title='__List of Guilds__', description='\n'.join(f'{guild} `{guild.id}`' for guild in self.client.guilds), colour='iron')
+        await ctx.send(embed=embed)
             
 
 
