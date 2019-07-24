@@ -2,11 +2,9 @@ import discord
 from discord.ext import commands
 from utils.storage import Storage
 from utils import utils
-import asyncio, re, xbox
+import asyncio, re, xbox, json, sys
 
 Utils = utils.Utils()
-
-xbox.client.authenticate('theironfleetsot@gmail.com', 'maxisgay!123')
 
 class Profile(commands.Cog):
     def __init__(self, client):
@@ -42,6 +40,43 @@ class Profile(commands.Cog):
 
         self.social_platforms = ['twitch', 'mixer', 'youtube', 'twitter', 'reddit', 'itchio']
         self.gt_platforms = ['steam', 'xbox', 'psn', 'nintendo', 'minecraft', 'origin', 'blizzard', 'bethesda']
+
+
+        self.MSUsername = None
+        self.MSPassword = None
+        try:
+            with open('xbox.json') as f:
+                c = json.load(f)
+
+            self.MSUsername = c.get('ms_username')
+            self.MSPassword = c.get('ms_password')
+
+            if not all((
+                self.MSUsername,
+                self.MSPassword
+            )):
+                raise KeyError('Missing field.')
+
+        except FileNotFoundError:
+            self.save()
+            print('Please edit xbox.json')
+            sys.exit(1)
+        except KeyError as f:
+            self.save()
+            print(f'Missing value: {f}')
+            sys.exit(1)
+        
+        global xbox
+
+        xbox.client.authenticate(self.MSUsername, self.MSPassword)
+
+
+    def save(self):
+        with open('xbox.json', 'w') as f:
+            json.dump({
+                'ms_username': self.MSUsername,
+                'ms_password': self.MSPassword,
+            }, f)
 
     @commands.Cog.listener()
     async def on_ready(self):
