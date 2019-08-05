@@ -23,8 +23,11 @@ class AutoVoice(commands.Cog, name='Auto-Voice'):
                 names = channel_names if len(names) == 0 else names
                 name = choice(names)
                 pos = auto_voice_channel.position + 1
-                voice_channel = await category.create_voice_channel(name, reason='Created ship channel.', position=pos)
-                await voice_channel.edit(position=pos, reason='Moved Ship Channel.')
+                voice_channel = await category.create_voice_channel(name, reason='Created ship channel.')
+                try:
+                    await voice_channel.edit(position=pos, reason='Moved Ship Channel.')
+                except discord.errors.InvalidArgument:
+                    await voice_channel.edit(position=pos-1, reason='Moved Ship Channel.')
                 self.created_channels.append(voice_channel)
                 await user.move_to(voice_channel, reason='Moved to created channel.')
         
