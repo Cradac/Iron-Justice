@@ -147,7 +147,7 @@ class Misc(commands.Cog):
 
     @commands.is_owner()
     @commands.command(
-        hidden=True
+        hidden=True,
         brief='List all guilds featuring the Iron Justice',
         description='',
         usage='?guildlist'
