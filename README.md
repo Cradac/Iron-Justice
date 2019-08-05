@@ -47,8 +47,8 @@ You can use the rest of the welcome framework to add your own, custom welcome me
 
 The Justice requires a connection to a MySQL Database. If you choose the self-host, it should be simple to change the [Storage Module](utils/storage.py) file to use another SQL Database.
 
-It also requires two json files, which store the bot's token and the database credentials.
-[Database Credentials](https://gist.github.com/Cradac/816e650fc45faf8e43218e7d69f63899) | [Bot Token](https://gist.github.com/Cradac/f8a7dfef507efaf8b2e57cd83d58e8f3)
+It also requires three json files, which store the bot's token, the database credentials and the info for the xbox API.
+[Database Credentials](https://gist.github.com/Cradac/816e650fc45faf8e43218e7d69f63899) | [Bot Token](https://gist.github.com/Cradac/f8a7dfef507efaf8b2e57cd83d58e8f3) | [XBox Info](https://gist.github.com/Cradac/c521a80199657479c2c4ec7c43218344)
 
 I will also link the Database-Model here at a later point. If you need it earlier just contact me.
 
