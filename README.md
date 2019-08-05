@@ -1,5 +1,7 @@
 # Iron Justice Discord Bot
 
+![GitHub release](https://img.shields.io/github/release/Cradac/Iron-Justice.svg) ![DUB](https://img.shields.io/dub/l/vibe-d.svg)
+
 ## General Info
 
 This custom discord bot aims to bring value to Sea of Thieves communities by providing a number of features.
@@ -46,7 +48,9 @@ You can use the rest of the welcome framework to add your own, custom welcome me
 The Justice requires a connection to a MySQL Database. If you choose the self-host, it should be simple to change the [Storage Module](utils/storage.py) file to use another SQL Database.
 
 It also requires two json files, which store the bot's token and the database credentials.
-I will link both here later.
+[Database Credentials](https://gist.github.com/Cradac/816e650fc45faf8e43218e7d69f63899) | [Bot Token](https://gist.github.com/Cradac/f8a7dfef507efaf8b2e57cd83d58e8f3)
+
+I will also link the Database-Model here at a later point. If you need it earlier just contact me.
 
 ## Contributing
 
@@ -56,8 +60,6 @@ If you have an interesting idea for the Justice, feel free to contact me and may
 ## License
 
 The project runs under the MIT License. Feel free to fork the repo and do whatever with it.
-
-![DUB](https://img.shields.io/dub/l/vibe-d.svg)
 
 ## Acknowledgment
 

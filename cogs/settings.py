@@ -39,6 +39,7 @@ class Settings(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         self.Storage.guild_leave(guild)
+        print (f'removed from server: {guild} ({guild.id})')
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):#Pn3vXNd
@@ -57,6 +58,8 @@ class Settings(commands.Cog):
         await guild.owner.send(embed=embed)
         role = await guild.create_role(name='lfc', mentionable=True, colour=discord.Color(0xFFFFFF))
         self.Storage.add_guild(guild, role)
+        print (f'Added to server: {guild} ({guild.id})')
+
     
     '''
         Setup goes through all config step one by one 

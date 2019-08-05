@@ -111,10 +111,10 @@ def parse_time(ctx, time_str:str):
 def calc_time(ctx, time_str: str, timezone_str: str):
     time = parse_time(ctx, time_str)
     if not time:
-        return
-    tz = timezone.get(timezone_str)
+        return None
+    tz = timezone.get(timezone_str.upper())
     if not tz:
         ctx.send('Timezone key not found. To see all available keys go here: <https://greenwichmeantime.com/time-zone/definition/>')
-        return
+        return None
     end_time = time + timedelta(hours=tz)
     return end_time
