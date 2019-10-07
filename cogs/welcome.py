@@ -68,8 +68,7 @@ class Welcome(commands.Cog):
             **5.** How did you find Rogue Legends?'
         game_txt = f'After you applied and we\'ve set your rank please head to {self.rogue["info"].mention} and react with the emoji according to the games you play to get access to their categories!'
         joined_txt = f'Please leave a message in {self.rogue["rollcall"].mention} with the some information about you. Check the pinned message there for format.\n\n\
-		Make sure you see the {self.rogue["announcements"].mention} channel for important information. (please do not mute the channel)\n\n\
-		If you have any questions, comments or concerns please PM {self.rogue["jenbot"].mention}'
+		Make sure you see the {self.rogue["announcements"].mention} channel for important information. (please do not mute the channel)'
         embed.add_field(name='__Rules and Server Access__', value=rules_txt)
         embed.add_field(name='__Game Channel Access__', value=game_txt)
         embed.add_field(name='__Once you have Server Access__', value=joined_txt)

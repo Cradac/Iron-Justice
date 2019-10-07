@@ -2,6 +2,13 @@
 All notable changes to the Justice will be documented in this file.
 
 ## [Unreleased]
+### Added
+- You can add your GoG username now
+- There is now a `?github` command to get a shortcut to the GitHub repository of the Iron Justice
+### Changed
+- Platforms and Social Site names are now case insensitive upon editing
+- Changed Rogue Legends' welcome message
+- The Page system on the `?whois` command now works with reactions
 
 ## [3.1.1] - 2019-07-17
 ### Fixed 

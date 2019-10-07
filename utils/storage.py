@@ -197,7 +197,8 @@ class Storage:
             'minecraft': r[4],
             'origin': r[5],
             'blizzard': r[6],
-            'bethesda': r[7]
+            'bethesda': r[7],
+            'gog': r[8]
         }
         return profile
 
