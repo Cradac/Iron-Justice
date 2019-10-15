@@ -1,7 +1,7 @@
 # CHANGELOG
 All notable changes to the Justice will be documented in this file.
 
-## [Unreleased]
+## [3.2.0] - 2019-10-15
 ### Added
 - You can add your GoG username now
 - There is now a `?github` command to get a shortcut to the GitHub repository of the Iron Justice

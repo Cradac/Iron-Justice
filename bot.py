@@ -3,7 +3,7 @@
 #Secondary intention: gimicks like the profile System
 #Author Maxe aka. Cradac
 
-#Version: 3.0.0b rewrite
+#Version: 3.2.0 rewrite
 
 import discord
 from discord.ext import commands
@@ -11,7 +11,7 @@ import sys, traceback, json
 from datetime import datetime
 from utils import utils
 
-_version = '3.1.0b'
+_version = '3.2.0'
 
 print(sys.version)
 print(discord.__version__)
