@@ -24,6 +24,7 @@ class Misc(commands.Cog):
         if user.bot:
             return
         if reaction.message.id in self.whois_messages.keys() and reaction.emoji in self.emojis:
+            await reaction.remove(user)
             users = self.whois_messages.get(reaction.message.id)['users']
             max_page = math.ceil(len(users)/20)
             cur_page = self.whois_messages.get(reaction.message.id)['page']
@@ -95,7 +96,7 @@ class Misc(commands.Cog):
         embed = self.get_page(users, page, role)
         msg = await ctx.send(embed=embed)
         await self.prepare_reaction_menu(msg)
-        self.whois_messages[msg.id] = {'list': users, 'page': page, 'role': role}
+        self.whois_messages[msg.id] = {'users': users, 'page': page, 'role': role}
 
 
     @utils.isMod()
