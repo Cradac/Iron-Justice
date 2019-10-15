@@ -184,7 +184,7 @@ class Storage:
         return profile
 
     async def get_tag_profile(self, ctx, user: discord.Member):
-        query = f'SELECT steam,xbox,psn,nintendo,minecraft,origin,blizzard,bethesda FROM gamertags WHERE uid={user.id};'
+        query = f'SELECT steam,xbox,psn,nintendo,minecraft,origin,blizzard,bethesda,gog FROM gamertags WHERE uid={user.id};'
         r = self.execute_query(query)
         if not r or len(r) == 0:
             await self.create_profile(ctx, user)
@@ -197,7 +197,8 @@ class Storage:
             'minecraft': r[4],
             'origin': r[5],
             'blizzard': r[6],
-            'bethesda': r[7]
+            'bethesda': r[7],
+            'gog': r[8]
         }
         return profile
 

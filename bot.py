@@ -3,7 +3,7 @@
 #Secondary intention: gimicks like the profile System
 #Author Maxe aka. Cradac
 
-#Version: 3.0.0b rewrite
+#Version: 3.2.0 rewrite
 
 import discord
 from discord.ext import commands
@@ -11,7 +11,7 @@ import sys, traceback, json
 from datetime import datetime
 from utils import utils
 
-_version = '3.1.0b'
+_version = '3.2.0'
 
 print(sys.version)
 print(discord.__version__)
@@ -21,7 +21,7 @@ print('bot version: {}'.format(_version))
 Client = discord.Client()
 client = commands.Bot(command_prefix = ['?'], case_insensitive=True, description=f'This is the Iron Fleet\'s own bot THE IRON JUSTICE V{_version} rewrite. For questions please contact Cradac | Max#2614.\n#beMoreIron', help_command=None)
 if len(sys.argv) == 1:
-	with open('config.json') as f:
+	with open('token.json') as f:
 		c = json.load(f)
 	bot_token =  c.get('token')
 else:

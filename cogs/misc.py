@@ -2,14 +2,82 @@ import discord
 from discord.ext import commands
 from utils import utils
 from utils.storage import Storage
-import datetime, math, typing, re, random
+import datetime, math, typing, re, random, asyncio
 
 class Misc(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+        self.whois_messages = dict()
+        self.prev = '⏪'
+        self.next = '⏩'
+        self.beginning = '⏮'
+        self.end = '⏭'
+        self.stop = '⏹'
+
+        self.emojis = [self.beginning, self.prev, self.next, self.end, self.stop]
+
         self.Storage = Storage()
 
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
+        if user.bot:
+            return
+        if reaction.message.id in self.whois_messages.keys() and reaction.emoji in self.emojis:
+            await reaction.remove(user)
+            users = self.whois_messages.get(reaction.message.id)['users']
+            max_page = math.ceil(len(users)/20)
+            cur_page = self.whois_messages.get(reaction.message.id)['page']
+            page = 1
+            role = self.whois_messages.get(reaction.message.id)['role']
+            if reaction.emoji == self.beginning:
+                embed = self.get_page(users, page, role)
+            elif reaction.emoji == self.end:
+                page = max_page
+                embed = self.get_page(users, page, role)
+            elif reaction.emoji == self.next:
+                cur_page = self.whois_messages.get(reaction.message.id)['page']
+                page = cur_page+1 if cur_page+1 <= max_page else max_page
+                embed = self.get_page(users, page, role)
+            elif reaction.emoji == self.prev:
+                page = cur_page-1 if cur_page-1 >= 1 else 1
+                embed = self.get_page(users, page, role)
+            elif reaction.emoji == self.stop:
+                await self.reaction_menu_timeout(reaction.message, wait=False)
+                return
+            else:
+                return
+            await reaction.message.edit(embed=embed)
+            
+
+
+    async def reaction_menu_timeout(self, message: discord.Message, wait: bool = True):
+        if wait:
+            await asyncio.sleep(300)
+        await message.clear_reactions()
+        try:
+            del self.whois_messages[message.id]
+        except KeyError:
+            pass
+
+    async def prepare_reaction_menu(self, message: discord.Message):
+        for emoji in self.emojis:
+            await message.add_reaction(emoji)
+        self.client.loop.create_task(self.reaction_menu_timeout(message))
+
+    def get_page(self, users, page, role):
+        sumpages = math.ceil(len(users)/20)
+        pagestart = (page * 20)-20
+        pageend = pagestart + 19
+        desctext = f'({str(len(users))} in total)\n'
+        for i in range(pagestart, pageend):
+            try:
+                desctext += users[i].mention + '\n'
+            except IndexError:
+                break
+        embed = utils.createEmbed(title=f'__Users with the role `{role}`:__', description=desctext, colour='iron')
+        embed.set_footer(text=f'Page {page}/{sumpages}')
+        return embed
 
     @commands.command(
         brief='Get a list of all members of a role.',
@@ -21,25 +89,14 @@ class Misc(commands.Cog):
         role = await utils.roleSearch(ctx, self.client, rolename)
         if not role:
             return
-        users = list()
-        for member in ctx.guild.members:
-            if role in member.roles:
-                users.append(member)
+        users = role.members
         users.sort(key=lambda x: x.name)
-        sumpages = math.ceil(len(users)/20)
-        page = sumpages if page > sumpages else page          
-        pagestart = (page * 20)-20
-        pageend = pagestart + 19
-        desctext = f'({str(len(users))} in total)\n'
-        for i in range(pagestart, pageend):
-            try:
-                desctext += users[i].mention + '\n'
-            except IndexError:
-                break
 
-        embed = utils.createEmbed(title=f'__Users with the role `{role}`:__', description=desctext, colour='iron', author=ctx.author)
-        embed.set_footer(text=f'Page {page}/{sumpages}')
-        await ctx.send(embed=embed)
+                 
+        embed = self.get_page(users, page, role)
+        msg = await ctx.send(embed=embed)
+        await self.prepare_reaction_menu(msg)
+        self.whois_messages[msg.id] = {'users': users, 'page': page, 'role': role}
 
 
     @utils.isMod()
@@ -97,12 +154,21 @@ class Misc(commands.Cog):
 
     @commands.command(
         name='commands',
-        brief='Get the GitHub link of this bot.',
-        description='This command shows you the Github link of the Iron Justice.',
+        brief='Get the link for the bot\'s commands summary.',
+        description='This command retrieves you the link to the command summary of the Iron Justice.',
         usage='?commands'
     )
     async def cmnds(self, ctx):
         embed = utils.createEmbed(author=ctx.author, description='You can view the command documentation of the Iron Justice right [here](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78).', colour='iron')
+        await ctx.send(embed=embed)
+
+    @commands.command(
+        brief='Get the GitHub repository.',
+        description='Get the GitHub Link of the Iron Justice discord bot and stay up to date!',
+        usage='?github'
+    )
+    async def github(self, ctx):
+        embed = utils.createEmbed(author=ctx.author, description='Visit the Iron Justice on [GitHub](https://github.com/Cradac/Iron-Justice) and check out the latest additions. Please Star the repository!', colour='iron')
         await ctx.send(embed=embed)
 
     @commands.command(
@@ -147,7 +213,7 @@ class Misc(commands.Cog):
 
     @commands.is_owner()
     @commands.command(
-        hidden=True
+        hidden=True,
         brief='List all guilds featuring the Iron Justice',
         description='',
         usage='?guildlist'

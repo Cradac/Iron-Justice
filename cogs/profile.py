@@ -39,7 +39,7 @@ class Profile(commands.Cog):
         self.emojis = list()
 
         self.social_platforms = ['twitch', 'mixer', 'youtube', 'twitter', 'reddit', 'itchio']
-        self.gt_platforms = ['steam', 'xbox', 'psn', 'nintendo', 'minecraft', 'origin', 'blizzard', 'bethesda']
+        self.gt_platforms = ['steam', 'xbox', 'psn', 'nintendo', 'gog', 'minecraft', 'origin', 'blizzard', 'bethesda']
 
 
         self.MSUsername = None
@@ -88,6 +88,7 @@ class Profile(commands.Cog):
         self.origin_emoji = self.client.get_emoji(588661018784301066)
         self.blizzard_emoji = self.client.get_emoji(588661019258126357)
         self.bethesda_emoji = self.client.get_emoji(588661017287065600)
+        self.gog_emoji = self.client.get_emoji(630739999293177866)
 
         self.sot_emoji = self.client.get_emoji(488445174536601600)
         self.social_emoji = self.client.get_emoji(588826943760236583)
@@ -99,7 +100,7 @@ class Profile(commands.Cog):
         self.reddit_emoji = self.client.get_emoji(588661023079399424)
         self.itchio_emoji = self.client.get_emoji(588661018394099722)
 
-        self.emojis = [self.xbox_emoji, self.sot_emoji, self.game_emoji, self.social_emoji, self.stop_emoji]
+        self.emojis = [self.sot_emoji, self.game_emoji, self.social_emoji, self.stop_emoji]
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
@@ -107,11 +108,12 @@ class Profile(commands.Cog):
             return
         if reaction.message.id in self.profile_messages.keys() and reaction.emoji in self.emojis:
             await reaction.remove(user)
-            if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
+            '''if reaction.emoji == self.xbox_emoji and self.profile_status[reaction.message.id] != 'xbox':
                 embed = self.get_xbox_page(self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'xbox'
+            '''
 
-            elif reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
+            if reaction.emoji == self.sot_emoji and self.profile_status[reaction.message.id] != 'sot':
                 embed = await self.get_sot_page(None, self.profile_messages[reaction.message.id])
                 self.profile_status[reaction.message.id] = 'sot'
 
@@ -145,7 +147,7 @@ class Profile(commands.Cog):
         self.client.loop.create_task(self.reaction_menu_timeout(message))
         
 
-    def get_xbox_page(self, member: discord.Member):
+    '''def get_xbox_page(self, member: discord.Member):
         gtag = self.Storage.get_xbox_tag(member)
         embed = utils.createEmbed(colour='iron', author=member)
         icon = member.guild.icon_url_as(format='png', size=512)
@@ -160,6 +162,7 @@ class Profile(commands.Cog):
             embed.description = 'There is no Xbox Gamertag set for this profile.\n\
                 If this is your profile you can add it with `?gt edit <gamertag>`.'
         return embed
+    '''
 
     async def get_sot_page(self, ctx: commands.Context, member: discord.Member):
         info = await self.Storage.get_sot_profile(ctx, member)
@@ -200,6 +203,8 @@ class Profile(commands.Cog):
             embed.add_field(name=str(self.psn_emoji) + 'Playstation Network', value=info['psn'], inline=True)
         if info['nintendo']:
             embed.add_field(name=str(self.nintendo_emoji) + 'Nintendo Friend Code', value=info['nintendo'], inline=True)
+        if info['gog']:
+            embed.add_field(name=str(self.gog_emoji) + 'GoG', value=info['gog'], inline=True)
         if info['minecraft']:
             embed.add_field(name=str(self.minecraft_emoji) + 'Minecraft', value=info['minecraft'], inline=True)
         if info['origin']:
@@ -295,7 +300,7 @@ class Profile(commands.Cog):
         usage='?gt edit <platform> <gamertag>'
     )
     async def edit(self, ctx, platform: str , *, gamertag):
-        
+        platform = platform.lower()
         if platform not in self.gt_platforms:
             embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(self.gt_platforms) + '`')
             await ctx.send(embed=embed)
@@ -441,6 +446,7 @@ class Profile(commands.Cog):
         usage='?social edit <platform> <username>'
     )
     async def _s_edit(self, ctx, platform: str , *, username):
+        platform = platform.lower()
         if platform not in self.social_platforms:
             embed = utils.createEmbed(author=ctx.author, colour='error', description=f'You need to select one of these platforms:\n• `' + '`\n• `'.join(self.social_platforms) + '`')
             await ctx.send(embed=embed)
