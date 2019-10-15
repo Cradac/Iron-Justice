@@ -11,9 +11,9 @@ class Misc(commands.Cog):
         self.whois_messages = dict()
         self.prev = '⏪'
         self.next = '⏩'
-        self.beginning = '⏮️'
-        self.end = '⏭️'
-        self.stop = '⏹️'
+        self.beginning = '⏮'
+        self.end = '⏭'
+        self.stop = '⏹'
 
         self.emojis = [self.beginning, self.prev, self.next, self.end, self.stop]
 
