@@ -21,7 +21,7 @@ print('bot version: {}'.format(_version))
 Client = discord.Client()
 client = commands.Bot(command_prefix = ['?'], case_insensitive=True, description=f'This is the Iron Fleet\'s own bot THE IRON JUSTICE V{_version} rewrite. For questions please contact Cradac | Max#2614.\n#beMoreIron', help_command=None)
 if len(sys.argv) == 1:
-	with open('config.json') as f:
+	with open('token.json') as f:
 		c = json.load(f)
 	bot_token =  c.get('token')
 else:

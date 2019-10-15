@@ -9,6 +9,8 @@ All notable changes to the Justice will be documented in this file.
 - Platforms and Social Site names are now case insensitive upon editing
 - Changed Rogue Legends' welcome message
 - The page system on the `?whois` command now works with reactions
+### Fixed
+- fixed token passing via .json file
 
 ## [3.1.1] - 2019-07-17
 ### Fixed 

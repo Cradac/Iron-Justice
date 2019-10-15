@@ -11,7 +11,7 @@ class Misc(commands.Cog):
         self.whois_messages = dict()
         self.prev = '⏪'
         self.next = '⏩'
-        self.beginning = '⏮️️️'
+        self.beginning = '⏮️'
         self.end = '⏭️'
         self.stop = '⏹️'
 
