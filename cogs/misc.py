@@ -93,9 +93,9 @@ class Misc(commands.Cog):
 
                  
         embed = self.get_page(users, page, role)
-        await ctx.send(embed=embed)
-        await self.prepare_reaction_menu(ctx.message)
-        self.whois_messages[ctx.message.id] = {'list': users, 'page': page, 'role': role}
+        msg = await ctx.send(embed=embed)
+        await self.prepare_reaction_menu(msg)
+        self.whois_messages[msg.id] = {'list': users, 'page': page, 'role': role}
 
 
     @utils.isMod()
