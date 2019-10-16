@@ -60,7 +60,7 @@ class Welcome(commands.Cog):
         embed.set_footer(text=f'Member #{user.guild.member_count}', icon_url=user.guild.icon_url_as(format='png', size=128))
 
         rules_txt = f'\
-            Please take a moment to read the {self.rogue["rules"].mention} & please provide the following information in a message below or to {self.rogue["jenbot"].mention} in a PM.\n\n\
+            Please take a moment to read the {self.rogue["rules"].mention} & please provide the following information in a message below.\n\n\
             **1.** Gamertag\n\
             **2.** Age\n\
             **3.** Do you stream? (if so please provide streaming channel URL)\n\
