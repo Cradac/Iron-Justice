@@ -174,7 +174,7 @@ class Settings(commands.Cog):
                     msg = await self.client.wait_for('message', timeout=60.0, check=message_check)
                 except asyncio.TimeoutError:
                     await ctx.send('Cancelled the Setup.')
-                role = await utils.roleSearch(ctx, self.client, msg)
+                role = await utils.roleSearch(ctx, self.client, msg.content)
                 self.Storage.update_lfc_role(ctx.guild, role)
                 await ctx.send(f'{role.mention} will now be used for the `Looking for Crew`-Module.')
 
