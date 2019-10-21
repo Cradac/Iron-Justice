@@ -1,6 +1,7 @@
 # Iron Justice Discord Bot
 
-![GitHub release](https://img.shields.io/github/release/Cradac/Iron-Justice.svg) ![DUB](https://img.shields.io/dub/l/vibe-d.svg)
+![GitHub release](https://img.shields.io/github/release/Cradac/Iron-Justice.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 
 ## General Info
 
@@ -59,11 +60,11 @@ If you have an interesting idea for the Justice, feel free to contact me and may
 
 ## License
 
-The project runs under the MIT License. Feel free to fork the repo and do whatever with it.
+The project runs under the GPL v3 License. Feel free to fork the repo.
 
 ## Acknowledgment
 
-Thanks to the entire Officer team of the Iron Fleet and Rogue Legends for testing and iterating over all new additions the Justice.
+Thanks to the entire Officer team of the Iron Fleet and Rogue Legends for testing and iterating over all new additions of the Justice.
 
 I also thank my tendency to procrastination, which sometimes halted the development for months and at two other occasions made me rewrite the entire code base within a few days.
 
