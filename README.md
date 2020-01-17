@@ -36,7 +36,7 @@ For a complete documentation of all commands and modules head [here](https://gis
 ## Self Hosting
 
 It is advised to invite the bot and not host it yourself, since some modules are dependant on Emojis from other Servers.
-You are allowed to self-host the bot for your own community and modify the source code to your own needs under the MIT License.
+You are allowed to self-host the bot for your own community and modify the source code to your own needs under the GNU General Public License 3.
 
 Be also advised, that most of the code is not documented, since I have been working mostly alone on this. Please do not let this stop your adventure drive.
 
@@ -56,7 +56,7 @@ I will also link the Database-Model here at a later point. If you need it earlie
 ## Contributing
 
 I will probably not accept any contributions from other sources.
-If you have an interesting idea for the Justice, feel free to contact me and maybe we can find a solution.
+If you have an interesting idea for the Justice, feel free to contact me and we can find a solution.
 
 ## License
 
