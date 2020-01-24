@@ -69,7 +69,7 @@ Thanks to the entire Officer team of the Iron Fleet and Rogue Legends for testin
 I also thank my tendency to procrastination, which sometimes halted the development for months and at two other occasions made me rewrite the entire code base within a few days.
 
 ## Links
-[Invite the Bot](https://discordapp.com/oauth2/authorize?client_id=442346885538250752&scope=bot&permissions=8) | [Read the Documentation](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78) | [Join the Support Server](https://discord.gg/Pn3vXNd) | [Look at upcoming features!](https://trello.com/invite/b/YHimqVIk/abe4346c9ec925dd9fb1dd412854e321/iron-justice-development) | [Join the Iron Fleet Community](https://discord.gg/cSZPMF7)
+[Invite the Bot](https://discordapp.com/oauth2/authorize?client_id=442346885538250752&scope=bot&permissions=8) | [Read the Documentation](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78) | [Join the Support Server](https://discord.gg/Pn3vXNd) | [Look at upcoming features!](https://trello.com/b/YHimqVIk) | [Join the Iron Fleet Community](https://discord.gg/cSZPMF7)
 
 ## Contact
 
