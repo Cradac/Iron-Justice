@@ -1,6 +1,7 @@
 # Iron Justice Discord Bot
 
-![GitHub release](https://img.shields.io/github/release/Cradac/Iron-Justice.svg) ![DUB](https://img.shields.io/dub/l/vibe-d.svg)
+![GitHub release](https://img.shields.io/github/release/Cradac/Iron-Justice.svg) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 
 ## General Info
 
@@ -35,7 +36,7 @@ For a complete documentation of all commands and modules head [here](https://gis
 ## Self Hosting
 
 It is advised to invite the bot and not host it yourself, since some modules are dependant on Emojis from other Servers.
-You are allowed to self-host the bot for your own community and modify the source code to your own needs under the MIT License.
+You are allowed to self-host the bot for your own community and modify the source code to your own needs under the GNU General Public License 3.
 
 Be also advised, that most of the code is not documented, since I have been working mostly alone on this. Please do not let this stop your adventure drive.
 
@@ -55,20 +56,20 @@ I will also link the Database-Model here at a later point. If you need it earlie
 ## Contributing
 
 I will probably not accept any contributions from other sources.
-If you have an interesting idea for the Justice, feel free to contact me and maybe we can find a solution.
+If you have an interesting idea for the Justice, feel free to contact me and we can find a solution.
 
 ## License
 
-The project runs under the MIT License. Feel free to fork the repo and do whatever with it.
+The project runs under the GPL v3 License. Feel free to fork the repo.
 
 ## Acknowledgment
 
-Thanks to the entire Officer team of the Iron Fleet and Rogue Legends for testing and iterating over all new additions the Justice.
+Thanks to the entire Officer team of the Iron Fleet and Rogue Legends for testing and iterating over all new additions of the Justice.
 
 I also thank my tendency to procrastination, which sometimes halted the development for months and at two other occasions made me rewrite the entire code base within a few days.
 
 ## Links
-[Invite the Bot](https://discordapp.com/oauth2/authorize?client_id=442346885538250752&scope=bot&permissions=8) | [Read the Documentation](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78) | [Join the Support Server](https://discord.gg/Pn3vXNd) | [Join the Iron Fleet Community](https://discord.gg/cSZPMF7)
+[Invite the Bot](https://discordapp.com/oauth2/authorize?client_id=442346885538250752&scope=bot&permissions=8) | [Read the Documentation](https://gist.github.com/Cradac/4544f0cbe9456a637c0d3a85061bda78) | [Join the Support Server](https://discord.gg/Pn3vXNd) | [Look at upcoming features!](https://trello.com/b/YHimqVIk) | [Join the Iron Fleet Community](https://discord.gg/cSZPMF7)
 
 ## Contact
 
