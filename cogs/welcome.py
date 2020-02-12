@@ -82,7 +82,7 @@ class Welcome(commands.Cog):
         return embed
 
     def hogf_welcome(self, user: discord.Member):
-        embed = utils.createEmbed(author=user, guild=user.guild, colour=discord.Colour((255,181,59)))
+        embed = utils.createEmbed(author=user, guild=user.guild, colour=0xffb53b)
         embed.description = f'Welcome to Hearts of Gold. Please review the {self.hogf["rules"].mention} and use the reaction role to agree to them. Once you have done this please make sure you familirize yourself with the {self.hogf["guide"].mention}. If you have any questions please ask an HoGF Admin or Mod.'
         embed.set_footer(text=f'Member #{user.guild.member_count}', icon_url=user.guild.icon_url_as(format='png', size=128))
         return embed
