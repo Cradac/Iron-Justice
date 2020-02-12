@@ -36,6 +36,13 @@ class Welcome(commands.Cog):
         if any(self.rogue.values()) is None:
             print('Didn\'t get a channel in the Iron Fleet.')
         print('Got all welcome guilds and channels.')
+        hogf_guild = self.client.get_guild(628663547647229982)
+        self.hogf = {
+            'guild': hogf_guild,
+            'rules': hogf_guild.get_channel(676562579719454739),
+            'guide': hogf_guild.get_channel(646204949281374225),
+            'welcome': hogf_guild.get_channel(628663547647229984),
+        }
 
 
 
@@ -64,7 +71,7 @@ class Welcome(commands.Cog):
             **1.** Gamertag\n\
             **2.** Age\n\
             **3.** Do you stream? (if so please provide streaming channel URL)\n\
-            **4.** Ae you an Insider? (Formerly Pioneer)\n\
+            **4.** Are you an Insider? (Formerly Pioneer)\n\
             **5.** How did you find Rogue Legends?'
         game_txt = f'After you applied and we\'ve set your rank please head to {self.rogue["info"].mention} and react with the emoji according to the games you play to get access to their categories!'
         joined_txt = f'Please leave a message in {self.rogue["rollcall"].mention} with the some information about you. Check the pinned message there for format.\n\n\
@@ -73,6 +80,13 @@ class Welcome(commands.Cog):
         embed.add_field(name='__Game Channel Access__', value=game_txt)
         embed.add_field(name='__Once you have Server Access__', value=joined_txt)
         return embed
+
+    def hogf_welcome(self, user: discord.Member):
+        embed = utils.createEmbed(author=user, guild=user.guild, colour='ffb53b')
+        embed.description = f'Welcome to Hearts of Gold. Please review the {self.hogf["rules"].mention} and use the reaction role to agree to them. Once you have done this please make sure you familirize yourself with the {self.hogf["guide"].mention}. If you have any questions please ask an HoGF Admin or Mod.'
+        embed.set_footer(text=f'Member #{user.guild.member_count}', icon_url=user.guild.icon_url_as(format='png', size=128))
+        return embed
+
         
 
     @commands.Cog.listener()
@@ -88,6 +102,9 @@ class Welcome(commands.Cog):
             elif user.guild == self.rogue['guild']:
                 embed_public = self.rogue_welcome(user)
                 welcome_channel = self.rogue['welcome']
+            elif user.guild == self.hogf['guild']:
+                embed_public = self.hogf_welcome(user)
+                welcome_channel = self.hogf['welcome']
             else: 
                 return
             await welcome_channel.send(embed=embed_public)
