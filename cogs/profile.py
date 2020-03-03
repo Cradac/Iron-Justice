@@ -170,7 +170,7 @@ class Profile(commands.Cog):
             return None
         embed = utils.createEmbed(colour='iron', author=member, guild=member.guild)
         embed.set_footer(icon_url=self.sot_emoji.url, text='Sea of Thieves')
-        embed.add_field(name="<:xbox:563799115201249301> Gamertag", value=info['gtag'], inline=False)
+        embed.add_field(name="<:xbox:684482808185618474> Gamertag", value=info['gtag'], inline=False)
         if info['alias']:
             embed.add_field(name="<:jollyroger:486619773875126293> Pirate Alias", value=info['alias'], inline=False)
         embed.add_field(name="<:rank:486619774445551626> Rank", value=member.top_role.name, inline=False)
