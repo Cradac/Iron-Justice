@@ -80,17 +80,17 @@ class Profile(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.steam_emoji = self.client.get_emoji(586475562772725780)
-        self.xbox_emoji = self.client.get_emoji(563799115201249301)
-        self.psn_emoji = self.client.get_emoji(563799160021712922)
-        self.nintendo_emoji = self.client.get_emoji(534433688025563137)
+        self.steam_emoji = self.client.get_emoji(684482808084955159)
+        self.xbox_emoji = self.client.get_emoji(684482808185618474)
+        self.psn_emoji = self.client.get_emoji(684483959106568251)
+        self.nintendo_emoji = self.client.get_emoji(684483959039721561)
         self.minecraft_emoji = self.client.get_emoji(588661530661355520)
         self.origin_emoji = self.client.get_emoji(588661018784301066)
         self.blizzard_emoji = self.client.get_emoji(588661019258126357)
         self.bethesda_emoji = self.client.get_emoji(588661017287065600)
         self.gog_emoji = self.client.get_emoji(630739999293177866)
 
-        self.sot_emoji = self.client.get_emoji(488445174536601600)
+        self.sot_emoji = self.client.get_emoji(684484612331667503)
         self.social_emoji = self.client.get_emoji(588826943760236583)
 
         self.twitch_emoji = self.client.get_emoji(588661018557808641)

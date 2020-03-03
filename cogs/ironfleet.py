@@ -26,7 +26,7 @@ class IronFleet(commands.Cog):
         await member.add_roles(recruit_role, reason='Recruit Command')
         await member.remove_roles(canread_role, reason='Recruit Command')
         await ctx.message.delete()
-        rr_channel = discord.utils.get(ctx.guild.channels, id=479313811518652417)
+        rr_channel = discord.utils.get(ctx.guild.channels, id=684390931402981427)
         await ctx.send(f'{member.mention} is now an Ironborn Recruit! *What is dead may never die!*\nHead over to {rr_channel.mention} to get your games assigned.')
 
 

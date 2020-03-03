@@ -16,10 +16,10 @@ class Welcome(commands.Cog):
         iron_guild = self.client.get_guild(479300072077787160)
         self.iron = {
             'guild': iron_guild,
-            'welcome': iron_guild.get_channel(479301249351548928),
-            'rules': iron_guild.get_channel(479301263461449768),
-            'info': iron_guild.get_channel(563479453091495945),
-            'intro': iron_guild.get_channel(481455365192548363)
+            'welcome': iron_guild.get_channel(684390600598093862),
+            'rules': iron_guild.get_channel(684390479491760161),
+            'info': iron_guild.get_channel(684390511980838922),
+            'intro': iron_guild.get_channel(684390743086858290)
         }
         if any(self.iron.values()) is None:
             print('Didn\'t get a channel in the Iron Fleet.')
