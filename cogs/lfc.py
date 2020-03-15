@@ -30,7 +30,8 @@ class LFC(commands.Cog, name='Looking for Crew'):
             You can only use this command in the set channels.\n\
             Type ?nlfc once you\'re in a crew to avoid getting further notifications.\n\
             The role will be automatically removed after 2 hours.',
-        usage='?lfc'
+        usage='?lfc',
+        aliases=['lfg']
     )
     async def lfc(self, ctx):
         local_role = self.Storage.get_lfc_role(ctx.guild)
@@ -52,7 +53,8 @@ class LFC(commands.Cog, name='Looking for Crew'):
         brief='Removes the `Looking for Crew` status manually.',
         description='This removes the `Looking for Crew` status.\n\
             If you are looking for a crew again use `?lfc`.',
-        usage='?nlfc'
+        usage='?nlfc',
+        aliases=['nlfg']
     )
     async def nlfc(self, ctx):
         local_role = self.Storage.get_lfc_role(ctx.guild)

@@ -297,7 +297,8 @@ class Profile(commands.Cog):
         brief='Edit your one of your gamertags.',
         description='Use this to edit your gamertag.\n\
             You can choose of these platforms: `steam`, `xbox`, `psn`, `nintendo`, `minecraft`, `origin`, `blizzard`, `bethesda`.',
-        usage='?gt edit <platform> <gamertag>'
+        usage='?gt edit <platform> <gamertag>',
+        aliases=['update', 'set']
     )
     async def edit(self, ctx, platform: str , *, gamertag):
         platform = platform.lower()
@@ -443,7 +444,8 @@ class Profile(commands.Cog):
         brief='Edit your one of your Social Media Platforms.',
         description='Use this to edit one of your Social Media names.\n\
             You can choose of these platforms: `twitch`, `mixer`, `youtube`, `twitter`, `reddit`, `itchio`.',
-        usage='?social edit <platform> <username>'
+        usage='?social edit <platform> <username>',
+        aliases=['update', 'set']
     )
     async def _s_edit(self, ctx, platform: str , *, username):
         platform = platform.lower()

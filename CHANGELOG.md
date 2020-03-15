@@ -1,6 +1,12 @@
 # CHANGELOG
 All notable changes to the Justice will be documented in this file.
 
+## unreleased
+### Added
+- `?lfg` and `?nlfg` as aliases for the LFC-Module
+- `update` and `set` as aliases for GT and Social name edit subcommands
+- welcome message for HoGF
+
 ## [3.2.0] - 2019-10-15
 ### Added
 - You can add your GoG username now
