@@ -179,10 +179,11 @@ class Profile(commands.Cog):
         embed.add_field(name="<:ma:486619774688952320> Merchant Alliance", value=info['ma'], inline=True)
         embed.add_field(name="<:hc:588378278772080641>  Hunter's Call", value=info['hc'], inline=True)
         embed.add_field(name="<:sd:588378278813761609> Sea Dogs", value=info['sd'], inline=True)
+        embed.add_field(name="<:rb:702448286191058974> Reaper's Bones", value=info['rb'], inline=True)
         embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value=info['af'], inline=False)
         if info['img']:
             embed.set_image(url=info['img'])
-        alliances = [info['gh'] == 50, info['oos'] == 50, info['ma'] == 50, info['hc'] == 50, info['sd'] == 50]
+        alliances = [info['gh'] == 50, info['oos'] == 50, info['ma'] == 50, info['hc'] == 50, info['sd'] == 50, info['rb'] == 50]
         true_count = sum(alliances)
         if true_count >= 3:
             embed.add_field(name="You are a Legend!", value='\u200b', inline=False)
@@ -336,14 +337,14 @@ class Profile(commands.Cog):
     @commands.command(
         aliases=['lvl'],
         brief='Update your Ingame Levels.',
-        description='Use this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter\'s Call\nsd: Sea Dogs\naf: Athena\'s Fortune',
+        description='Use this command to regularly update your levels.\ngh: Gold Hoarders\noos: Order of Souls\nma: Merchant Aliance\nhc: Hunter\'s Call\nsd: Sea Dogs\nrb: Reaper\'s Bones\naf: Athena\'s Fortune',
         usage='?levels *[<company>=<level>]'
     )
     async def levels(self, ctx, *args):
         comps = dict()
-        r = re.compile(r'^(([a-z]|[A-Z]){1,3}=([1-4][0-9]|50|[1-9])\s)*$')
+        r = re.compile(r'^(([a-z]|[A-Z]){1,3}=([0-9]{1,2})\s)*$')
         if not r.match(' '.join(args) + ' '):
-            await ctx.send('The Syntax is not correct. Try this instead:\n`?levels gh=50`\n`?levels af=10 hc=50 gh=50 sd=50 ma=50 oos=50`')
+            await ctx.send('The Syntax is not correct. Try this instead:\n`?levels gh=75`\n`?levels af=20 hc=50 gh=75 sd=50 ma=75 oos=75 rb=75`')
             return
         for arg in args:
             arg = arg.split('=')
@@ -353,14 +354,18 @@ class Profile(commands.Cog):
                 await ctx.send('Please only pass integers for levels.')
                 return
         for comp,lvl in comps.items():
-            if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af']:
-                await ctx.send(f'`{comp}` is not a correct trading company abbreviation.\nPossible abbreviations are: `gh`, `oos`, `ma`, `hc`, `sd`, `af`.')
+            if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af', 'rb']:
+                await ctx.send(f'`{comp}` is not a correct trading company abbreviation.\nPossible abbreviations are: `gh`, `oos`, `ma`, `hc`, `sd`, `rb`, `af`.')
                 return
-            if comp == 'af' and (not isinstance(lvl, int) or not 0 <= lvl <=10):
-                await ctx.send('Athena\'s levels can only be between 0 and 10.')
+            if comp == 'af' and not 0 <= lvl <=20:
+                await ctx.send('Athena\'s levels can only be between 0 and 20.')
                 return
-            if not isinstance(lvl, int) or not 0 < lvl <= 50:
-                await ctx.send('Levels can only be between 1 and 50.')
+            elif comp in ['gh', 'oos', 'ma', 'rb'] and not 0 < lvl <= 75:
+                await ctx.send('Levels can only be between 1 and 75 for GH, OOS, MA, RB.')
+                return
+            elif comp in ['hc', 'sd'] and not 0 < lvl <=50:
+                await ctx.send('Levels can only be between 1 and 50 for SD, HC.')
+                return            
         self.Storage.update_levels(ctx.author, comps)
         embed = utils.createEmbed(description=f'Your levels have been updated.', author=ctx.author, colour='iron')
         embed.set_footer(icon_url=ctx.guild.icon_url_as(format='png', size=128), text='Levels updated')

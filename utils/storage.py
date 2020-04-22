@@ -159,7 +159,7 @@ class Storage:
     '''
 
     async def get_sot_profile(self, ctx, user: discord.Member):
-        query = f'SELECT hc,sd,gh,oos,ma,af,img,alias FROM sot_profile WHERE uid={user.id};'
+        query = f'SELECT hc,sd,gh,oos,ma,af,img,alias,rb FROM sot_profile WHERE uid={user.id};'
         cur = self.get_cursor()
         cur.execute(query)
         r = cur.fetchone()
@@ -176,9 +176,10 @@ class Storage:
             'gh': r[2],
             'oos': r[3],
             'ma': r[4],
+            'rb': r[8],
             'af': r[5],
             'img': r[6],
-            'alias': r[7],
+            'alias': r[7]
         }
         profile['gtag'] = self.get_xbox_tag(user)
         return profile
