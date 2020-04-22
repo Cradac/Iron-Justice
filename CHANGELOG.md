@@ -1,6 +1,12 @@
 # CHANGELOG
 All notable changes to the Justice will be documented in this file.
 
+## [3.2.2] - 2020-04-22
+### Added
+- Reaper's Bones
+### Changed
+- Raised Level Caps for GH, MA, OOS, AF
+
 ## [3.2.1] - 2020-03-15
 ### Added
 - `?lfg` and `?nlfg` as aliases for the LFC-Module
