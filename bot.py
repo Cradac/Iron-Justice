@@ -85,6 +85,7 @@ async def on_command_error(ctx, error):
 			colour='error',
 			author=ctx.author)
 		await ctx.send(embed=embed)
+	'''
 	else:
 		try:
 			embed = utils.createEmbed(
@@ -102,7 +103,7 @@ async def on_command_error(ctx, error):
 			raise error
 		except Exception as error:
 			tb = traceback.format_exc()
-			print(error, tb)
+			print(error, tb)'''
 
 
 ##########################################################################################################################################
