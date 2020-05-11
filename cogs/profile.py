@@ -179,7 +179,7 @@ class Profile(commands.Cog):
         embed.add_field(name="<:ma:486619774688952320> Merchant Alliance", value=info['ma'], inline=True)
         embed.add_field(name="<:hc:588378278772080641>  Hunter's Call", value=info['hc'], inline=True)
         embed.add_field(name="<:sd:588378278813761609> Sea Dogs", value=info['sd'], inline=True)
-        embed.add_field(name="<:rb:702448286191058974> Reaper's Bones", value=info['rb'], inline=True)
+        embed.add_field(name="<:rb:703008029599072356> Reaper's Bones", value=info['rb'], inline=True)
         embed.add_field(name="<:af:486619774122459178> Athena's Fortune", value=info['af'], inline=False)
         if info['img']:
             embed.set_image(url=info['img'])
