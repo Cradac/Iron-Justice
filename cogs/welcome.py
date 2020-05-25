@@ -67,15 +67,14 @@ class Welcome(commands.Cog):
         embed.set_footer(text=f'Member #{user.guild.member_count}', icon_url=user.guild.icon_url_as(format='png', size=128))
 
         rules_txt = f'\
-            Please take a moment to read the {self.rogue["rules"].mention} & please provide the following information in a message below.\n\n\
+            Please take a moment to read and accept the {self.rogue["rules"].mention} & please provide the following information in a message below.\n\n\
             **1.** Gamertag\n\
-            **2.** Age\n\
-            **3.** Do you stream? (if so please provide streaming channel URL)\n\
-            **4.** Are you an Insider? (Formerly Pioneer)\n\
-            **5.** How did you find Rogue Legends?'
+            **2.** Do you stream? (if so please provide streaming channel URL)\n\
+            **3.** Are you an Insider? (Formerly Pioneer)\n\
+            **4.** Who is your fave Rogue Legends Lord? (we know you don\'t know them. But pick one anyway!'
         game_txt = f'After you applied and we\'ve set your rank please head to {self.rogue["info"].mention} and react with the emoji according to the games you play to get access to their categories!'
         joined_txt = f'Please leave a message in {self.rogue["rollcall"].mention} with the some information about you. Check the pinned message there for format.\n\n\
-		Make sure you see the {self.rogue["announcements"].mention} channel for important information. (please do not mute the channel)'
+		Make sure you see the {self.rogue["announcements"].mention} channel for important information. (Please do not mute the channel)'
         embed.add_field(name='__Rules and Server Access__', value=rules_txt)
         embed.add_field(name='__Game Channel Access__', value=game_txt)
         embed.add_field(name='__Once you have Server Access__', value=joined_txt)
