@@ -17,9 +17,17 @@ print(sys.version)
 print(discord.__version__)
 print('bot version: {}'.format(_version))
 
+intents = discord.Intents.default()
+intents.members = True
+intents.bans = False
+intents.integrations = False
+intents.webhooks = False
+intents.invites = False
+intents.typing = False
+
 
 Client = discord.Client()
-client = commands.Bot(command_prefix = ['?'], case_insensitive=True, description=f'This is the Iron Fleet\'s own bot THE IRON JUSTICE V{_version} rewrite. For questions please contact Cradac | Max#2614.\n#beMoreIron', help_command=None)
+client = commands.Bot(command_prefix = ['?'], case_insensitive=True, intents=intents, help_command=None,  description=f'This is the Iron Fleet\'s own bot THE IRON JUSTICE V{_version} rewrite. For questions please contact Cradac | Max#2614.\n#beMoreIron')
 if len(sys.argv) == 1:
 	with open('token.json') as f:
 		c = json.load(f)
