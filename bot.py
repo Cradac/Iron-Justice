@@ -50,8 +50,7 @@ async def on_ready():
 	await client.change_presence(status=discord.Status.online, activity=game)
 	print('Logged in as: ' + client.user.name)
 	print('Bot ID: ' + str(client.user.id))
-	for guild in client.guilds:
-		print (f'Connected to server: {guild}')
+	print (f'Connected to {str(len(client.guilds))} servers.')
 	print('------')
 
 	
