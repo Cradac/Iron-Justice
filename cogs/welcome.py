@@ -66,13 +66,11 @@ class Welcome(commands.Cog):
         embed.set_footer(text=f'Member #{user.guild.member_count}', icon_url=user.guild.icon_url_as(format='png', size=128))
         embed.description = f'\
             It appears that {user.mention} has decided to go Rogue, and join us Legends!\n\n\
-            Please take a moment to read and accept the {self.rogue["rules"].mention} & please provide the following information in a message below.\n\n\
+            Please take a moment to read and accept the {self.rogue["rules"].mention} & please provide the following information in a message below so we can set your roles.\n\n\
             **1.** How did you find us?\n\
-            **2.** Gamertag\n\
-            **3.** Age\n\
-            **4.** Do you stream? (if so please provide streaming channel URL)\n\
-            **5.** Are you an Insider? (Formerly Pioneer)\n\n\
-            If you have joined from the SoT forum, and haven\'t already done so, please leave us a message on the forum to let us know you\'ve joined <http://bit.ly/RLrecruitment>'
+            **2.** Age\n\
+            **3.** Do you stream? (if so please provide streaming channel URL)\n\
+            **4.** Are you an Insider? (Formerly Pioneer)\n\n'
         return embed
 
     def hogf_welcome(self, user: discord.Member):
