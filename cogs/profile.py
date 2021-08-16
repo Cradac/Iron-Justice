@@ -237,7 +237,7 @@ class Profile(commands.Cog):
         if info['reddit']:
             embed.add_field(name=str(self.reddit_emoji) + 'Reddit', value=f'[{info["reddit"]}](https://www.reddit.com/user/{info["reddit"]})', inline=True)
         if info['itchio']:
-            embed.add_field(name=str(self.itchio_emoji) + 'Itch.io', value=f'[{info["itchio"]}(https://{info["itchio"]}.itch.io/)', inline=True)
+            embed.add_field(name=str(self.itchio_emoji) + 'Itch.io', value=f'[{info["itchio"]}](https://{info["itchio"]}.itch.io/)', inline=True)
         if len(embed.fields) == 0:
             embed.description = f'{member} has not set any social media names.'
 
