@@ -51,15 +51,15 @@ class Welcome(commands.Cog):
         embed_public = utils.createEmbed(description=description, author=user, guild=user.guild, colour='iron')
         embed_public.set_footer(text=f'#{user.guild.member_count} Ironborn', icon_url=user.guild.icon_url_as(format='png', size=128))
 
-        txt1 = f'Please take a moment to read the {self.iron["rules"].mention} and click the reaction emoji to indicate that you\'ve done so. This will open you up to the application channel.'
-        txt2 = f'To apply, submit an application in {self.iron["intro"].mention}.\n\
-            Head over to {self.iron["info"].mention} to read up on our FAQ, get our social media links and general info about the fleet.\n\
-            Feel free to message a Junior or Senior Officer if you have any questions or need any help.'
-        embed_private = utils.createEmbed(guild=user.guild, colour='iron')
-        embed_private.set_footer(text=f'#{user.guild.member_count} Ironborn', icon_url=user.guild.icon_url_as(format='png', size=128))
-        embed_private.add_field(name=f'Ahoy, {user.name} and welcome to the Iron Fleet!', value=txt1)
-        embed_private.add_field(name='Afterwards...', value=txt2)
-        return embed_public, embed_private
+        #txt1 = f'Please take a moment to read the {self.iron["rules"].mention} and click the reaction emoji to indicate that you\'ve done so. This will open you up to the application channel.'
+        #txt2 = f'To apply, submit an application in {self.iron["intro"].mention}.\n\
+           # Head over to {self.iron["info"].mention} to read up on our FAQ, get our social media links and general info about the fleet.\n\
+           # Feel free to message a Junior or Senior Officer if you have any questions or need any help.'
+        #embed_private = utils.createEmbed(guild=user.guild, colour='iron')
+        #embed_private.set_footer(text=f'#{user.guild.member_count} Ironborn', icon_url=user.guild.icon_url_as(format='png', size=128))
+        #embed_private.add_field(name=f'Ahoy, {user.name} and welcome to the Iron Fleet!', value=txt1)
+        #embed_private.add_field(name='Afterwards...', value=txt2)
+        return embed_public
 
     def rogue_welcome(self, user: discord.Member):
         embed = utils.createEmbed(description='', author=user, guild=user.guild, colour='rogue')
@@ -87,12 +87,12 @@ class Welcome(commands.Cog):
     async def on_member_join(self, user: discord.Member):
         if not user.bot:
             if user.guild == self.iron['guild']:
-                embed_public, embed_private = self.iron_welcome(user)
+                embed_public = self.iron_welcome(user)
                 welcome_channel = self.iron['welcome']
-                try:
-                    await user.send(embed=embed_private)
-                except discord.errors.Forbidden:
-                    pass
+                #try:
+                #await user.send(embed=embed_private)
+                #except discord.errors.Forbidden:
+                #    pass
             elif user.guild == self.rogue['guild']:
                 embed_public = self.rogue_welcome(user)
                 welcome_channel = self.rogue['welcome']
