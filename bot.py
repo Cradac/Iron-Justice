@@ -37,7 +37,7 @@ else:
 	#sys.stdout = open(datetime.now().strftime('logs/discord_log_%Y_%m_%d_%H_%M_%S.log'), 'w+')
 
 
-extensions = ['activity_logging', 'auto_voice', 'ironfleet', 'lfc', 'misc', 'profile', 'settings', 'welcome']
+extensions = ['auto_voice', 'ironfleet', 'lfc', 'misc', 'profile', 'settings', 'welcome']
 
 
 ##########################################################################################################################################
