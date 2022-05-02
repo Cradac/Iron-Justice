@@ -357,8 +357,8 @@ class Profile(commands.Cog):
             if comp not in ['gh', 'oos', 'ma', 'hc', 'sd', 'af', 'rb']:
                 await ctx.send(f'`{comp}` is not a correct trading company abbreviation.\nPossible abbreviations are: `gh`, `oos`, `ma`, `hc`, `sd`, `rb`, `af`.')
                 return
-            if comp == 'af' and not 0 <= lvl <=20:
-                await ctx.send('Athena\'s levels can only be between 0 and 20.')
+            if comp == 'af' and not 0 <= lvl <=30:
+                await ctx.send('Athena\'s levels can only be between 0 and 30.')
                 return
             elif comp in ['gh', 'oos', 'ma', 'rb'] and not 0 < lvl <= 75:
                 await ctx.send('Levels can only be between 1 and 75 for GH, OOS, MA, RB.')
