@@ -7,6 +7,8 @@
 
 ## General Info
 
+**This project is no longer maintained by me.**
+
 This custom discord bot aims to bring value to Sea of Thieves communities by providing a number of features.
 
 The Justice has been the custom discord bot of the Iron Fleet Sea of Thieves Community for over a year. Since its initial release I felt it has evolved enough to be published.
