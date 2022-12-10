@@ -4,6 +4,10 @@
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E52E9WJ)
 
+## IMPORTANT NOTICE
+Since May 2022 the Iron Justice has taken been offline. If you want to use a bot with similar features you should try out [TechPotion's](https://github.com/Atreatis) *Kraken's Watch* bot.
+
+Its documentation and invite link are available [here](https://kraken.potionlab.net).
 
 ## General Info
 
@@ -77,4 +81,4 @@ I also thank my tendency to procrastination, which sometimes halted the developm
 
 ## Contact
 
-[Contact me on Twitter](https://twitter.com/MFCradac) or add me on Discord: `Cradac | Max#2614`
+[Contact me on Mastodon](https://home.social/@cradac) or add me on Discord: `Cradac | Max#2614`
