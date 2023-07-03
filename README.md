@@ -5,9 +5,9 @@
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E52E9WJ)
 
 ## IMPORTANT NOTICE
-Since May 2022 the Iron Justice has taken been offline. If you want to use a bot with similar features you should try out [TechPotion's](https://github.com/Atreatis) *Kraken's Watch* bot.
+Since May 2022 the Iron Justice has taken been offline. If you want to use a bot with similar features you should try out [TechPotion's](https://github.com/Atreatis) *Meta Forge* bot.
 
-Its documentation and invite link are available [here](https://kraken.potionlab.net).
+Its documentation and invite link are available [here](https://forgedevs.com/).
 
 ## General Info
 
